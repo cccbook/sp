@@ -1,0 +1,18 @@
+{
+  "name": "ad1",
+  "version": "0.0.1",
+  "description": "Auto difference",
+  "main": "ad1.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "Auto",
+    "difference"
+  ],
+  "author": "ccc",
+  "license": "MIT",
+  "dependencies": {
+    "uglify-js": "^3.4.9"
+  }
+}
