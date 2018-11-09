@@ -1,10 +1,10 @@
  
-# 電子書： 系統程式 -- 以 Node.js 為例
+# 電子書： 系統程式 - 從 nand2tetris 入門
 
 
 欄位   | 連結
 -------|---------------------------------------
-書籍   |  [軟體工程 -- 以 Node.js 為例](https://github.com/cccbook/spjs/wiki)
+書籍   |  [系統程式 - 從 nand2tetris 入門](https://github.com/cccbook/spjs/wiki)
 範例   |  [example](example)
 練習   |  [exercise](exercise)
 專案   |  [project](project)
