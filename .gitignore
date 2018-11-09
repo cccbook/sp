@@ -7,7 +7,7 @@ logs
 *.log
 
 # pdf
-*.pdf
+# *.pdf
 
 
 # exe

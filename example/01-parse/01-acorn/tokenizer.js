@@ -1,5 +1,6 @@
 const acorn = require("acorn")
-let str = '1 + 1'
-let tokens = [...acorn.tokenizer(str)];
+let code = "function f(a,b) { return a + b }"
+// let code = '1 + 1'
+let tokens = [...acorn.tokenizer(code)];
 
 console.log(tokens)
