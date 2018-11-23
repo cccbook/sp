@@ -1,0 +1,14 @@
+class Main {
+    function void main() {
+		  var int s = sum(10);
+			Output.printInt(s);
+    }
+		
+		function int sum(int n) {
+		  var int i=0, s=0;
+			while (i<=n) {
+			  s=s+i;
+			}
+			return s;
+		}
+}

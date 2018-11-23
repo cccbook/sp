@@ -1,0 +1,58 @@
+	arg	10		
+	call	T1	sum	
+	=	s	T1	
+sum	function			
+	param	n		
+	=	s	0	
+	=	i	1	
+L1				
+	<=	T2	i	10
+	if0	T2	L2	
+	+	T3	s	i
+	=	s	T3	
+	++	i		
+	goto	L1		
+L2				
+	return	s		
+	endf			
+	arg	3		
+	arg	5		
+	call	T4	max	
+	=	m	T4	
+max	function			
+	param	a		
+	param	b		
+	>	T5	a	b
+	if0	T5	L3	
+	return	a		
+L3				
+	return	b		
+	endf			
+total	function			
+	param	a		
+	=	s	0	
+	=	i	0	
+L4	length	T6	a	
+	<	T7	i	T6
+	if0	T7	L5	
+	[]	T8	a	i
+	+	T9	s	T8
+	=	s	T9	
+	goto	L4		
+L5				
+	return	s		
+	endf			
+	array	T10		
+	apush	T10	1	
+	apush	T10	3	
+	apush	T10	7	
+	apush	T10	2	
+	apush	T10	6	
+	=	a	T10	
+	arg	a		
+	call	T11	total	
+	=	t	T11	
+	table	T12		
+	map	T12	e	"dog"
+	map	T12	c	"狗"
+	=	word	T12	

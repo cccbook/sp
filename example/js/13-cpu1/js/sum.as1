@@ -1,0 +1,15 @@
+		LD	 R1, sum
+		LD	 R2, i
+		ADDI R3, R0, 10
+		ADDI R4, R0, 10
+FOR:	ADDI R5, R2,-11
+		JZ	 R5, EXIT
+		ADD	 R1, i
+		ADDI R2, R2, 1
+        ST   R2, i
+		JZ	 R0, FOR
+EXIT:	RET
+x:      BYTE    3,18,2
+i:		WORD	1
+sum:	WORD	0
+back:   WORD    0

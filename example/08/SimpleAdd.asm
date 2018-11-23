@@ -1,0 +1,72 @@
+// init
+@256
+D=A
+@RSP
+M=D
+@LABEL1
+D=A
+@SP
+A=M
+M=D
+@R1
+D=M
+@SP
+A=M
+M=D
+@R2
+D=M
+@SP
+A=M
+M=D
+@R3
+D=M
+@SP
+A=M
+M=D
+@R4
+D=M
+@SP
+A=M
+M=D
+@5
+D=A
+@R0
+AD=A-D
+@R2
+M=D
+@R0
+D=M
+@R1
+M=D
+@Sys.init
+0; JMP
+label LABEL1
+// push constant 7
+@7
+D=A
+@SP
+A=M
+M=D
+// push constant 8
+@8
+D=A
+@SP
+A=M
+M=D
+// add
+@SP
+M=M-1
+@SP
+A=M
+D=M
+@SP
+M=M-1
+@SP
+A=M
+A=M
+D=D+A
+@SP
+A=M
+M=D
+@SP
+M=M+1

@@ -1,0 +1,74 @@
+InterruptVector: 
+    JMP ResetHandler
+    JMP Unexpected
+    JMP Unexpected
+    JMP IrqHandler
+
+Unexpected:
+    JMP Unexpected
+
+ResetHandler:    
+    LDI R12, 192        ; 允許軟硬體中斷 (T:SWI)
+    SWI 2                ; 停止追蹤
+    JMP Task1            ; 啟動時直接執行第一個行程 Task1
+
+IrqHandler:             
+    LDI R12, 64            ; 禁止硬體中斷 (I:IRQ)，允許軟體中斷 (T:SWI)
+SaveTask:                ; 保存目前行程的暫存器到 TaskBuf[TaskId] (TaskBuf+TaskId*4) 中。
+    ST  R14, TR14
+    CALL GetTaskBuf
+    ST  R9, [R1+36]
+    LD  R14, TR14
+    ST  R14, [R1+60]    ; 存入舊行程的 PC
+TaskIdNext:
+    LD  R1, TaskId
+    LDI R2, 1
+    ADD R1, R1, R2        ; TaskId+1
+    ST  R1, TaskId        ; TaskId = R3
+    LD  R2, TaskMax
+    CMP R1, R2            ; if (TaskId >= TaskMax)
+    JLT LoadTask
+    ST  R0, TaskId        ;     TaskId = 0
+LoadTask:                ; 載入新行程暫存器
+    CALL GetTaskBuf
+    LD  R9, [R1+36]
+    LDI R12, 192        ; 允許軟硬體中斷 (I:IRQ, T:SWI)
+    SWI 0
+    SWI 5                ; 重設計時器，避免中斷太快發生
+    LD  R15, [R1+60]    ; 載入新行程的 PC 以切換到新行程
+
+GetTaskBuf:
+    ST  R2, TR2
+    LDI R1, 64            ; R1=64
+    LD  R2, TaskId        ; R2=TaskId
+    MUL R1, R2, R1        ; R1=TaskId*64
+    LD  R2, TaskBufPtr    ; R2=TaskBufPtr
+    ADD R1, R2, R1        ; R1=&TaskBuf[TaskId]=該行程緩衝區起始點
+    LD  R2, TR2
+    RET
+
+Task1:                     ; 第一個行程 Task1, 利用 R1 計數，從 0 開始向上數
+    LD  R9, Task1Ptr     ; 顯示 Task1
+FOR1:    SWI 3
+    JMP FOR1
+
+Task2:                    ; 第二個行程 Task2, 利用 R2 計數，從 0 開始向上數
+    LD  R9, Task2Ptr     ; 顯示 Task2
+FOR2:    SWI 3
+    JMP FOR2
+
+TR1:        RESW 1
+TR2:        RESW 1
+TR14:       RESW 1
+TaskId:     WORD 0        ; 目前行程代號
+TaskMax:    WORD 2        ; 所有行程的數目
+TaskBuf:                 ; 行程結構儲存區，用來儲存暫存器 R1-R15
+TaskBuf1:   RESW 15
+Task1PC:    WORD Task1
+TaskBuf2:   RESW 15
+Task2PC:    WORD Task2
+TaskBufPtr: WORD TaskBuf
+Task1Name:  BYTE "Task1"
+Task1Ptr:   WORD Task1Name
+Task2Name:  BYTE "Task2"
+Task2Ptr:   WORD Task2Name

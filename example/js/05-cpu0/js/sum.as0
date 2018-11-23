@@ -1,0 +1,19 @@
+        LD     R1, sum      ; R1 = sum = 0
+        LD     R2, i        ; R2 = i = 1
+        LDI    R3, 10       ; R3 = 10
+FOR:    CMP    R2, R3       ; if (R2 > R3)
+        JGT    EXIT         ;   goto EXIT
+        ADD    R1, R1, R2   ; R1 = R1 + R2 (sum = sum + i)
+        ADDI   R2, R2, 1    ; R2 = R2 + 1  ( i  = i + 1)
+        JMP    FOR          ; goto FOR
+EXIT:   ST     R1, sum      ; sum = R1
+        ST     R2, i        ; i = R2
+        LD     R9, msgptr   ; R9= pointer(msg) = &msg
+        SWI    3            ; SWI 3 : 印出 R9 (=&msg) 中的字串
+        MOV    R9, R1       ; R9 = R1 = sum
+        SWI    4            ; SWI 2 : 印出 R9 (=R1=sum) 中的整數
+        RET                 ; return 返回上一層呼叫函數
+i:      RESW   1            ; int i
+sum:    WORD   0            ; int sum=0
+msg:    BYTE   "1+...+10=", 0   ; char *msg = "sum="
+msgptr: WORD   msg          ; char &msgptr = &msg

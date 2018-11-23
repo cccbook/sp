@@ -1,0 +1,9 @@
+See Chapter 13 in the book. It's your call!
+
+And, if you've developed something cool, and you wish to share it with others, please let us know about it. We'll put a link to it from the nand2tetris site.
+
+We hope that you enjoyed the ride!
+
+-- Noam and Shimon
+
+www.nand2tetris.org

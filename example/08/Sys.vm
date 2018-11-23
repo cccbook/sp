@@ -1,0 +1,33 @@
+// Sys.vm for NestedCall test.
+//
+// Copyright (C) 2013 Mark A. Armbrust.
+// Permission granted for educational use.
+
+// Sys.init() calls Sys.main(), stores the return value in temp 1,
+//  and enters an infinite loop.
+
+function Sys.init 0
+call Sys.main 0
+pop temp 1
+label LOOP
+goto LOOP
+
+// Sys.main() calls Sys.add12(123) and stores return value (135) in temp 0.
+// Returns 456.
+
+function Sys.main 0
+push constant 123
+call Sys.add12 1
+pop temp 0
+push constant 246
+return
+
+// Sys.add12(int x) returns x+12.
+// It allocates 3 words of local storage to test the deallocation of local
+// storage during the return.
+
+function Sys.add12 3
+push argument 0
+push constant 12
+add
+return

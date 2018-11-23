@@ -1,0 +1,49 @@
+# 剖析器 -- parser
+
+```
+csienqu-teacher:js csienqu$ node parseExp
+text=32+5*(182+degree*4-20)
+tokens=["32","+","5","*","(","182","+","degree","*","4","-","20",")"]
++E
+  +T
+    +F
+      32
+    -F
+  -T
+  +
+  +T
+    +F
+      5
+    -F
+    *
+    +F
+      (
+      +E
+        +T
+          +F
+            182
+          -F
+        -T
+        +
+        +T
+          +F
+            degree
+          -F
+          *
+          +F
+            4
+          -F
+        -T
+        -
+        +T
+          +F
+            20
+          -F
+        -T
+      -E
+      )
+    -F
+  -T
+-E
+```
+

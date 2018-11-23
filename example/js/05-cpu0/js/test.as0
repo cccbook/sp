@@ -1,0 +1,196 @@
+; 	arg	10		
+	LD	R1	10	
+	PUSH	R1		
+; 	call	T1	sum	
+	CALL	sum		
+	ST	R1	T1	
+; 	=	s	T1	
+	LD	R1	T1	
+	ST	R1	s	
+; sum	function			
+sum				
+; 	param	n		
+	POP	R1		
+	ST	R1	n	
+; 	=	s	0	
+	LD	R1	0	
+	ST	R1	s	
+; 	=	i	1	
+	LD	R1	1	
+	ST	R1	i	
+; L1				
+L1				
+; 	<=	T2	i	10
+	LD	R1	i	
+	LD	R2	10	
+	CMP	R1	R2	
+	JLE	CSET0		
+	LDI	R1	1	
+	JMP	CEXIT0		
+CSET0	LDI	R1	0	
+CEXIT0	ST	R1	T2	
+; 	if0	T2	L2	
+	CMP	R0	T2	
+	JEQ	L2		
+; 	+	T3	s	i
+	LD	R1	s	
+	LD	R2	i	
+	ADD	R3	R1	R2
+	ST	R3	T3	
+; 	=	s	T3	
+	LD	R1	T3	
+	ST	R1	s	
+; 	++	i		
+	LDI	R1	1	
+	LD	R2	i	
+	ADD	R2	R1	R2
+	ST	R2	i	undefined
+; 	goto	L1		
+	JMP	L1		
+; L2				
+L2				
+; 	return	s		
+	LD	R1	s	
+	RET			
+; 	endf			
+; 	arg	3		
+	LD	R1	3	
+	PUSH	R1		
+; 	arg	5		
+	LD	R1	5	
+	PUSH	R1		
+; 	call	T4	max	
+	CALL	max		
+	ST	R1	T4	
+; 	=	m	T4	
+	LD	R1	T4	
+	ST	R1	m	
+; max	function			
+max				
+; 	param	a		
+	POP	R1		
+	ST	R1	a	
+; 	param	b		
+	POP	R1		
+	ST	R1	b	
+; 	>	T5	a	b
+	LD	R1	a	
+	LD	R2	b	
+	CMP	R1	R2	
+	JGT	CSET0		
+	LDI	R1	1	
+	JMP	CEXIT0		
+CSET0	LDI	R1	0	
+CEXIT0	ST	R1	T5	
+; 	if0	T5	L3	
+	CMP	R0	T5	
+	JEQ	L3		
+; 	return	a		
+	LD	R1	a	
+	RET			
+; L3				
+L3				
+; 	return	b		
+	LD	R1	b	
+	RET			
+; 	endf			
+; total	function			
+total				
+; 	param	a		
+	POP	R1		
+	ST	R1	a	
+; 	=	s	0	
+	LD	R1	0	
+	ST	R1	s	
+; 	=	i	0	
+	LD	R1	0	
+	ST	R1	i	
+; L4	length	T6	a	
+L4				
+	LD	R1	a	
+	CALL	ALEN		
+	ST	R1	T6	
+; 	<	T7	i	T6
+	LD	R1	i	
+	LD	R2	T6	
+	CMP	R1	R2	
+	JLT	CSET0		
+	LDI	R1	1	
+	JMP	CEXIT0		
+CSET0	LDI	R1	0	
+CEXIT0	ST	R1	T7	
+; 	if0	T7	L5	
+	CMP	R0	T7	
+	JEQ	L5		
+; 	[]	T8	a	i
+	LD	R1	a	
+	LD	R2	i	
+	CALL	AGET		
+	ST	R1	T8	
+; 	+	T9	s	T8
+	LD	R1	s	
+	LD	R2	T8	
+	ADD	R3	R1	R2
+	ST	R3	T9	
+; 	=	s	T9	
+	LD	R1	T9	
+	ST	R1	s	
+; 	goto	L4		
+	JMP	L4		
+; L5				
+L5				
+; 	return	s		
+	LD	R1	s	
+	RET			
+; 	endf			
+; 	array	T10		
+	LD	R1	T10	
+	CALL	ARRAY		
+; 	apush	T10	1	
+	LD	R1	T10	
+	LD	R2	1	
+	CALL	APUSH		
+; 	apush	T10	3	
+	LD	R1	T10	
+	LD	R2	3	
+	CALL	APUSH		
+; 	apush	T10	7	
+	LD	R1	T10	
+	LD	R2	7	
+	CALL	APUSH		
+; 	apush	T10	2	
+	LD	R1	T10	
+	LD	R2	2	
+	CALL	APUSH		
+; 	apush	T10	6	
+	LD	R1	T10	
+	LD	R2	6	
+	CALL	APUSH		
+; 	=	a	T10	
+	LD	R1	T10	
+	ST	R1	a	
+; 	arg	a		
+	LD	R1	a	
+	PUSH	R1		
+; 	call	T11	total	
+	CALL	total		
+	ST	R1	T11	
+; 	=	t	T11	
+	LD	R1	T11	
+	ST	R1	t	
+; 	table	T12		
+	LD	R1	T12	
+	CALL	TABLE		
+; 	map	T12	e	"dog"
+	LD	R1	T12	
+	LD	R2	e	
+	LD	R3	"dog"	
+	CALL	TMAP		
+; 	map	T12	c	"狗"
+	LD	R1	T12	
+	LD	R2	c	
+	LD	R3	"狗"	
+	CALL	TMAP		
+; 	=	word	T12	
+	LD	R1	T12	
+	ST	R1	word	
