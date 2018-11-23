@@ -50,12 +50,21 @@ void c6htob(string hex, string binary) {
   }
 }
 
-void c6dtob(int d, string binary) {
+void c6itob(int i, string binary) {
   char hex[100];
-  sprintf(hex, "%04X", d);
+  sprintf(hex, "%04X", i);
   c6htob(hex, binary);
 }
 
+int c6btoi(string binary) {
+  int result = 0;
+  int len = strlen(binary);
+  for(int i=0; i < len; i++) {
+    result <<= 1;
+    if (binary[i] == '1') result += 1;
+  }
+  return result;
+}
 
 // ================== String Table ======================
 void c6strTable(StrTable *t, char *text, int size) {

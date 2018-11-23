@@ -29,7 +29,8 @@ extern Pair c6mapAdd(Map *map, char *key, void *value);
 extern int c6mapFind(Map *map, char *key);
 extern void *c6mapLookup(Map *map, char *key);
 extern void c6htob(string hex, string binary);
-extern void c6dtob(int d, string binary);
+extern void c6itob(int i, string binary);
+extern int c6btoi(string binary);
 extern void c6strTable(StrTable *t, char *text, int size);
 extern char *c6strNew(StrTable *t, char *str);
 #endif

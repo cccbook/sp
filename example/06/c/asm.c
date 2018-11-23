@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include <stdint.h>
 #include "c6.h"
 
 Pair dList[] = {
@@ -84,7 +85,7 @@ void code2binary(string code, string binary) {
     int address;
     int match = sscanf(code, "@%d", &address);
     if (match == 1)
-      c6dtob(address, binary);
+      c6itob(address, binary);
     else {
       char symbol[100];
       match = sscanf(code, "@%s", symbol);
@@ -95,7 +96,7 @@ void code2binary(string code, string binary) {
       } else { // 已知變數 (標記) 位址
         address = *addrPtr;
       }
-      c6dtob(address, binary);
+      c6itob(address, binary);
     }
   } else { // C 指令
     if (strchr(code, '=') != NULL) { // d=comp
@@ -132,11 +133,12 @@ void pass1(string inFile) {
   fclose(fp);
 }
 
-void pass2(string inFile, string outFile) {
+void pass2(string inFile, string hackFile, string binFile) {
   printf("============= PASS2 ================\n");
   char line[100], binary[17];
   FILE *fp = fopen(inFile, "r");
-  FILE *ofp = fopen(outFile, "w");
+  FILE *hfp = fopen(hackFile, "w");
+  FILE *bfp = fopen(binFile, "wb");
   while (fgets(line, sizeof(line), fp)) {
     char *code = parse(line);
     if (strlen(code)==0) continue;
@@ -144,22 +146,26 @@ void pass2(string inFile, string outFile) {
       printf("%s\n", code);
     } else {
       code2binary(code, binary);
-      printf("  %-20s %s\n", code, binary);
-      fprintf(ofp, "%s\n", binary);
+      uint16_t b = c6btoi(binary);
+      printf("  %-20s %s %04x\n", code, binary, b);
+      fprintf(hfp, "%s\n", binary);
+      fwrite(&b, sizeof(b), 1, bfp);
     }
   }
   fclose(fp);
-  fclose(ofp);
+  fclose(hfp);
+  fclose(bfp);
 }
 
 void assemble(string file) {
-  char inFile[100], outFile[100];
+  char inFile[100], hackFile[100], binFile[100];
   sprintf(inFile, "%s.asm", file);
-  sprintf(outFile, "%s.my.hack", file);
+  sprintf(hackFile, "%s.my.hack", file);
+  sprintf(binFile, "%s.my.bin", file);
   symDump(&symMap);
   pass1(inFile);
   symDump(&symMap);
-  pass2(inFile, outFile);
+  pass2(inFile, hackFile, binFile);
 }
 
 // run: ./asm <file> 
