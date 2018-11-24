@@ -1,3 +1,6 @@
+*.hack
+*.bin
+
 .nyc_output
 
 package-lock.json
