@@ -1,0 +1,130 @@
+
+;; Function sum
+
+(note 2 0 3 NOTE_INSN_DELETED)
+
+(note 3 2 4 NOTE_INSN_FUNCTION_BEG)
+
+(note 4 3 5 NOTE_INSN_DELETED)
+
+(note 5 4 6 008E9190 NOTE_INSN_BLOCK_BEG)
+
+(note 6 5 8 NOTE_INSN_DELETED)
+
+(insn 8 6 11 (set (mem/f:SI (plus:SI (reg/f:SI 54 virtual-stack-vars)
+                (const_int -4 [0xfffffffc])) [0 s+0 S4 A32])
+        (const_int 0 [0x0])) -1 (nil)
+    (nil))
+
+(insn 11 8 12 (set (mem/f:SI (plus:SI (reg/f:SI 54 virtual-stack-vars)
+                (const_int -8 [0xfffffff8])) [0 i+0 S4 A32])
+        (const_int 1 [0x1])) -1 (nil)
+    (nil))
+
+(note 12 11 13 NOTE_INSN_LOOP_BEG)
+
+(code_label 13 12 14 2 "" [0 uses])
+
+(insn 14 13 15 (set (reg:SI 59)
+        (mem/f:SI (plus:SI (reg/f:SI 54 virtual-stack-vars)
+                (const_int -8 [0xfffffff8])) [0 i+0 S4 A32])) -1 (nil)
+    (nil))
+
+(insn 15 14 16 (set (reg:CCGC 17 flags)
+        (compare:CCGC (reg:SI 59)
+            (mem/f:SI (reg/f:SI 53 virtual-incoming-args) [0 n+0 S4 A32]))) -1 (nil)
+    (nil))
+
+(jump_insn 16 15 17 (set (pc)
+        (if_then_else (gt (reg:CCGC 17 flags)
+                (const_int 0 [0x0]))
+            (label_ref 30)
+            (pc))) -1 (nil)
+    (nil))
+
+(note 17 16 18 NOTE_INSN_LOOP_END_TOP_COND)
+
+(note 18 17 19 NOTE_INSN_DELETED)
+
+(note 19 18 21 NOTE_INSN_DELETED)
+
+(insn 21 19 22 (set (reg:SI 60)
+        (mem/f:SI (plus:SI (reg/f:SI 54 virtual-stack-vars)
+                (const_int -8 [0xfffffff8])) [0 i+0 S4 A32])) -1 (nil)
+    (nil))
+
+(insn 22 21 24 (parallel [
+            (set (mem/f:SI (plus:SI (reg/f:SI 54 virtual-stack-vars)
+                        (const_int -4 [0xfffffffc])) [0 s+0 S4 A32])
+                (plus:SI (mem/f:SI (plus:SI (reg/f:SI 54 virtual-stack-vars)
+                            (const_int -4 [0xfffffffc])) [0 s+0 S4 A32])
+                    (reg:SI 60)))
+            (clobber (reg:CC 17 flags))
+        ]) -1 (nil)
+    (expr_list:REG_EQUAL (plus:SI (mem/f:SI (plus:SI (reg/f:SI 54 virtual-stack-vars)
+                    (const_int -4 [0xfffffffc])) [0 s+0 S4 A32])
+            (mem/f:SI (plus:SI (reg/f:SI 54 virtual-stack-vars)
+                    (const_int -8 [0xfffffff8])) [0 i+0 S4 A32]))
+        (nil)))
+
+(note 24 22 25 NOTE_INSN_LOOP_CONT)
+
+(code_label 25 24 26 4 "" [0 uses])
+
+(insn 26 25 27 (parallel [
+            (set (mem/f:SI (plus:SI (reg/f:SI 54 virtual-stack-vars)
+                        (const_int -8 [0xfffffff8])) [0 i+0 S4 A32])
+                (plus:SI (mem/f:SI (plus:SI (reg/f:SI 54 virtual-stack-vars)
+                            (const_int -8 [0xfffffff8])) [0 i+0 S4 A32])
+                    (const_int 1 [0x1])))
+            (clobber (reg:CC 17 flags))
+        ]) -1 (nil)
+    (nil))
+
+(jump_insn 27 26 28 (set (pc)
+        (label_ref 13)) -1 (nil)
+    (nil))
+
+(barrier 28 27 29)
+
+(note 29 28 30 NOTE_INSN_LOOP_END)
+
+(code_label 30 29 32 3 "" [0 uses])
+
+(note 32 30 33 NOTE_INSN_DELETED)
+
+(note 33 32 34 NOTE_INSN_DELETED)
+
+(insn 34 33 35 (set (reg:SI 62)
+        (mem/f:SI (plus:SI (reg/f:SI 54 virtual-stack-vars)
+                (const_int -4 [0xfffffffc])) [0 s+0 S4 A32])) -1 (nil)
+    (nil))
+
+(insn 35 34 36 (set (reg:SI 58 [ <result> ])
+        (reg:SI 62)) -1 (nil)
+    (nil))
+
+(jump_insn 36 35 37 (set (pc)
+        (label_ref 41)) -1 (nil)
+    (nil))
+
+(barrier 37 36 38)
+
+(note 38 37 39 008E9190 NOTE_INSN_BLOCK_END)
+
+(note 39 38 43 NOTE_INSN_FUNCTION_END)
+
+(insn 43 39 44 (clobber (reg/i:SI 0 ax)) -1 (nil)
+    (nil))
+
+(insn 44 43 41 (clobber (reg:SI 58 [ <result> ])) -1 (nil)
+    (nil))
+
+(code_label 41 44 42 1 "" [0 uses])
+
+(insn 42 41 45 (set (reg/i:SI 0 ax)
+        (reg:SI 58 [ <result> ])) -1 (nil)
+    (nil))
+
+(insn 45 42 0 (use (reg/i:SI 0 ax)) -1 (nil)
+    (nil))

@@ -1,0 +1,33 @@
+GAS LISTING gnu_sum.s 			page 1
+
+
+   1              		.data
+   2 0000 00000000 	sum: .long 0
+   3 0004 00000000 		.text
+   3      00000000 
+   3      00000000 
+   4              	.globl _asmMain
+   5              		.def _asmMain; .scl	2; .type 32; .endef
+   6              	_asmMain:
+   7 0000 B8010000 		mov $1, %eax
+   7      00
+   8              	FOR1:
+   9 0005 01050000 		addl %eax, sum
+   9      0000
+  10 000b 83C001   		addl $1, %eax
+  11 000e 83F80A   		cmpl $10,%eax
+  12 0011 7EF2     		jle FOR1
+  13 0013 A1000000 		movl sum, %eax
+  13      00
+  14 0018 C3909090 		ret
+  14      90909090 
+GAS LISTING gnu_sum.s 			page 2
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 fake
+           gnu_sum.s:2      .data:00000000 sum
+           gnu_sum.s:6      .text:00000000 _asmMain
+           gnu_sum.s:8      .text:00000005 FOR1
+
+NO UNDEFINED SYMBOLS

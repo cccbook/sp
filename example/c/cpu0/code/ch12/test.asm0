@@ -1,0 +1,26 @@
+         LDI  R1   0        
+         ST   R1   sum      
+         LDI  R1   0        
+         ST   R1   i        
+FOR0:                       
+         LD   R1   i        
+         LDI  R2   10       
+         CMP  R1   R2       
+         JGT  _FOR0          
+         LD   R1   sum      
+         LD   R2   i        
+         ADD  R3   R1   R2  
+         ST   R3   T0       
+         LD   R1   T0       
+         ST   R1   sum      
+         LD   R1   i        
+         LDI  R2   1        
+         ADD  R3   R1   R2  
+         ST   R3   i        
+         JMP  FOR0          
+_FOR0:                      
+         LD   R1   sum      
+         RET                
+sum:     RESW 1             
+i:       RESW 1             
+T0:      RESW 1             

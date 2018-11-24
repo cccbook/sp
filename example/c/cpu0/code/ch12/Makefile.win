@@ -1,0 +1,63 @@
+# Project: Project1
+# Makefile created by Dev-C++ 4.9.9.2
+
+CPP  = g++.exe -D__DEBUG__
+CC   = gcc.exe -D__DEBUG__
+WINDRES = windres.exe
+RES  = 
+OBJ  = Parser.o Tree.o Lib.o Scanner.o Array.o Compiler.o HashTable.o Generator.o main.o Assembler.o Cpu0.o OpTable.o $(RES)
+LINKOBJ  = Parser.o Tree.o Lib.o Scanner.o Array.o Compiler.o HashTable.o Generator.o main.o Assembler.o Cpu0.o OpTable.o $(RES)
+LIBS =  -L"C:/Dev-Cpp/lib"  -g3 
+INCS =  -I"C:/Dev-Cpp/include" 
+CXXINCS =  -I"C:/Dev-Cpp/lib/gcc/mingw32/3.4.2/include"  -I"C:/Dev-Cpp/include/c++/3.4.2/backward"  -I"C:/Dev-Cpp/include/c++/3.4.2/mingw32"  -I"C:/Dev-Cpp/include/c++/3.4.2"  -I"C:/Dev-Cpp/include" 
+BIN  = Ch12.exe
+CXXFLAGS = $(CXXINCS)   -g3
+CFLAGS = $(INCS)   -g3
+RM = rm -f
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before Ch12.exe all-after
+
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CC) $(LINKOBJ) -o "Ch12.exe" $(LIBS)
+
+Parser.o: Parser.c
+	$(CC) -c Parser.c -o Parser.o $(CFLAGS)
+
+Tree.o: Tree.c
+	$(CC) -c Tree.c -o Tree.o $(CFLAGS)
+
+Lib.o: Lib.c
+	$(CC) -c Lib.c -o Lib.o $(CFLAGS)
+
+Scanner.o: Scanner.c
+	$(CC) -c Scanner.c -o Scanner.o $(CFLAGS)
+
+Array.o: Array.c
+	$(CC) -c Array.c -o Array.o $(CFLAGS)
+
+Compiler.o: Compiler.c
+	$(CC) -c Compiler.c -o Compiler.o $(CFLAGS)
+
+HashTable.o: HashTable.c
+	$(CC) -c HashTable.c -o HashTable.o $(CFLAGS)
+
+Generator.o: Generator.c
+	$(CC) -c Generator.c -o Generator.o $(CFLAGS)
+
+main.o: main.c
+	$(CC) -c main.c -o main.o $(CFLAGS)
+
+Assembler.o: Assembler.c
+	$(CC) -c Assembler.c -o Assembler.o $(CFLAGS)
+
+Cpu0.o: Cpu0.c
+	$(CC) -c Cpu0.c -o Cpu0.o $(CFLAGS)
+
+OpTable.o: OpTable.c
+	$(CC) -c OpTable.c -o OpTable.o $(CFLAGS)

@@ -1,0 +1,31 @@
+int f1(int t) {
+	int b = f2(&t);
+	return b+b;
+}
+int f2(int *p) {
+	int r= *p+5;
+	return r;
+}
+	.data
+t: .long 0
+b: .long 0
+	.text
+.globl _asmMain
+	.def _asmMain; .scl	2; .type 32; .endef
+_asmMain:
+	popl t
+	leal t, %eax
+	addl %eax, sum
+	addl $1, %eax
+	cmpl $10,%eax
+	jle FOR1
+	movl sum, %eax
+	ret
+
+	.data
+p: .long 0
+r: .long 0
+	.text
+.globl f2
+	.def f2; .scl	2; .type 32; .endef
+	

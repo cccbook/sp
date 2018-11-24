@@ -1,0 +1,7 @@
+LD	R2, B
+LD	R3, C
+LD	R4, D
+ADD	R1, R2, R3
+SUB	R1, R1, R4
+ST	R1, A
+RET

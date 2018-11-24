@@ -1,0 +1,19 @@
+	LDI	R1, 0		; R1=0
+	LD	R2, aptr	; R2=aptr
+	LDI	R3, 3		; R3=3
+	LDI	R4, 4		; R4=4
+	LDI	R9, 1		; R9=1
+FOR:	
+	LD	R5, [R2]	; R5=*aptr
+	ADD	R1,R1,R5	; R1+=*aptr
+	ADD	R2, R2, R4	; R2+=4
+	SUB	R3, R3, R9	; R3--;
+	CMP R3, R0		; if (R3!=0)
+	JNE	FOR			;   goto FOR;
+	ST	R1, sum		; sum=R1
+	LD	R8, sum		; R8=sum
+	RET
+a:	WORD	3, 7, 4	; int a[]={3,7,4}
+aptr:	WORD 	a	; int *aptr = &a
+sum:	WORD	0	; int sum = 0
+

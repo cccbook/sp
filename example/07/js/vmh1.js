@@ -100,7 +100,8 @@ function pass1(lines, asmFile) {
 	init(ws);
   for (var i=0; i<lines.length; i++) {
     var p = parse(lines[i], i);
-    if (p===null) continue;
+		if (p===null) continue;
+		C("//" + lines[i] + "\n");
 		translate(p, ws);
   }
 	ws.end();

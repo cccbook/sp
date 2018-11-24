@@ -150,6 +150,7 @@ M=M+1
 // pop temp 6
 @SP
 M=M-1
+//  ==> regNum(temp,6)=11
 @SP
 A=M
 D=M

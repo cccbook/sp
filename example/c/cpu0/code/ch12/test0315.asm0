@@ -1,0 +1,21 @@
+	LD R1, A           
+	ST R5, B           
+	ADD R2, R1, R5     
+	RET                
+A:	WORD 3           
+B:	WORD 5           
+                    
+	XOR R1, R2, R6     
+	SHL R1, 10         
+LOOP:	MOV R3, R1    
+	CMP R3, R5         
+		JGT LOOP          
+		RET               
+	C:	WORD 37         
+	D:	BYTE 25         
+                    
+		LBR R1, R3+20     
+		LDI R8, 100       
+		ST  R5, C         
+		STB R13, A        
+		RET               

@@ -1,0 +1,67 @@
+Microsoft (R) Macro Assembler Version 9.00.21022.08	    09/08/09 12:14:46
+sum.asm							     Page 1 - 1
+
+
+				.386
+				.model	flat
+				INCLUDELIB LIBCMT
+				printf PROTO C, format:PTR BYTE, args:VARARG
+ 00000000			.data
+ 00000000 00000000		sum DWORD 0
+ 00000004 73 75 6D 3D 25	formatStr BYTE "sum=%d", 0dh, 0ah, 0
+	   64 0D 0A 00
+				PUBLIC	_main
+ 00000000			.code
+ 00000000			_main	PROC
+ 00000000  B8 00000001			MOV eax, 1
+ 00000005			FOR1:
+ 00000005  01 05 00000000 R		ADD sum, eax
+ 0000000B  83 C0 01			ADD eax, 1
+ 0000000E  83 F8 0A			CMP eax, 10
+ 00000011  7E F2			JLE FOR1
+					INVOKE printf, ADDR formatStr, sum
+ 00000026  C3				ret	0
+ 00000027			_main	ENDP
+				END
+Microsoft (R) Macro Assembler Version 9.00.21022.08	    09/08/09 12:14:46
+sum.asm							     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+_DATA  . . . . . . . . . . . . .	32 Bit	 0000000D DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000027 DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+_main  . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000027 Public
+  FOR1 . . . . . . . . . . . . .	L Near	 00000005 _TEXT	
+printf . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000000h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+formatStr  . . . . . . . . . . .	Byte	 00000004 _DATA	
+sum  . . . . . . . . . . . . . .	DWord	 00000000 _DATA	
+
+	   0 Warnings
+	   0 Errors

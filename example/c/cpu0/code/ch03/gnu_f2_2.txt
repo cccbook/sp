@@ -1,0 +1,73 @@
+int f1(int t) {
+	int b = f2(&t);
+	return b+b;
+}
+int f2(int *p) {
+	int r= *p+5;
+	return r;
+}
+	.data
+t: .long 0
+b: .long 0
+	.text
+.globl _asmMain
+	.def _asmMain; .scl	2; .type 32; .endef
+_asmMain:
+	popl t
+	leal t, %eax
+	pushl %eax
+	call f2
+	addl %eax, sum
+	addl $1, %eax
+	cmpl $10,%eax
+	jle FOR1
+	movl sum, %eax
+	ret
+
+	.data
+p: .long 0
+r: .long 0
+	.text
+.globl f2
+	.def f2; .scl	2; .type 32; .endef
+	
+.data
+x: .long 1
+y: .long 0
+.text
+	movl x, eax
+	pushl eax
+	call f1
+	popl eax
+	movl eax, y
+	ret
+
+.data
+f1: 
+	POP R1
+	PUSH LR
+	ST R1, t
+	LD R2, pt
+	PUSH R2
+	CALL f2
+	POP R1
+	ST R1, b
+	ADD R2, R1, R1
+	POP LR
+	PUSH R2
+	RET
+t RESW 1
+b RESW 1
+pt WORD &t
+
+f2:
+	POP R1 
+	LD R2, [R1]
+	LD R3, K5
+	ADD R4, R2, R3
+	ST R4, r
+	PUSH R4
+	RET
+K5 WORD 5
+r RESW 1
+	END MAIN

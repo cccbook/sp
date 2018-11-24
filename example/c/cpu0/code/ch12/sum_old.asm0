@@ -1,0 +1,14 @@
+	LD	R1, sum
+	LD	R2, i
+	LD	R3, ten
+	LD	R4, one
+FOR:	CMP	R2, R3
+	JGT	EXIT
+	ADD	R1, R2, R1
+	ADD	R2, R4, R2
+	JMP	FOR
+EXIT: 	RET	
+i:	RESW	1
+sum:	WORD	0
+ten:	WORD	10
+one:	WORD	1

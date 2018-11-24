@@ -1,0 +1,5 @@
+	LD	R1, B
+	ST	R1, A
+	RET
+A:	RESW	1
+B:	WORD	29
