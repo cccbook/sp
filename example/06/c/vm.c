@@ -1,30 +1,36 @@
 #include <stdio.h>
-// #include <stdlib.h>
-// #include <string.h>
 #include <assert.h>
 #include <stdint.h>
 
 int imTop = 0;
-uint16_t im[32768], m[65536];
+int16_t im[32768], m[65536];
 
 #define BIT0 0x0001
 #define BIT1 0x0002
 #define BIT2 0x0004
 
-int run(uint16_t *im, uint16_t *m) {
-  uint16_t PC = 0, D = 0, A = 0, I= 0;
+int run(uint16_t *im, int16_t *m) {
+  int16_t D = 0, A = 0, PC = 0;
+  uint16_t I = 0;
+  uint16_t a, c, d, j;
   while (1) {
-    uint16_t aluOut = 0, AM = 0;
+    int16_t aluOut = 0, AM = 0;
+    if (PC >= imTop) { 
+      printf("exit program !\n");
+      break;
+    }
     I = im[PC];
-    if (I & 0x8000 == 0) { // A 指令
+    printf("PC=%04X I=%04X", PC, I);
+    PC ++;
+    if ((I & 0x8000) == 0) { // A 指令
       A = I;
     } else { // C 指令
-      uint16_t a, c, d, j;
-      a = (I & 0x4000) >> 12;
-      c = (I & 0x3F00) >>  6;
+      a = (I & 0x1000) >> 12;
+      c = (I & 0x0FC0) >>  6;
       d = (I & 0x0038) >>  3;
       j = (I & 0x0007) >>  0;
-      if (a == 1) AM = A; else AM = m[A];
+      // 
+      if (a == 0) AM = A; else AM = m[A];
       switch (c) { // 處理 c1..6, 計算 aluOut
         case 0x2A: aluOut = 0;  break; // "0",   "101010"
         case 0x3F: aluOut = 1;  break; // "1",   "111111"
@@ -33,8 +39,8 @@ int run(uint16_t *im, uint16_t *m) {
         case 0x30: aluOut = AM; break; // "AM",  "110000"
         case 0x0D: aluOut = D^0xFFFF; break; // "!D",  "001101"
         case 0x31: aluOut = AM^0xFFFF; break; // "!AM", "110001"
-        case 0x0F: aluOut = -D; break; // "-D",  "001111" 這個要小心型態?
-        case 0x33: aluOut = -AM; break; // "-AM", "110011" 這個要小心型態?
+        case 0x0F: aluOut = -D; break; // "-D",  "001111"
+        case 0x33: aluOut = -AM; break; // "-AM", "110011"
         case 0x1F: aluOut = D+1; break; // "D+1", "011111"
         case 0x37: aluOut = AM+1; break; // "AM+1","110111"
         case 0x0E: aluOut = D-1; break; // "D-1", "001110"
@@ -44,7 +50,7 @@ int run(uint16_t *im, uint16_t *m) {
         case 0x07: aluOut = AM-D; break; // "AM-D","000111"
         case 0x00: aluOut = D&AM; break; // "D&AM","000000"
         case 0x15: aluOut = D|AM; break; // "D|AM","010101"
-        default: assert(1);
+        default: assert(0);
       }
       if (d&BIT2) A = aluOut;
       if (d&BIT1) D = aluOut;
@@ -59,11 +65,10 @@ int run(uint16_t *im, uint16_t *m) {
         case 0x6: if (aluOut <= 0) PC = A; break; // JLE
         case 0x7: PC = A; break;                  // JMP
       }
-      if (PC >= imTop) {
-        printf("PC=%d: exit program !\n", PC);
-        break;
-      }
     }
+    printf(" A=%04X D=%04X m[A]=%04X", PC, A, D, m[A]);
+    if ((I & 0x8000) != 0) printf(" a=%X c=%02X d=%X j=%X", a, c, d, j);
+    printf("\n");
   }
 }
 

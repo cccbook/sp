@@ -160,8 +160,8 @@ void pass2(string inFile, string hackFile, string binFile) {
 void assemble(string file) {
   char inFile[100], hackFile[100], binFile[100];
   sprintf(inFile, "%s.asm", file);
-  sprintf(hackFile, "%s.my.hack", file);
-  sprintf(binFile, "%s.my.bin", file);
+  sprintf(hackFile, "%s.hack", file);
+  sprintf(binFile, "%s.bin", file);
   symDump(&symMap);
   pass1(inFile);
   symDump(&symMap);
