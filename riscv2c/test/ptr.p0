@@ -1,0 +1,6 @@
+    file       test/ptr.c                      
+    global     x          int        *         
+    global     y          int                  
+    global     z          int        *         
+    global     ptr        char       *         
+    global     c          char                 

@@ -1,0 +1,41 @@
+# file _test/op.c  
+ --- not handle yet ! ----
+# function _op _int 
+	.text
+	.globl	_op
+	.def	_op;	.scl	2;	.type	32;	.endef
+_op:
+	pushl	%ebp
+	movl	%esp, %ebp
+# param _a _int 
+ --- not handle yet ! ----
+# param _b _int 
+ --- not handle yet ! ----
+# * _t0 _a $3
+	movl	_a, eax
+	mull	$3, eax
+	movl	eax, _t0
+# + _t1 _t0 _b
+	movl	_t0, eax
+	addl	_b, eax
+	movl	eax, _t1
+# * _t2 _t1 $4
+	movl	_t1, eax
+	mull	$4, eax
+	movl	eax, _t2
+# / _t3 _t2 $5
+	movl	_t2, eax
+	divl	$5, eax
+	movl	eax, _t3
+# - _t4 _t3 $6
+	movl	_t3, eax
+	subl	$6, eax
+	movl	eax, _t4
+# + _t5 _t4 $7
+	movl	_t4, eax
+	addl	$7, eax
+	movl	eax, _t5
+# return _t5  
+	ret	_t5
+# fend _op  
+	ret

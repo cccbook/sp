@@ -1,0 +1,21 @@
+# file _test/str.c  
+ --- not handle yet ! ----
+# global _str _char *
+	.comm	_str, 4, 2
+# function _get _char *
+	.text
+	.globl	_get
+	.def	_get;	.scl	2;	.type	32;	.endef
+_get:
+	pushl	%ebp
+	movl	%esp, %ebp
+# str _S0 "hello" 
+_S0:
+	.ascii "hello"
+# = _str _S0 
+	movl	_S0, eax
+	movl	eax, _str
+# return _str  
+	ret	_str
+# fend _get  
+	ret

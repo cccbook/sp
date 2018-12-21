@@ -1,0 +1,49 @@
+# file _test/suma.c  
+ --- not handle yet ! ----
+# function _total _int 
+	.text
+	.globl	_total
+	.def	_total;	.scl	2;	.type	32;	.endef
+_total:
+	pushl	%ebp
+	movl	%esp, %ebp
+# param _a _int *
+ --- not handle yet ! ----
+# param _size _int 
+ --- not handle yet ! ----
+# local _s _int 
+ --- not handle yet ! ----
+# = _s $0 
+	movl	$0, eax
+	movl	eax, _s
+# local _i _int 
+ --- not handle yet ! ----
+# = _i $0 
+	movl	$0, eax
+	movl	eax, _i
+WBEGIN0:
+# < _t0 _i _size
+	movl _i, eax
+	movl _size, ebx
+	cmp eax, ebx
+	setl al
+	movzbl	0x1.146800p+856l, 3.020234e-306ax
+	movl	eax, 
+# jnz _WEND1 _t0 
+	cmp	_t0, 0
+	jne	_WEND1
+# [] _t0 _a _i
+ --- not handle yet ! ----
+# + _t1 _s _t0
+	movl	_s, eax
+	addl	_t0, eax
+# = _s _t1 
+	movl	_t1, eax
+	movl	eax, _s
+# jmp _WBEGIN0  
+	jmp	_WBEGIN0
+WEND1:
+# return _s  
+	ret	_s
+# fend _total  
+	ret

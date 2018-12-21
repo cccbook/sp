@@ -1,0 +1,25 @@
+# file _test/movl.c  
+# function _f _int 
+	.text
+	.globl	_f
+	.def	_f;	.scl	2;	.type	32;	.endef
+_f:
+	pushl	%ebp
+	movl	%esp, %ebp
+# param _a _int 
+# local _t _int 
+# = _t $398723408 
+	movl	$398723408, eax
+	movl	eax, _t
+# local _s _int 
+# * _t0 _t _a
+	movl	_t, eax
+	mull	_a, eax
+	movl	eax, _t0
+# = _s _t0 
+	movl	_t0, eax
+	movl	eax, _s
+# return _s  
+	ret	_s
+# fend _f  
+	ret

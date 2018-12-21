@@ -1,0 +1,52 @@
+# file _test/sum.c  
+ --- not handle yet ! ----
+# function _sum _int 
+	.text
+	.globl	_sum
+	.def	_sum;	.scl	2;	.type	32;	.endef
+_sum:
+	pushl	%ebp
+	movl	%esp, %ebp
+# param _n _int 
+ --- not handle yet ! ----
+# local _s _int 
+ --- not handle yet ! ----
+# local _i _int 
+ --- not handle yet ! ----
+# = _s $0 
+	movl	$0, eax
+	movl	eax, _s
+# = _i $1 
+	movl	$1, eax
+	movl	eax, _i
+WBEGIN0:
+# <= _t0 _i _n
+	movl _i, eax
+	movl _n, ebx
+	cmp eax, ebx
+	setle al
+
+	movzbl	0x1.146800p+856l, 3.020234e-306ax
+	movl	eax, 
+# jnz _WEND1 _t0 
+	cmp	_t0, 0
+	jne	_WEND1
+# + _t0 _s _i
+	movl	_s, eax
+	addl	_i, eax
+# = _s _t0 
+	movl	_t0, eax
+	movl	eax, _s
+# + _t0 _i $1
+	movl	_i, eax
+	addl	$1, eax
+# = _i _t0 
+	movl	_t0, eax
+	movl	eax, _i
+# jmp _WBEGIN0  
+	jmp	_WBEGIN0
+WEND1:
+# return _s  
+	ret	_s
+# fend _sum  
+	ret

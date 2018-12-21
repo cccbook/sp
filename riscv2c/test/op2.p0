@@ -1,0 +1,14 @@
+    file       test/op2.c                      
+    function   op         int                  
+    param      a          int                  
+    param      b          int                  
+    *          t0         a          a         
+    *          t1         t0         17        
+    +          t2         t1         b         
+    *          t3         t2         a         
+    +          t4         t3         9         
+    +          t5         t4         b         
+    *          t6         t5         b         
+    *          t7         t6         3         
+    return     t7                              
+    fend       op                              

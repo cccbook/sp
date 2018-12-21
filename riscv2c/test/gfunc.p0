@@ -1,0 +1,26 @@
+    file       "gfunc.c"                       
+    global     s          int                  
+    global     i          int                  
+    global     n          int                  
+    function   sum        int                  
+    =          s          0                    
+    =          i          1                    
+WBEGIN0:
+    <=         t0         i          n         
+    jnz        WEND1      t0                   
+    +          t0         s          i         
+    =          s          t0                   
+    ++         i                               
+    jmp        WBEGIN0                         
+WEND1:
+    return     s                               
+    fend       sum                             
+    function   main       int                  
+    =          n          10                   
+    str        S2         "sum(%d)=%d\n"           
+    push       S2                              
+    push       n                               
+    call       t0         sum                  
+    push       t0                              
+    call       t1         printf               
+    fend       main                            

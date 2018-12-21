@@ -1,0 +1,10 @@
+    file       "printLocal.c"                      
+    function   main       int                  
+    local      n          int                  
+    =          n          3                    
+    str        $S0        "Hello %d!\n"           
+    arg        $S0        0                    
+    arg        n          1                    
+    call       t0         printf     2         
+    -function  main                            
+    -file      "printLocal.c"                      
