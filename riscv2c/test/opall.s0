@@ -1,4 +1,0 @@
-# file _test/opall.c  
- --- not handle yet ! ----
-# global _a _int 
-	.comm	_a, 4, 2

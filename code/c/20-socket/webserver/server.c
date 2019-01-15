@@ -14,7 +14,7 @@
 #include <pthread.h>
 
 // global constants
-#define PORT 2001             // port to connect on
+#define PORT 3000             // port to connect on
 #define LISTENQ 10            // number of connections
 
 int list_s;                   // listening socket
@@ -315,14 +315,14 @@ int recordTotalBytes(int bytes_sent, sharedVariables *mempointer)
 }
 
 
-int main(int argc, char *argv[]) {
-    printf("Web Server run at localhost:2001\n");
-    printf("Start http://localhost:2001/index.html\n");
-    
+int main(int argc, char *argv[]) {    
     int conn_s;                  //  connection socket
     short int port = PORT;       //  port number
     struct sockaddr_in servaddr; //  socket address structure
-    
+
+    printf("Web Server run at localhost:%d\n", port);
+    printf("Start http://localhost:%d/index.html\n", port);
+
     // set up signal handler for ctrl-c
     (void) signal(SIGINT, cleanup);
     

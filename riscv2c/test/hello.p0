@@ -1,6 +1,0 @@
-    file       "hello.c"                       
-    function   main       int                  
-    str        S0         "Hello!\n"           
-    arg        S0         0                    
-    call       t0         printf     1         
-    fend       main                            
