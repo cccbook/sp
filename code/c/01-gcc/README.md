@@ -11,3 +11,12 @@ $ gcc sum.c
 ```
 $ gcc sum.c -o sum
 ```
+
+## MSYS2 環境
+
+
+```
+user@DESKTOP-96FRN6B MSYS /d/ccc/book/sp/code/c/30-linux
+$ pacman -S glib2
+$ pacman -S vim
+```
