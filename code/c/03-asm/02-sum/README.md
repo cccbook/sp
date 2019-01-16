@@ -3,16 +3,16 @@
 ## 用 gcc 編譯 C 程式
 
 ```
-PS D:\ccc\book\sp\code\c\03-asm> gcc main.c sum.c -o sum
-PS D:\ccc\book\sp\code\c\03-asm> ./sum
+$ gcc main.c sum.c -o sum
+$ ./sum
 sum(10)=55
 ```
 
 ## 用 gcc 產生組合語言
 
 ```
-PS D:\ccc\book\sp\code\c\03-asm> gcc -fverbose-asm -S main.c -o main.s
-PS D:\ccc\book\sp\code\c\03-asm> gcc -fverbose-asm -S sum.c -o sum.s
+$ gcc -fverbose-asm -S main.c -o main.s
+$ gcc -fverbose-asm -S sum.c -o sum.s
 ```
 
 sum.s
@@ -47,7 +47,7 @@ L2:
 ## 將組合語言轉換為目的檔
 
 ```
-PS D:\ccc\book\sp\code\c\03-asm> gcc -c sum.s -o sum.o
+$ gcc -c sum.s -o sum.o
 ```
 
 ## objdump 反組譯目的檔
@@ -56,7 +56,7 @@ PS D:\ccc\book\sp\code\c\03-asm> gcc -c sum.s -o sum.o
 傾印目的檔
 
 ```
-PS D:\ccc\book\sp\code\c\03-asm> objdump -s sum.o
+$ objdump -s sum.o
 
 sum.o:     file format pe-i386
 
@@ -72,7 +72,7 @@ Contents of section .rdata$zzz:
 反組譯目的檔
 
 ```
-PS D:\ccc\book\sp\code\c\03-asm> objdump -d sum.o
+$ objdump -d sum.o
 
 sum.o:     file format pe-i386
 
