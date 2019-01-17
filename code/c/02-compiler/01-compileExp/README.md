@@ -1,10 +1,8 @@
 # compileExp
 
 ```
-user@DESKTOP-96FRN6B MINGW64 /d/ccc/book/sp/code/c/02-compiler/01-compileExp
 $ gcc compileExp.c -o compileExp
 
-user@DESKTOP-96FRN6B MINGW64 /d/ccc/book/sp/code/c/02-compiler/01-compileExp
 $ ./compileExp 1+3*x
 === EBNF Grammar =====
 E=T ([+-] T)*

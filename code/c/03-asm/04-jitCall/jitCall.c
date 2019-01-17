@@ -34,8 +34,36 @@ unsigned char addCode[] = {
    0x90              // nop
 };
 
+unsigned char fibCode[] = {
+   0x55,                      // push   %ebp
+   0x89, 0xe5,                // mov    %esp,%ebp
+   0x53,                      // push   %ebx
+   0x83, 0xec, 0x14,          // sub    $0x14,%esp
+   0x83, 0x7d, 0x08, 0x01,    // cmpl   $0x1,0x8(%ebp)
+   0x7f, 0x07,                // jg     14 <_fib+0x14>
+   0xb8, 0x01, 0x00, 0x00, 0x00, // mov    $0x1,%eax
+   0xeb, 0x20,                // jmp    34 <_fib+0x34>
+   0x8b, 0x45, 0x08,          // mov    0x8(%ebp),%eax
+   0x83, 0xe8, 0x01,          // sub    $0x1,%eax
+   0x89, 0x04, 0x24,          // mov    %eax,(%esp)
+   0xe8, 0xde, 0xff, 0xff, 0xff, // call   0 <_fib>
+   0x89, 0xc3,                // mov    %eax,%ebx
+   0x8b, 0x45, 0x08,          // mov    0x8(%ebp),%eax
+   0x83, 0xe8, 0x02,          // sub    $0x2,%eax
+   0x89, 0x04, 0x24,          // mov    %eax,(%esp)
+   0xe8, 0xce, 0xff, 0xff, 0xff, // call   0 <_fib>
+   0x01, 0xd8,                // add    %ebx,%eax
+   0x83, 0xc4, 0x14,          // add    $0x14,%esp
+   0x5b,                      // pop    %ebx
+   0x5d,                      // pop    %ebp
+   0xc3,                      // ret
+   0x90,                      // nop
+   0x90,                      // nop
+};
+
 int (*add)(int a, int b);
 int (*sum)(int n);
+int (*fib)(int n);
 
 int main() {
   add = (int (*)(int, int)) addCode;
@@ -43,4 +71,7 @@ int main() {
 
   sum = (int (*)(int)) sumCode;
   printf("sum(10)=%d\n", sum(10));
+
+  fib = (int (*)(int)) fibCode;
+  printf("fib(10)=%d\n", fib(10));
 }
