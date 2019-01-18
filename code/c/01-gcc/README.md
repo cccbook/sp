@@ -1,4 +1,8 @@
-# GCC
+# GCC 開發環境
+
+1. Linux : 完全沒問題，最好的做法！
+2. Mac : 安裝 Bower 並安裝 gcc !
+3. Windows : 安裝 MSYS2 並安裝 gcc !
 
 ## 輸出 a.out
 

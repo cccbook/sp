@@ -1,0 +1,9 @@
+add (int a, int b)
+{
+  int D.1485;
+
+  D.1485 = a + b;
+  return D.1485;
+}
+
+
