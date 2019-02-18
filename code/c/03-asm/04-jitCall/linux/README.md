@@ -22,6 +22,15 @@ Disassembly of section .text:
 
 ```
 
+結果在 linux 跑會失敗， core dump
+
+```
+root@localhost:~/ccc/sp/code/c/03-asm/04-jitCall/linux# gcc jitCall.c -o jitCallroot@localhost:~/ccc/sp/code/c/03-asm/04-jitCall/linux# ./jitCall
+Segmentation fault (core dumped)
+root@localhost:~/ccc/sp/code/c/03-asm/04-jitCall/linux# ls
+jitCall  jitCall.c  jitCall.exe.stackdump  jitCall.o  jitRef.md  README.md
+```
+
 ## 參考文獻
 
 * [Jserv's blog: AsmJit : C++ 封裝的 Just-In-Time Assembler](http://blog.linux.org.tw/~jserv/archives/002089.html)

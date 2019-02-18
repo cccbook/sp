@@ -106,7 +106,6 @@ void BLOCK() {
 
 void PROG() {
   STMT();
-  // WHILE();
 }
 
 void parse() {
