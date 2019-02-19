@@ -8,7 +8,13 @@ Pair jList[] = {
 Map jMap;
 
 int main() {
-  mapNew(&jMap, jList, 8, 8);
+  printf("======= main() ==============\n");
+  mapNew(&jMap, 17);
+  for (int i=0; i<8; i++) {
+    printf("%d : key=%s value=%s\n", i, jList[i].key, jList[i].value);
+    mapAdd(&jMap, jList[i].key, jList[i].value);
+  }
+  mapDump(&jMap);
   char *jCode = mapLookup(&jMap, "JLE");
   printf("jCode=%s\n", jCode);
 }

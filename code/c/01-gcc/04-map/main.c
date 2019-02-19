@@ -8,7 +8,9 @@ Pair jList[] = {
 Map jMap;
 
 int main() {
-  mapNew(&jMap, jList, 8, 8);
+  mapNew(&jMap, 17);
+  jMap.table = jList;
+  jMap.top = 8;
   char *jCode = mapLookup(&jMap, "JLE");
   printf("jCode=%s\n", jCode);
 }

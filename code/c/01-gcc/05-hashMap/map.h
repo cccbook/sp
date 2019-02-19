@@ -4,6 +4,7 @@
 #include <string.h>
 #include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 typedef char* string;
 
@@ -13,13 +14,13 @@ typedef struct _Pair {
 } Pair;
 
 typedef struct _Map {
-  Pair *list;
+  Pair *table;
   int size;
   int top;
 } Map;
 
-extern Map* mapNew(Map *map, Pair *list, int size, int top);
-extern Pair mapAdd(Map *map, char *key, void *value);
+extern Map* mapNew(Map *map, int size);
+extern Pair* mapAdd(Map *map, char *key, void *value);
 extern int mapFind(Map *map, char *key);
 extern void* mapLookup(Map *map, char *key);
 extern void mapDump(Map *map);

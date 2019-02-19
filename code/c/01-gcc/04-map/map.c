@@ -1,22 +1,22 @@
 #include "map.h"
 
-Map* mapNew(Map *map, Pair *list, int size, int top) {
-  map->list = list;
+Map* mapNew(Map *map, int size) {
+  map->table = NULL;
   map->size = size;
-  map->top = top;
+  map->top = 0;
   return map;
 }
 
 Pair mapAdd(Map *map, char *key, void *value) {
   assert(map->top < map->size);
   Pair p = { key, value };
-  map->list[map->top++] = p;
+  map->table[map->top++] = p;
   return p;
 }
 
 int mapFind(Map *map, char *key) {
   for (int i=0; i<map->top; i++) {
-    if (strcmp(map->list[i].key, key)==0)
+    if (strcmp(map->table[i].key, key)==0)
       return i;
   }
   return -1;
@@ -25,13 +25,13 @@ int mapFind(Map *map, char *key) {
 void* mapLookup(Map *map, char *key) {
   int i = mapFind(map, key);
   if (i==-1) return NULL;
-  return map->list[i].value;
+  return map->table[i].value;
 }
 
 void mapDump(Map *map) {
   printf("======= mapDump() ==============\n");
   for (int i=0; i<map->top; i++) {
-    Pair *p = &map->list[i];
+    Pair *p = &map->table[i];
     printf("  %s %s\n", p->key, (char*) p->value);
   }
 }

@@ -2,31 +2,38 @@
 
 unsigned int hash(char *key) {
   char *p = key;
-  unsigned int  h = 3;
+  unsigned int  h = 37;
   while (*p != '\0') {
     h = h * 147 + *p++;
   }
   return h;
 }
 
-Map* mapNew(Map *map, Pair *list, int size, int top) {
-  map->list = list;
+Map* mapNew(Map *map, int size) {
+  map->table = malloc(size*sizeof(Pair));
+  memset(map->table, 0, size*sizeof(Pair));
   map->size = size;
-  map->top = top;
+  map->top = 0;
   return map;
 }
 
-Pair mapAdd(Map *map, char *key, void *value) {
+Pair* mapAdd(Map *map, char *key, void *value) {
   assert(map->top < map->size);
-  Pair p = { key, value };
-  map->list[map->top++] = p;
-  return p;
+  unsigned int h = hash(key) % map->size;
+  while (map->table[h].key != NULL) {
+    if (strcmp(map->table[h].key, key)==0) break;
+    h = (h+1) % map->size;
+  }
+  map->table[h].key = key;
+  map->table[h].value = value;
+  return &map->table[h];
 }
 
 int mapFind(Map *map, char *key) {
-  for (int i=0; i<map->top; i++) {
-    if (strcmp(map->list[i].key, key)==0)
-      return i;
+  int h = hash(key) % map->size;
+  while (map->table[h].key != NULL) {
+    if (strcmp(map->table[h].key, key)==0) return h;
+    h = (h+1) % map->size;
   }
   return -1;
 }
@@ -34,13 +41,13 @@ int mapFind(Map *map, char *key) {
 void* mapLookup(Map *map, char *key) {
   int i = mapFind(map, key);
   if (i==-1) return NULL;
-  return map->list[i].value;
+  return map->table[i].value;
 }
 
 void mapDump(Map *map) {
   printf("======= mapDump() ==============\n");
-  for (int i=0; i<map->top; i++) {
-    Pair *p = &map->list[i];
-    printf("  %s %s\n", p->key, (char*) p->value);
+  for (int i=0; i<map->size; i++) {
+    Pair *p = &map->table[i];
+    printf("%d:  %s %s\n", i, p->key, (char*) p->value);
   }
 }
