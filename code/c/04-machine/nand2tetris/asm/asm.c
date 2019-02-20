@@ -3,7 +3,9 @@
 #include <string.h>
 #include <assert.h>
 #include <stdint.h>
-#include "c6.h"
+#include "../lib/map.h"
+#include "../lib/strTable.h"
+#include "../lib/util.h"
 
 Pair dList[] = {
   {"", "000"}, {"M", "001"}, {"D", "010"}, {"MD", "011"},
@@ -28,7 +30,7 @@ Pair jList[] = {
   {"JLT","100"}, {"JNE","101"}, {"JLE","110"}, {"JMP","111"}
 };
 
-#define SYM_SIZE 1000*100
+#define SYM_SIZE 1000
 
 int addr[SYM_SIZE] = {
   0, 1, 2, 3,
@@ -39,7 +41,7 @@ int addr[SYM_SIZE] = {
   0, 1, 2, 3, 4
 };
 
-Pair symList[SYM_SIZE] = {
+Pair symList[] = {
   {"R0",&addr[0]},{"R1",&addr[1]},{"R2",&addr[2]},{"R3",&addr[3]}, 
   {"R4",&addr[4]},{"R5",&addr[5]},{"R6",&addr[6]},{"R7",&addr[7]},
   {"R8",&addr[8]}, {"R9",&addr[9]}, {"R10",&addr[10]}, {"R11",&addr[11]},
@@ -49,24 +51,21 @@ Pair symList[SYM_SIZE] = {
 };
 
 Map dMap, cMap, jMap, symMap;
-int symTop = 23;
 int varTop = 16;
-
-char strTableText[100000];
-StrTable strTable;
 
 void symAdd(Map *map, char *label, int address) {
   addr[map->top] = address;
-  Pair p = c6mapAdd(map, c6strNew(&strTable, label), &addr[map->top]);
-  printf("  p.key=%s *p.value=%d top=%d\n", p.key, *(int*)p.value, map->top);
+  Pair *p = mapAdd(map, stAdd(label), &addr[map->top]);
+  printf("  key=%s *value=%d top=%d\n", p->key, *(int*)p->value, map->top);
 }
 
 void symDump(Map *map) {
   printf("======= SYMBOL TABLE ===========\n");
-  for (int i=0; i<map->top; i++) {
-    char *key = map->list[i].key;
-    int *vptr = map->list[i].value;
-    printf("%d: %s, %d\n", i, key, *vptr);
+  printf("map->top = %d size=%d\n", map->top, map->size);
+  for (int i=0; i<map->size; i++) {
+    Pair *p = &map->table[i];
+    if (p->key != NULL)
+      printf("%d: %s, %d\n", i, p->key, *(int*) p->value);
   }
 }
 
@@ -85,29 +84,29 @@ void code2binary(string code, string binary) {
     int address;
     int match = sscanf(code, "@%d", &address);
     if (match == 1)
-      c6itob(address, binary);
+      itob(address, binary);
     else {
       char symbol[100];
       match = sscanf(code, "@%s", symbol);
-      int* addrPtr = c6mapLookup(&symMap, symbol);
+      int* addrPtr = mapLookup(&symMap, symbol);
       if (addrPtr == NULL) { // 宣告變數
         symAdd(&symMap, symbol, varTop); // 新增一個變數
-        address = varTop++;
+        address = varTop ++;
       } else { // 已知變數 (標記) 位址
         address = *addrPtr;
       }
-      c6itob(address, binary);
+      itob(address, binary);
     }
   } else { // C 指令
     if (strchr(code, '=') != NULL) { // d=comp
       sscanf(code, "%[^=]=%s", d, comp);
-      dcode = c6mapLookup(&dMap, d);
-      ccode = c6mapLookup(&cMap, comp);
+      dcode = mapLookup(&dMap, d);
+      ccode = mapLookup(&cMap, comp);
       sprintf(binary, "111%s%s000", ccode, dcode);
     } else {
       sscanf(code, "%[^;];%s", comp, j); // comp;j
-      ccode = c6mapLookup(&cMap, comp);
-      jcode = c6mapLookup(&jMap, j);
+      ccode = mapLookup(&cMap, comp);
+      jcode = mapLookup(&jMap, j);
       sprintf(binary, "111%s000%s", ccode, jcode);      
     }
   }
@@ -146,7 +145,7 @@ void pass2(string inFile, string hackFile, string binFile) {
       printf("%s\n", code);
     } else {
       code2binary(code, binary);
-      uint16_t b = c6btoi(binary);
+      uint16_t b = btoi(binary);
       printf("  %-20s %s %04x\n", code, binary, b);
       fprintf(hfp, "%s\n", binary);
       fwrite(&b, sizeof(b), 1, bfp);
@@ -171,11 +170,17 @@ void assemble(string file) {
 // run: ./asm <file> 
 // notice : <file> with no extension.
 int main(int argc, char *argv[]) {
-  c6mapNew(&dMap, dList, c6size(dList));
-  c6mapNew(&cMap, cList, c6size(cList));
-  c6mapNew(&jMap, jList, c6size(jList));
-  c6mapNew(&symMap, symList, SYM_SIZE);
-  c6strTable(&strTable, strTableText, c6size(strTableText));
-  symMap.top = symTop;
+  // 建置表格
+  mapNew(&dMap, 37); mapAddAll(&dMap, dList, ARRAY_SIZE(dList));
+  mapNew(&cMap, 79); mapAddAll(&cMap, cList, ARRAY_SIZE(cList));
+  mapNew(&jMap, 23); mapAddAll(&jMap, jList, ARRAY_SIZE(jList));
+  mapNew(&symMap, SYM_SIZE); mapAddAll(&symMap, symList, ARRAY_SIZE(symList));
+  stInit();
+  // 組譯器主要函數開始
   assemble(argv[1]);
+  // 釋放表格
+  mapFree(&dMap);
+  mapFree(&cMap);
+  mapFree(&jMap);
+  mapFree(&symMap);
 }
