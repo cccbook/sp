@@ -1,3 +1,5 @@
+// Jack 編譯器 (被 compile.js 呼叫)
+
 var POINTER_THIS=0; // pointer [0] for this
 var POINTER_THAT=1; // pointer [1] for that
 var TEMP_RETURN=0;  // Use temp 0 for popping an unused return value

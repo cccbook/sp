@@ -1,4 +1,4 @@
-// jackc 編譯器，用法範例： iojs jackc <file>.jack
+// jack 詞彙分析器 (被 lex 呼叫)
 var fs = require("fs");
 var lib  = require("./lib");
 

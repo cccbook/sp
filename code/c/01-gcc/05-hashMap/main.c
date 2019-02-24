@@ -8,7 +8,7 @@ Pair jList[] = {
 Map jMap;
 
 int main() {
-  mapNew(&jMap, 17);
+  mapNew(&jMap, 23);
   mapAddAll(&jMap, jList, ARRAY_SIZE(jList));
   mapDump(&jMap);
   char *jle = mapLookup(&jMap, "JLE");

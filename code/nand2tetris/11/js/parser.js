@@ -1,4 +1,4 @@
-// jackc 編譯器，用法範例： iojs jackc <file>.jack
+// jackc 剖析器 parser 主模組 (被 parse 呼叫)
 var fs = require("fs");
 var lib = require("./lib");
 var lexer = require("./lexer");

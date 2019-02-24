@@ -1,4 +1,4 @@
-// jackc 編譯器，用法範例： iojs jackc <file>.jack
+// jackc 編譯器，用法範例： node parse <file>.jack
 var parser = require("./parser"); 
 
 var path = process.argv[2];
