@@ -1,7 +1,12 @@
+*
+!/**/
+!*.*
+
 *.hack
 *.bin
 *.o
 *.zip
+a.out
 
 .nyc_output
 
