@@ -55,20 +55,6 @@ void genOp2(int i, int i1, char op, int i2) {
   printf("M=D\n");
 }
 
-// E = F ([+-] F)*
-int E() {
-  int i1 = F();
-  while (isNext("+-")) {
-    char op=next();
-    int i2 = F();
-    int i = nextTemp();
-    genOp2(i, i1, op, i2);
-    i1 = i;
-  }
-  return i1;
-}
-
-
 // F =  Number | '(' E ')'
 int F() {
   int f;
@@ -86,6 +72,19 @@ int F() {
     error("F = (E) | Number fail!");
   }
   return f; 
+}
+
+// E = F ([+-] F)*
+int E() {
+  int i1 = F();
+  while (isNext("+-")) {
+    char op=next();
+    int i2 = F();
+    int i = nextTemp();
+    genOp2(i, i1, op, i2);
+    i1 = i;
+  }
+  return i1;
 }
 
 void parse(char *str) {
