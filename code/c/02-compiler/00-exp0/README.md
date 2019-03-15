@@ -21,6 +21,7 @@ t4=t0+t3
 ## exp0hack -- 編譯後產生 hack CPU 的組合語言 (nand2tetris)
 
 ```
+$ gcc exp0hack.c -o exp0hack
 $ ./exp0hack '3+(5-8)'
 === EBNF Grammar =====
 E=F ([+-] F)*

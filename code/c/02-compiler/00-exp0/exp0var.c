@@ -38,8 +38,10 @@ int nextTemp() {
 void genOp1(int i, char c) {
   printf("# t%d=%c\n", i, c);
   // t1=3 轉成 @3; D=A; @t1; M=D
+  // t1=x 轉成 @x; D=M; @t1; M=D
   printf("@%c\n", c);
-  printf("D=A\n");
+  char AM = (isdigit(c)) ? 'A':'M';
+  printf("D=%c\n", AM);
   printf("@t%d\n", i);
   printf("M=D\n");
 }
@@ -59,7 +61,7 @@ void genOp2(int i, int i1, char op, int i2) {
 int F() {
   int f;
   char c = ch();
-  if (isdigit(c)) {
+  if (isdigit(c) || (c>='a'&&c<='z')) {
     next(); // skip c
     f = nextTemp();
     genOp1(f, c);
