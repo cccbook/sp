@@ -102,12 +102,16 @@ int parse(string line, Code *c) {
   if (*p == '(') {
     c->type = 'L';
     c->size = 0;
-    c->str[0] = '\0';
-    sscanf(p, "(%[^)])%s", c->label, c->str);
+    char str[100]; float f; int n;
+    if (sscanf(p, "(%[^)])%s", c->label, c->data) >=2) {
+      printf("label=%s data=%s\n", c->label, c->data);
+      if (sscanf(c->data, "\"%s\"", str) == 1) c->size = strlen(str);
+      else if (sscanf(c->data, "%f", &f) == 1) c->size = 2;
+      else if (sscanf(c->data, "%d", &n) == 1) c->size = 1;
+    }
   } else if (*p == '@') {
     c->type = 'A';
-    // sscanf(p, "@%[^\r\n ]", c->a);
-    sscanf(p, "@%s", c->a);
+    sscanf(p, "@%[^\r\n ]", c->a);
   } else {
     c->type = 'C';
     if (strchr(p, '=') != NULL) {
@@ -138,9 +142,9 @@ void comp2code(char *comp, char *ccode, char *ami) {
   assert(0);
 }
 
-int code2bin(Code *code, int16_t *bin) {
-  char bstr[100]; int size = 1;
-  // printf("code2bin()");
+void code2binary(Code *code, int16_t *bin) {
+  char bstr[100];
+  // printf("code2binary()");
   if (code->type=='A') { // A 指令： ＠number || @symbol
     int A;
     if (isdigit(code->a[0])) {
@@ -165,19 +169,18 @@ int code2bin(Code *code, int16_t *bin) {
       char *dcode = mapLookup(&dMap, code->d);
       // printf("  comp=%s\n", code->c);
       comp2code(code->c, ccode, ami);
-      sprintf(bstr, "11%s%s%s000", ami, ccode, dcode);
+      sprintf(binary, "11%s%s%s000", ami, ccode, dcode);
     } else { // comp;j
       comp2code(code->c, ccode, ami);
       char *jcode = mapLookup(&jMap, code->j);
-      sprintf(bstr, "11%s%s000%s", ami, ccode, jcode);
+      sprintf(binary, "11%s%s000%s", ami, ccode, jcode);      
     }
-    bin[0] = btoi(bstr);
   } else if (code->type == 'L') { // LABEL
-    char *str = code->str, *p = str;
-    for (p=str; *p != '\0'; p++) bin[p-str] = *p;
-    size = p-str;
+    char str[100]; int n; float f;
+    if (sscanf(c->data, "%s", str) == 1) {
+      
+    }
   }
-  return size;
 }
 
 void pass1(string inFile) {
@@ -200,7 +203,7 @@ void pass1(string inFile) {
 
 void pass2(string inFile, string hackFile, string binFile) {
   printf("============= PASS2 ================\n");
-  char line[100]; int16_t bin[L_LEN];
+  char line[100], binary[17];
   FILE *fp = fopen(inFile, "r");
   FILE *hfp = fopen(hackFile, "w");
   FILE *bfp = fopen(binFile, "wb");
@@ -208,21 +211,15 @@ void pass2(string inFile, string hackFile, string binFile) {
     Code code;
     // printf("line=%s\n", line);
     if (!parse(line, &code)) continue;
-    /*
     if (code.label[0] != '\0') {
       printf("(%s)\n", code.label);
     } else {
-    */
-      int size = code2bin(&code, bin);
-      // uint16_t b = btoi(binary);
-      // printf("  %-20s %s %04x\n", line, binary, b);
-      printf("%-20s", line);
-      hexDump((uint8_t*) bin, size*2);
-      printf("\n");
-      // fprintf(hfp, "%s\n", binary);
-      // fwrite(&b, sizeof(b), 1, bfp);
-      if (size > 0) fwrite(bin, size*2, 1, bfp);
-    // }
+      code2binary(&code, binary);
+      uint16_t b = btoi(binary);
+      printf("  %-20s %s %04x\n", line, binary, b);
+      fprintf(hfp, "%s\n", binary);
+      fwrite(&b, sizeof(b), 1, bfp);
+    }
   }
   fclose(fp);
   fclose(hfp);
@@ -257,19 +254,3 @@ int main(int argc, char *argv[]) {
   mapFree(&jMap);
   mapFree(&symMap);
 }
-
-        /*    char str[100]; float f; int n;
-              while (*p != '\0') {
-        while (*p == ' ') p++;
-        char *start = p, token = NULL;
-        while (*p != ',' && *p != '\0') p++;
-        scopy(token, data, token, p-token);
-
-        if (sscanf(c->data, "\"%s\"", str) == 1) {
-          c->tokens[i] = str
-          c->size += strlen(str);
-        } else if (sscanf(c->data, "%f", &f) == 1) {
-          c->size = 2;
-        } else if (sscanf(c->data, "%d", &n) == 1) c->size = 1;
-      }
-              */

@@ -6,4 +6,15 @@ D=D*A
 M=D
 D=D*M
 @0
+(label)
 D=D*I
+@str
+puts
+@f1
+putf
+@i1
+puti
+(str)hello!
+(f1)3.14159
+(i1)47
+(cstr)中文字串

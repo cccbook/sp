@@ -9,6 +9,17 @@ static char* h2b[] = {
 
 static char hexDigits[] = "0123456789ABCDEF";
 
+void hexDump(uint8_t *bytes, int len) {
+  for (int i=0; i<len; i++) {
+    printf("%02X", bytes[i]);
+  }
+}
+
+int error(char *msg) {
+  printf("Error: %s", msg);
+  assert(0);
+}
+
 void replace(char *str, char *set, char t) {
   for (char *p = str; *p!= '\0'; p++) {
     if (strchr(set, *p) != NULL) *p = t;
