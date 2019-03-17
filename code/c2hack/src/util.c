@@ -9,9 +9,17 @@ static char* h2b[] = {
 
 static char hexDigits[] = "0123456789ABCDEF";
 
-void hexDump(uint8_t *bytes, int len) {
+char *nextToken(char *str, char *spliter, char *sp) {
+  char *p = str;
+  while (!strchr(spliter, *p)) p++;
+  *sp = *p;
+  *p = '\0';
+  return str;
+}
+
+void hexDump16(uint16_t *words, int len) {
   for (int i=0; i<len; i++) {
-    printf("%02X", bytes[i]);
+    printf("%04X", words[i]);
   }
 }
 
@@ -43,10 +51,9 @@ void itob(int i, char* binary) {
 
 int btoi(char* binary) {
   int result = 0;
-  int len = strlen(binary);
-  for(int i=0; i < len; i++) {
+  for (char *p = binary; *p != '\0'; p++) {
     result <<= 1;
-    if (binary[i] == '1') result += 1;
+    if (*p == '1') result += 1;
   }
   return result;
 }

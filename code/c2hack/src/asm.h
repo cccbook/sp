@@ -16,8 +16,10 @@
 #define L_LEN 100
 
 typedef struct _Code {
-  int size;
-  char type, label[S_LEN], a[S_LEN], c[S_LEN], d[S_LEN], j[S_LEN], str[L_LEN];
+  char type, *label, *a, *c, *d, *j, *line;
+  char dtype[S_LEN], *dstr[S_LEN]; // dstr[i] = NULL 就是結束。
+  int  size; // , dsize
+  uint16_t bin[S_LEN], *bptr[S_LEN];
 } Code;
 
 #endif

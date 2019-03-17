@@ -1,3 +1,12 @@
+@main
+0;JMP
+
+(str) "hello!", 0
+(f1) 3.14159
+(i1) 47
+(cstr) "中文字串", 0
+
+(main)
 @3
 D=A
 @5
@@ -9,12 +18,4 @@ D=D*M
 (label)
 D=D*I
 @str
-puts
-@f1
-putf
-@i1
-puti
-(str)hello!
-(f1)3.14159
-(i1)47
-(cstr)中文字串
+.puts
