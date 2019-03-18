@@ -20,4 +20,5 @@ extern int  btoi(char* binary);
 #define member(c, set) strchr(set, c)
 #define error(...) ({ printf(__VA_ARGS__); assert(0); })
 
+
 #endif
