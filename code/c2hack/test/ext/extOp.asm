@@ -16,7 +16,7 @@ M=D
 D=D*M
 @0
 (label)
-D=D*I
+D=D*A
 @str
 D=A
 @2

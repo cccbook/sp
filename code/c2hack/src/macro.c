@@ -4,6 +4,10 @@
 #include "util.h"
 
 Pair macroList[] = {
+  {"iput", "@0;swi"},
+  {"cput", "@1;swi"},
+  {"sputi","@%s;D=A;@2;swi"},
+  {"sput", "@%s;D=A;@3;swi"},
   {"fput", "@18;swi"},
   {"fset", "@%s;D=A;@16;swi"},
   {"fadd", "@%s;D=A;@19;swi"},

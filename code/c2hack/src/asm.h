@@ -18,7 +18,7 @@
 typedef struct _Code {
   char type, *label, *a, *c, *d, *j, *line;
   char dtype[S_LEN], *dstr[S_LEN]; // dstr[i] = NULL 就是結束。
-  int  size; // , dsize
+  int  size, offset; // , dsize
   uint16_t bin[S_LEN], *bptr[S_LEN];
 } Code;
 

@@ -36,17 +36,6 @@ Pair cList[] = {
   {"ret",  "101110"},
   {"swi",  "101111"},
   // io 指令 : I[14]=1 使用 CPU，I[14]=0 使用 IO 指令，所以不需要再避免衝突了。
-  // {".swi", "000001"}, // 
-  // {".puts", "000001"}, 
-  /*
-  {"gets", "010001"},
-  {"puti", "010010"},
-  {"putf", "011000"},
-  {"addf", "011001"},
-  {"subf", "011010"},
-  {"mulf", "011011"},
-  {"divf", "011100"},
-  */
 };
 
 Pair jList[] = {
@@ -79,7 +68,7 @@ int varTop = 16;
 void symAdd(Map *map, char *label, int address) {
   addr[map->top] = address;
   Pair *p = mapAdd(map, stAdd(label), &addr[map->top]);
-  printf("  key=%s *value=%d top=%d\n", p->key, *(int*)p->value, map->top);
+  printf("\n  key=%s *value=%d top=%d\n", p->key, *(int*)p->value, map->top);
 }
 
 void symDump(Map *map) {
@@ -110,7 +99,6 @@ int parseLabelData(Code *c, char *line) {
   uint16_t *b = c->bin;
   for (int i=0; p=c->dstr[i]; i++) { // 注意： p 改指向 dstr[i] 了
     c->bptr[i] = b;
-    // printf("c->dstr[%d]=%s\n", i, c->dstr[i]);
     if (*p == '"') { // 字串 "..." 
       c->dtype[i] = 'S';
       for (++p; *p != '"' && *p != '\0'; ) *b++ = *p++;
@@ -134,13 +122,11 @@ int parseLabelData(Code *c, char *line) {
     }
   }
   c->size = b - c->bin;
-  // printf("c->size=%d\n", c->size);
 }
 
 int parse(char *line, Code *c) {
   memset(c, 0, sizeof(Code));
   c->line = line;
-  // printf("parse: line=%s\n", line);
   replace(line, "\r\t\n", ' ');
   char *p = line;
   char *pend = strstr(p, "//");  // 去掉註解
@@ -148,7 +134,6 @@ int parse(char *line, Code *c) {
   for (; *p!='\0'; p++) { // 找到第一個不是空白的字
     if (*p!=' ') break;
   }
-  // printf("parse: p=%s\n", p);
   c->size = 1;
   char *begin = p;
   if (*p == '\0') { // 空行 : 不算大小
@@ -172,7 +157,6 @@ int parse(char *line, Code *c) {
       p = op2 + 1;
     }
     strtok(p, " ");
-    // printf("d=%s c=%s p=%s\n", c->d, c->c, p);
     if (!op1 && !op2) {
       c->c = p;
     } else if (op1 && !op2) {
@@ -185,27 +169,19 @@ int parse(char *line, Code *c) {
   return c->size;
 }
 
-// ex: comp: D+A, code: {p,m,a,c} = {1,1,0,code(D+A)}
+// ex: comp: D+A, code: {a,c} = {0,code(D+A)}
+// ex: comp: D+M, code: {a,c} = {1,code(D+A)}
 void comp2code(char *comp, char *code) {
   char *aComp = comp, mComp[100], iComp[100], *c;
-  c = mapLookup(&cMap, aComp); // A: x10xxxxxx
-  // printf("comp2code:comp=%s\n", comp);
-  if (c) { // {p,m,a=0 /*A*/}
-    char *head = (c[0] == '.')?"010"/*p=0:.puts */:"110" /*p=1:D+A*/;
-    sprintf(code, "%s%s", head, c);
+  c = mapLookup(&cMap, aComp); // A: 0xxxxxx
+  if (c) { // {a=0 /*A*/}
+    sprintf(code, "0%s", c);
     return;
   }
   strcpy(mComp, comp); replace(mComp, "M", 'A');
-  c = mapLookup(&cMap, mComp); // M: x11xxxxxx
-  if (c) { // {p,m,a=1 /*M*/ }
-    sprintf(code, "%s%s", "111", c); /*D+M*/;
-    // printf("comp2code:mComp=%s code=%s\n", mComp, code);
-    return;
-  }
-  strcpy(iComp, comp); replace(iComp, "I", 'A');
-  c = mapLookup(&cMap, iComp); // I: x01xxxxxx
-  if (c) {
-    sprintf(code, "%s%s", "101", c); /*D+I*/
+  c = mapLookup(&cMap, mComp); // M: 1xxxxxx
+  if (c) { // {a=1 /*M*/ }
+    sprintf(code, "1%s", c); /*D+M*/;
     return;
   }
   error("comp=%s not found!");
@@ -213,7 +189,6 @@ void comp2code(char *comp, char *code) {
 
 void code2bin(Code *c) {
   char bstr[100]; uint16_t *bin = c->bin;
-  // printf("code2bin(): a=%s d=%s c=%s j=%s\n", c->a,  c->d, c->c,c->j);
   if (c->a) { // A 指令： ＠number || @symbol
     int A;
     if (isdigit(c->a[0])) {
@@ -236,18 +211,15 @@ void code2bin(Code *c) {
       dcode = mapLookup(&dMap, c->d);
       if (!dcode) error("code2bin: dcode not found!", dcode);
       comp2code(c->c, ccode);
-      // printf("ccode=%s dcode=%s\n", ccode, dcode);
-      sprintf(bstr, "1%s%s%s", ccode, dcode, jcode);
+      sprintf(bstr, "111%s%s%s", ccode, dcode, jcode);
     } else { // c;j
       comp2code(c->c, ccode);
       char *jcode = "000";
       if (c->j) jcode = mapLookup(&jMap, c->j);
       if (!jcode) error("code2bin: jcode=%s not found!", jcode);
-      sprintf(bstr, "1%s%s%s", ccode, dcode, jcode);
+      sprintf(bstr, "111%s%s%s", ccode, dcode, jcode);
     }
-    // printf("C:bstr=%s\n", bstr);
     bin[0] = btoi(bstr);
-    // printf("bstr=%s bin=0x%04X\n", bstr, bin[0]);
   } else if (c->label) { // LABEL : 把符號轉成位址
     int16_t *b = bin;
     for (int i=0; c->dstr[i]; i++) { // i < c->dsize
@@ -268,12 +240,10 @@ void pass1(string inFile) {
     Code code;
     replace(line, "\r\n", ' ');
     printf("%02d:%s\n", address, line);
-    // if (!parse(line, &code)) continue;
     parse(line, &code);
     if (code.label) {
       printf("label=%s address=%02X\n", code.label, address);
       symAdd(&symMap, code.label, address);
-      // printf("pass1:symAdd(%s)\n", code.label);
     }
     address += code.size;
   }
@@ -312,6 +282,7 @@ void assemble(string file) {
   pass1(inFile);
   symDump(&symMap);
   pass2(inFile, hackFile, binFile);
+  symDump(&symMap);
 }
 
 // run: ./asm <file> 
