@@ -13,6 +13,11 @@ extern void htob(char* hex, char* binary);
 extern void itob(int i, char* binary);
 extern int  btoi(char* binary);
 
+#define NMAX 20
+#define SMAX 100
+#define TMAX 1000
+
 #define member(c, set) strchr(set, c)
+#define error(...) ({ printf(__VA_ARGS__); assert(0); })
 
 #endif

@@ -3,24 +3,27 @@
 #include <stdint.h>
 #include <wchar.h>
 #include <locale.h>
+#include <string.h>
+#include "util.h"
 
 int16_t D = 0, A = 0, PC = 0;
 uint16_t I = 0;
 int16_t im[32768], m[24576+5];
 int16_t *Keyboard = &m[24576];
 float   *F = (float*) &m[24577];
+int isDebug = 0;
 
 #define BIT0 0x0001
 #define BIT1 0x0002
 #define BIT2 0x0004
 
 int cAssignExt(int16_t c, int16_t A, int16_t D, int16_t AM);
-
+/*
 int error(char *msg) {
   printf("Error: %s", msg);
   assert(0);
 }
-
+*/
 // C 型指令的 cTable 之處理, 也就是T = X op Y 的狀況 
 int cAssign(int16_t c, int16_t A, int16_t D, int16_t AM) {
   int16_t out = 0;
@@ -48,6 +51,56 @@ int cAssign(int16_t c, int16_t A, int16_t D, int16_t AM) {
   return out;
 }
 
+int putstr(int16_t *str) {
+  int16_t *p = str;
+  while (*p != 0) {
+    printf("%c", (char) *p++);
+  }
+  return p-str;
+}
+
+int swi(int16_t A, int16_t D) {
+  float f;
+  switch (A) {
+    case 0x00: // swi 0: print integer
+      printf("%d", D);
+      break;
+    case 0x01: // swi 1: print char
+      printf("%c", (char) D);
+      break;
+    case 0x02: // swi 2: print string in im
+      putstr(&im[D]);
+      break;
+    case 0x03: // swi 3: print string in m
+      putstr(&m[D]);
+      break;
+    case 0x04: // swi 4: print float in m
+      putstr(&im[D]);
+      break;
+    case 0x10: // swi 16: fseti
+      *F = *(float*) &im[D];
+      break;
+    case 0x11: // swi 17: fsetm
+      *F = *(float*) &m[D];
+      break;
+    case 0x12: // swi 18: fput
+      printf("%f ", *F);
+      break;
+    case 0x13: // swi 19: fadd
+      *F += *(float*) &im[D];
+      break;
+    case 0x14: // swi 20: fsub
+      *F -= *(float*) &im[D];
+      break;
+    case 0x15: // swi 21: fmul
+      *F *= *(float*) &im[D];
+      break;
+    case 0x16: // swi 22: fdiv
+      *F /= *(float*) &im[D];
+      break;
+  }
+}
+
 // C 型指令的擴充指令集 aluExt
 int cAssignExt(int16_t c, int16_t A, int16_t D, int16_t AM) {
   int16_t out = 0, *mp;
@@ -66,6 +119,11 @@ int cAssignExt(int16_t c, int16_t A, int16_t D, int16_t AM) {
     case 0x29: out = D == AM;  break; // 等於
     case 0x2B: out = D != AM;  break; // 不等於
     case 0x2C: out = D ^ AM;   break; // xor
+    case 0x2D: error("call not defined!"); break; // {"call", "101101"},
+    case 0x2E: error("ret not defined!"); break;  // {"ret",  "101110"},
+    case 0x2F: // {"swi",  "101111"},
+      swi(A, D);
+      break;
     default: break;
       // sprintf(msg, "cAssign + cAssignExt do not support c=0x%02X\n", c);
       // error(msg);
@@ -75,7 +133,7 @@ int cAssignExt(int16_t c, int16_t A, int16_t D, int16_t AM) {
 
 // 處理 C 型指令
 int cInstr(int16_t i, int16_t a, int16_t c, int16_t d, int16_t j) {
-  int AM = (a == 0) ? A : 
+  int AM = (a == 0) ? A :  
            (i == 0) ? im[A] : m[A];
   int16_t aluOut = cAssign(c, A, D, AM);
   if (d&BIT2) A = aluOut;
@@ -121,16 +179,17 @@ int run(uint16_t *im, int16_t *m, int imTop) {
   char msg[100];
   uint16_t p, i, a, c, d, j, e;
   while (1) {
-    printf("imTop=%d PC=%d\n", imTop, PC);
+    // printf("imTop=%d PC=%d\n", imTop, PC);
     if (PC >= imTop) { 
-      printf("exit program !\n");
+      // printf("exit program !\n");
       break;
     }
     I = im[PC];
-    printf("PC=%04X I=%04X", PC, I);
+    if (isDebug) printf("PC=%04X I=%04X", PC, I);
     PC ++;
     if ((I & 0x8000) == 0) { // A 指令
       A = I;
+      // printf("(A=%X)", A);
     } else { // C 指令
       p = (I & 0x4000) >> 14; // p=1 使用 CPU，p=0 使用外掛裝置 (例如 IO，FPU)
       i = (I & 0x2000) >> 13; // i=1 存取指令記憶體 IM，i=0 存取資料記憶體 M, 
@@ -143,17 +202,25 @@ int run(uint16_t *im, int16_t *m, int imTop) {
       else
         ioInstr(c);
     }
-    printf(" A=%04hX D=%04hX=%05d m[A]=%04hX", A, D, D, m[A]);
-    if ((I & 0x8000) != 0) printf(" a=%X c=%02X d=%X j=%X", a, c, d, j);
-    printf("\n");
+    if (isDebug) {
+      printf(" A=%04hX D=%04hX=%05d m[A]=%04hX", A, D, D, m[A]);
+      if (I & 0x8000) printf(" a=%X c=%02X d=%X j=%X", a, c, d, j);
+      printf("\n");
+    }
   }
 }
 
 // run: ./vm <file.bin>
 int main(int argc, char *argv[]) {
-  char *binFileName = argv[1];
-  FILE *binFile = fopen(binFileName, "rb");
+  if (argc < 2) error("./vm <file.bin> debug*\n");
+  int isDump = 0;
+  for (int i=1; i<argc; i++) {
+    if (strcmp(argv[i], "-d")==0) isDebug = 1;
+    if (strcmp(argv[i], "-m")==0) isDump = 1;
+  }
+  FILE *binFile = fopen(argv[1], "rb");
   int imTop = fread(im, sizeof(uint16_t), 32768, binFile);
+  if (isDump) hexDump16(im, imTop);
   fclose(binFile);
   run(im, m, imTop);
 }

@@ -22,12 +22,12 @@ void hexDump16(uint16_t *words, int len) {
     printf("%04X", words[i]);
   }
 }
-
+/*
 int error(char *msg) {
   printf("Error: %s", msg);
   assert(0);
 }
-
+*/
 void replace(char *str, char *set, char t) {
   for (char *p = str; *p!= '\0'; p++) {
     if (strchr(set, *p) != NULL) *p = t;

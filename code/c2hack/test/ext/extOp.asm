@@ -4,7 +4,7 @@
 (str) "hello!", 0
 (f1) 3.14159
 (i1) 47
-(cstr) "中文字串", 0
+// (cstr) "中文字串", 0
 
 (main)
 @3
@@ -18,4 +18,6 @@ D=D*M
 (label)
 D=D*I
 @str
-.puts
+D=A
+@2
+swi
