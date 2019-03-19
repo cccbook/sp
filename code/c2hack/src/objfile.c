@@ -13,7 +13,7 @@ int objNew(Elf16_Ehdr *ehdr, Elf16_Shdr *shdrs) {
   ehdr->e_shnum = SECTIONS;                      // 共有五個分段 0:code, 1:data, 2:bss, 3:symTable, 4:strTable
   ehdr->e_shentsize = sizeof(Elf16_Shdr);        // 分段結構為 Elf16_Shdr，所以大小為 sizeof(Elf16_Shdr)
   ehdr->e_shstrndx = 4;                          // 字串表在第四段
-  memset(shdrs, sizeof(Elf16_Shdr)*SECTIONS, 0); //
+  memset(shdrs, sizeof(Elf16_Shdr)*SECTIONS, 0); // 清除分段表頭
   shdrs[0].sh_type = CODE;
   shdrs[1].sh_type = DATA;
   shdrs[2].sh_type = BSS;
