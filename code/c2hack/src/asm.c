@@ -64,10 +64,13 @@ Pair symList[] = {
 
 Map dMap, cMap, jMap, symMap;
 int varTop = 16;
+StrTable strTable;
+ObjFile obj;
+char strTableText[TMAX];
 
 void symAdd(Map *map, char *label, int address) {
   addr[map->top] = address;
-  Pair *p = mapAdd(map, stAdd(label), &addr[map->top]);
+  Pair *p = mapAdd(map, stAdd(&strTable, label), &addr[map->top]);
   printf("\n  key=%s *value=%d top=%d\n", p->key, *(int*)p->value, map->top);
 }
 
@@ -93,19 +96,19 @@ int parseLabelData(Code *c, char *line) {
     if (token) {
       while (*p == ' ') p++;
     }
-    c->dstr[i] = (p && *p!='\0') ? p : NULL;
+    c->data[i].token = (p && *p!='\0') ? p : NULL;
   }
 
   uint16_t *b = c->bin;
-  for (int i=0; p=c->dstr[i]; i++) { // 注意： p 改指向 dstr[i] 了
-    c->bptr[i] = b;
+  for (int i=0; p=c->data[i].token; i++) { // 注意： p 改指向 dstr[i] 了
+    c->data[i].offset = b - c->bin;
     if (*p == '"') { // 字串 "..." 
-      c->dtype[i] = 'S';
+      c->data[i].type = 'S';
       for (++p; *p != '"' && *p != '\0'; ) *b++ = *p++;
     } else if (isdigit(*p)) {
       if (strchr(p, '.')) { // 浮點數，大小為 2
         float f;
-        c->dtype[i] = 'F';
+        c->data[i].type = 'F';
         sscanf(p, "%f", &f);
         uint16_t *tf = (uint16_t*) &f;
         *b++ = tf[0];
@@ -113,11 +116,11 @@ int parseLabelData(Code *c, char *line) {
       } else {
         int16_t n;
         sscanf(p, "%d", &n);
-        c->dtype[i] = 'N';
+        c->data[i].type = 'N';
         *b++ = n;
       }
     } else { // 應該是符號，暫時先放 0
-      c->dtype[i] = 'L';
+      c->data[i].type = 'L';
       *b++ = 0;
     }
   }
@@ -126,9 +129,10 @@ int parseLabelData(Code *c, char *line) {
 
 int parse(char *line, Code *c) {
   memset(c, 0, sizeof(Code));
-  c->line = line;
-  replace(line, "\r\t\n", ' ');
-  char *p = line;
+  strcpy(c->line, line);
+  replace(c->line, "\r\t\n", ' ');
+  strcpy(c->src, c->line);
+  char *p = c->src;
   char *pend = strstr(p, "//");  // 去掉註解
   if (pend) *pend = '\0';
   for (; *p!='\0'; p++) { // 找到第一個不是空白的字
@@ -187,7 +191,7 @@ void comp2code(char *comp, char *code) {
   error("comp=%s not found!");
 }
 
-void code2bin(Code *c) {
+void code2bin(Code *c, ObjFile *obj) {
   char bstr[100]; uint16_t *bin = c->bin;
   if (c->a) { // A 指令： ＠number || @symbol
     int A;
@@ -222,99 +226,85 @@ void code2bin(Code *c) {
     bin[0] = btoi(bstr);
   } else if (c->label) { // LABEL : 把符號轉成位址
     int16_t *b = bin;
-    for (int i=0; c->dstr[i]; i++) { // i < c->dsize
-      if (c->dtype[i] == 'L') {
-        uint16_t *address = mapLookup(&symMap, c->dstr[i]);
-        *(c->bptr[i]) = *address;
+    for (int i=0; c->data[i].token; i++) {
+      if (c->data[i].type == 'L') {
+        uint16_t *offset = mapLookup(&symMap, c->data[i].token);
+        c->data[i].offset = *offset;
       }
     }
   }
 }
 
-void pass1(string inFile) {
+void pass1(char * inFile) {
   printf("============= PASS1 ================\n");
   char line[100]="";
   FILE *fp = fopen(inFile, "r");
-  int address = 0;
+  int dataAddr = 0, codeAddr = 0;
   while (fgets(line, sizeof(line), fp)) {
     Code code;
     replace(line, "\r\n", ' ');
-    printf("%02d:%s\n", address, line);
     parse(line, &code);
-    if (code.label) {
-      printf("label=%s address=%02X\n", code.label, address);
-      symAdd(&symMap, code.label, address);
+    if (code.label) symAdd(&symMap, code.label, dataAddr);
+    if (code.type=='D') { // 資料定義
+      printf("data:%04X %s\n", dataAddr, line);
+      dataAddr += code.size;
+    } else { // 指令 C or A
+      printf("code:%04X %s\n", codeAddr, line);
+      codeAddr += code.size;
     }
-    address += code.size;
   }
   fclose(fp);
 }
 
-void pass2(string inFile, string hackFile, string binFile) {
+void pass2(char * inFile, ObjFile *obj) {
   printf("============= PASS2 ================\n");
   char line[100];
   FILE *fp = fopen(inFile, "r");
-  FILE *hfp = fopen(hackFile, "w");
-  FILE *bfp = fopen(binFile, "wb");
-  int address = 0;
   while (fgets(line, sizeof(line), fp)) {
     Code code;
     replace(line, "\r\n", ' ');
-    printf("%04X %-20s", address, line);
     if (!parse(line, &code)) { printf("\n"); continue; }
-    code2bin(&code);
-    hexDump16(code.bin, code.size);
-    printf("\n");
-    if (code.size > 0) fwrite(code.bin, code.size*2, 1, bfp);
-    address += code.size;
+    code2bin(&code, obj);
+    char hex[TMAX];
+    hexDump16(code.bin, code.size, hex);
+    int sectIdx = (code.type == 'D') ? DATA : CODE;
+    Elf16_Shdr *section = &obj->shdrs[sectIdx];
+    printf("%c %04X %-20s %s\n", code.type, section->sh_size, line, hex);
+    memcpy(obj->bin[sectIdx], code.bin, code.size);
+    section->sh_size += sizeof(code.bin[0]) * code.size;
   }
   fclose(fp);
-  fclose(hfp);
-  fclose(bfp);
 }
 
-void assemble(string file) {
-  char inFile[100], hackFile[100], binFile[100];
+void assemble(char *file) {
+  char inFile[SMAX], objFile[SMAX];
   sprintf(inFile, "%s.asm", file);
-  sprintf(hackFile, "%s.hack", file);
-  sprintf(binFile, "%s.bin", file);
+  sprintf(objFile, "%s.o", file);
+
   symDump(&symMap);
   pass1(inFile);
   symDump(&symMap);
-  pass2(inFile, hackFile, binFile);
+
+  objNew(&obj, &symMap, &strTable);
+  pass2(inFile, &obj);
   symDump(&symMap);
+  objSave(&obj, objFile);
 }
 
 // run: ./asm <file> 
 // notice : <file> with no extension.
 int main(int argc, char *argv[]) {
-  // 建置表格
   mapNew(&dMap, 37); mapAddAll(&dMap, dList, ARRAY_SIZE(dList));
   mapNew(&cMap, 79); mapAddAll(&cMap, cList, ARRAY_SIZE(cList));
   mapNew(&jMap, 23); mapAddAll(&jMap, jList, ARRAY_SIZE(jList));
   mapNew(&symMap, SYM_SIZE); mapAddAll(&symMap, symList, ARRAY_SIZE(symList));
-  stInit();
-  // 組譯器主要函數開始
+
+  stNew(&strTable, strTableText);
   assemble(argv[1]);
-  // 釋放表格
+
   mapFree(&dMap);
   mapFree(&cMap);
   mapFree(&jMap);
   mapFree(&symMap);
 }
 
-        /*    char str[100]; float f; int n;
-              while (*p != '\0') {
-        while (*p == ' ') p++;
-        char *start = p, token = NULL;
-        while (*p != ',' && *p != '\0') p++;
-        scopy(token, data, token, p-token);
-
-        if (sscanf(c->data, "\"%s\"", str) == 1) {
-          c->tokens[i] = str
-          c->size += strlen(str);
-        } else if (sscanf(c->data, "%f", &f) == 1) {
-          c->size = 2;
-        } else if (sscanf(c->data, "%d", &n) == 1) c->size = 1;
-      }
-              */

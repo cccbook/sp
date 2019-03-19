@@ -1,15 +1,17 @@
 
 #include "strTable.h"
 
-char strTable[1000*1000], *strTableEnd = strTable;
-
-void stInit() {
-  strTableEnd = strTable;
+void stNew(StrTable *table, char *text) {
+  table->text = table->end = text;
 }
 
-char *stAdd(char *str) {
-  char *strPtr = strTableEnd;
-  strcpy(strTableEnd, str);
-  strTableEnd += (strlen(str)+1);
-  return strPtr;
+char *stAdd(StrTable *table, char *str) {
+  char *p = table->end;
+  strcpy(p, str);
+  table->end += (strlen(str)+1);
+  return p;
+}
+
+int stSize(StrTable *table) {
+  return table->end - table->text;
 }

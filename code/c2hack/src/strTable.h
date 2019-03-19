@@ -3,8 +3,13 @@
 
 #include <string.h>
 
-#define stPrint(...) ({ char stTemp[SMAX]; sprintf(stTemp, __VA_ARGS__); char *p=stAdd(stTemp); p; })
-extern void stInit();
-extern char *stAdd(char *str);
+typedef struct {
+  char *text, *end;
+} StrTable;
+
+// #define stPrint(...) ({ char stTemp[SMAX]; sprintf(stTemp, __VA_ARGS__); char *p=stAdd(stTemp); p; })
+extern void stNew(StrTable *table, char *text);
+extern char *stAdd(StrTable *table, char *str);
+extern int stSize(StrTable *table);
 
 #endif

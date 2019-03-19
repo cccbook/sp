@@ -17,17 +17,14 @@ char *nextToken(char *str, char *spliter, char *sp) {
   return str;
 }
 
-void hexDump16(uint16_t *words, int len) {
+void hexDump16(uint16_t *words, int len, char *hex) {
+  char h[5];
   for (int i=0; i<len; i++) {
-    printf("%04X", words[i]);
+    sprintf(h, "%04X", words[i]);
+    strcpy(&hex[i*4], h);
   }
 }
-/*
-int error(char *msg) {
-  printf("Error: %s", msg);
-  assert(0);
-}
-*/
+
 void replace(char *str, char *set, char t) {
   for (char *p = str; *p!= '\0'; p++) {
     if (strchr(set, *p) != NULL) *p = t;
