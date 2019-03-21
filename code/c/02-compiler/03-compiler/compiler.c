@@ -74,6 +74,25 @@ void ASSIGN() {
   emit("%s = t%d\n", id, e);
 }
 
+// IF = if (E) STMT (else STMT)?
+void IF() {
+  int elseLabel = nextLabel();
+  int endifLabel = nextLabel();
+  skip("if");
+  skip("(");
+  int e = E();
+  skip(")");
+  emit("ifnot t%d goto L%d\n", e, elseLabel);
+  STMT();
+  emit("goto L%d\n", endifLabel);
+  if (isNext("else")) {
+    emit("(L%d)\n", elseLabel);
+    skip("else");
+    STMT();
+  }
+  emit("(L%d)\n", endifLabel);
+}
+
 // while (E) STMT
 void WHILE() {
   int whileBegin = nextLabel();
@@ -82,7 +101,7 @@ void WHILE() {
   skip("while");
   skip("(");
   int e = E();
-  emit("if not T%d goto L%d\n", e, whileEnd);
+  emit("ifnot T%d goto L%d\n", e, whileEnd);
   skip(")");
   STMT();
   emit("goto L%d\n", whileBegin);
@@ -92,8 +111,8 @@ void WHILE() {
 void STMT() {
   if (isNext("while"))
     return WHILE();
-  // else if (isNext("if"))
-  //   IF();
+  else if (isNext("if"))
+    IF();
   else if (isNext("{"))
     BLOCK();
   else
