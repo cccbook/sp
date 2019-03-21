@@ -21,7 +21,7 @@ extern int types[];
 
 #define isAlpha(ch) (((ch) >= 'a' && (ch) <='z') || ((ch) >= 'A' && (ch) <= 'Z'))
 
-int lex(char *text);
+void lex(char *text);
 void parse();
 
 #endif

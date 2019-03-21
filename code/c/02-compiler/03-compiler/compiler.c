@@ -82,7 +82,7 @@ void WHILE() {
   skip("while");
   skip("(");
   int e = E();
-  emit("goif T%d L%d\n", whileEnd, e);
+  emit("if not T%d goto L%d\n", e, whileEnd);
   skip(")");
   STMT();
   emit("goto L%d\n", whileBegin);
