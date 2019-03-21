@@ -25,4 +25,7 @@ $@ : 屬於目標條件，也就是 foo.o
 ## 範例 2 : https://github.com/jserv/mini-arm-os/blob/master/07-Threads/Makefile
 
 
+
+## 參考
+
 * [EricWang: makefile 心得、教學](https://wwssllabcd.github.io/blog/2016/10/03/how-to-write-make-file/)

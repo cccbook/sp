@@ -19,7 +19,12 @@ int isNext(char *set) {
   return (tokenIdx < tokenTop && strstr(eset, etoken) != NULL);
 }
 
+int isEnd() {
+  return tokenIdx >= tokenTop;
+}
+
 char *next() {
+  // printf("token[%d]=%s\n", tokenIdx, tokens[tokenIdx]);
   return tokens[tokenIdx++];
 }
 
@@ -77,7 +82,7 @@ void WHILE() {
   skip("while");
   skip("(");
   int e = E();
-  emit("goto L%d if T%d\n", whileEnd, e);
+  emit("goif T%d L%d\n", whileEnd, e);
   skip(")");
   STMT();
   emit("goto L%d\n", whileBegin);
@@ -95,17 +100,21 @@ void STMT() {
     ASSIGN();
 }
 
+void STMTS() {
+  while (!isEnd() && !isNext("}")) {
+    STMT();
+  }
+}
+
 // { STMT* }
 void BLOCK() {
   skip("{");
-  while (!isNext("}")) {
-    STMT();
-  }
+  STMTS();
   skip("}");
 }
 
 void PROG() {
-  STMT();
+  STMTS();
 }
 
 void parse() {
