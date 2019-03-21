@@ -58,7 +58,7 @@ char *next(char *p) {
   return p;
 }
 
-int lex(char *fileName) {
+void lex(char *fileName) {
   char *p = code;
   while (1) {
     p = next(p);
@@ -66,7 +66,7 @@ int lex(char *fileName) {
   }
 }
 
-int dump(char *strTable[], int top) {
+void dump(char *strTable[], int top) {
   for (int i=0; i<top; i++) {
     printf("%d:%s\n", i, strTable[i]);
   }
