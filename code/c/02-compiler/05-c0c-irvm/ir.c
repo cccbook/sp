@@ -49,6 +49,7 @@ void irPrint(IR *p) {
 
 void irDump() {
   for (int i=0; i<irTop; i++) {
+    printf("%02d: ", i);
     irPrint(&ir[i]);
   }
 }

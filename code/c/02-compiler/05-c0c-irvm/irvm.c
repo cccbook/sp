@@ -34,6 +34,7 @@ int irExec(int i) {
   IR *p = &ir[i];
   char *op = p->op;
   int pc = i + 1;
+  trace("%02d: ", i);
   if (eq(op, "s=t")) {
     int *vp = varLookup(p->s);
     *vp = t[p->t];
@@ -49,14 +50,14 @@ int irExec(int i) {
     trace("goto L%d = %d\n", p->label, pc);
   } else if (eq(op, "if-goto")) {
     int cond = t[p->t];
-    trace("if t%d (=%d)", p->t, cond);
+    trace("if t%d(=%d) ", p->t, cond);
     if (cond) {
       pc = L[p->label];
       trace("goto L%d = %d\n", p->label, pc);
     } else trace(" -- fail\n");
   } else if (eq(op, "ifnot-goto")) {
     int cond = t[p->t];
-    trace("ifnot t%d (=%d)", p->t, cond);
+    trace("ifnot t%d(=%d) ", p->t, cond);
     if (!cond) {
       pc = L[p->label];
       trace("goto L%d = %d\n", p->label, L[p->label]);
