@@ -70,20 +70,28 @@ int op2i(char *op) {
   return *ip;
 }
 
-int varTop = 0;
-Pair varList[VAR_MAX];
-Map varMap;
-int L[VAR_MAX];
-int vi[VAR_MAX];
-int t[VAR_MAX] = { 0 };
+int symTop = 0;
+// Pair symList[VAR_MAX];
+Map symMap;
 
-int *varLookup(char *name) {
-  int *vp = mapLookup(&varMap, name);
+typedef struct {
+  int idx, addr;
+  char type; // G:Global, B:label, A:arg, C:local
+} Symbol;
+
+Symbol symList[VAR_MAX];
+int globalTop = 0;
+int L[VAR_MAX];
+
+int *symLookup(char *name) {
+  int *vp = mapLookup(&symMap, name);
   return vp;
 }
 
-int *varAdd(char *name) {
-  return mapAdd(&varMap, name, &vi[varTop++])->value;
+int *symAdd(char *name, char type, int addr) {
+  Symbol s = {.type = type, .addr=addr, .idx=symTop };
+  symList[symTop++] = s;
+  return mapAdd(&symMap, name, &symList[symTop++])->value;
 }
 
 // ============================= IR64 ====================================
@@ -91,7 +99,7 @@ int *varAdd(char *name) {
 void ir64init() {
   // printf("=======ir64init()==========\n");
   opMapInit();
-  mapNew(&varMap, VAR_MAX);
+  mapNew(&symMap, VAR_MAX);
   // mapDumpInt(&opMap);
   ir64top = 0;
 }
@@ -125,10 +133,10 @@ void ir64jit1(IR *r) {
         r64.c = atoi(r->s);
     } else {
       r64.m = 1; // memory access
-      int *vip = varLookup(r->s);
+      int *sp = symLookup(r->s);
       // printf("ir64jit1: vip=%p\n", vip);
-      if (!vip) vip = varAdd(r->s);
-      r64.c = vip-vi;
+      if (!sp) sp = symAdd(r->s, 'G', globalTop);
+      r64.c = globalTop++;
       r64.r1 = R_DS;
     }
   }
@@ -139,11 +147,21 @@ void ir64jit1(IR *r) {
       r64.op = op2i(r->op);
       r64.r0 = r->t; r64.r1 = r->t1; r64.r2 = r->t2; 
       break;
-    // case IrLabel:
+    case IrLabel:
+      L[r->label] = ir64top;
+      printf("%02d: (L%d)\n", ir64top, r->label);
+      return;
     // case IrCall1:
-    case IrGoto:      r64.r1 = R_CS; r64.c = L[r->label]; break;
-    case IrIfGoto:    r64.r1 = R_CS; r64.c = L[r->label]; break;
-    case IrIfNotGoto: r64.r1 = R_CS; r64.c = L[r->label]; break;
+    case IrGoto:
+    case IrIfGoto:
+    case IrIfNotGoto:
+      r64.r0 = r->t;
+      r64.r1 = R_CS;
+      r64.c  = ir64top;
+      if (r->type == IrGoto) r64.op = op2i("jmp"); 
+      else if (r->type == IrIfGoto) r64.op = op2i("jeq"); 
+      else if (r->type == IrIfGoto) r64.op = op2i("jne"); 
+      break;
     // case IrCall:
     // case IrArg:
   }
@@ -154,7 +172,7 @@ void ir64jit1(IR *r) {
 
 void ir64jit() {
   printf("==============ir64jit=========\n");
-  varTop = 0;
+  symTop = 0;
   for (int i=0; i<irTop; i++) {
     ir64jit1(&ir[i]);
   }

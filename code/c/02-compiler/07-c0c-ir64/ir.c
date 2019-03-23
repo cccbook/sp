@@ -28,7 +28,7 @@ void irEmitOp2(int t, int t1, char *op, int t2) {
 }
 
 void irEmitLabel(int label) {
-  L[label] = irTop;
+  // L[label] = irTop;
   irNew((IR) {.type=IrLabel, .op="label", .label=label});
 }
 
