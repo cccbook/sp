@@ -39,6 +39,14 @@ char *skip(char *set) {
   }
 }
 
+char *skipType(TokenType type) {
+  if (isNextType(type)) {
+    return next();
+  } else {
+    error("skipType(%s) got %s fail!\n", typeName[type], typeName[types[tokenIdx]]);
+  }
+}
+
 // CALL(id) = (E*)
 int CALL(char *id) {
   assert(isNext("("));
@@ -122,6 +130,15 @@ void STMT() {
     BLOCK();
   else {
     char *id = next();
+    /*
+    if (eq(id, "int")) {
+      skip("int");
+      while (!isNext(";")) {
+        char *var = skipType(Id);
+        mapAdd(symMap, var, &symList[symTop++]);
+      }
+    }
+    */
     if (isNext("(")) {
       CALL(id);
     } else {

@@ -1,6 +1,6 @@
 #include "ir.h"
 
-IR ir[TMAX];
+IR ir[IR_MAX];
 int irTop = 0;
 
 void irNew(IR p) {
@@ -59,6 +59,7 @@ void irPrint(IR *p) {
 }
 
 void irDump() {
+  printf("=======irDump()==========\n");
   for (int i=0; i<irTop; i++) {
     printf("%02d: ", i);
     irPrint(&ir[i]);

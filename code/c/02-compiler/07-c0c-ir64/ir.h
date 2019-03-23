@@ -23,6 +23,7 @@ extern void irDump();
 // IR Virtual Machine
 #define trace printf
 #define VAR_MAX 10000
+#define IR_MAX  10000
 
 typedef enum { IrAssignSt, IrAssignTs, IrOp2, IrLabel, IrCall1, IrGoto, IrIfGoto, IrIfNotGoto, IrCall, IrArg } IrType;
 
