@@ -42,7 +42,7 @@ int irExec(int i) {
   } else if (eq(op, "t=s")) {
     int v = (isdigit(*p->s)) ? atoi(p->s) : *varLookup(p->s);
     t[p->t] = v;
-    trace("t%d = %d\n", p->t, v);
+    trace("t%d = %s = %d\n", p->t, p->s, v);
   } else if (eq(op, "label")) {
     trace("(L%d) = %d\n", p->label, L[p->label]);
   } else if (eq(op, "goto")) {

@@ -9,7 +9,7 @@ unsigned int hash(char *key) {
     h = (h << 4) + h + *p; // h = h*17 + *p; 為了加速不用乘法 ....
     p++;
   }
-  return h;
+  return h << 6 + (p-key);
 }
 
 Map* mapNew(Map *map, int size) {
@@ -67,7 +67,17 @@ void mapDump(Map *map) {
   for (int i=0; i<map->size; i++) {
     Pair *p = &map->table[i];
     if (p->key != NULL) {
-      printf("%d:  %s %s\n", i, p->key, (char*) p->value);
+      printf("%03d:  %-20s %s\n", i, p->key, (char*) p->value);
+    }
+  }
+}
+
+void mapDumpInt(Map *map) {
+  printf("======= mapDumpInt() ==============\n");
+  for (int i=0; i<map->size; i++) {
+    Pair *p = &map->table[i];
+    if (p->key != NULL) {
+      printf("%03d:  %-20s %d\n", i, p->key, *(int*) p->value);
     }
   }
 }

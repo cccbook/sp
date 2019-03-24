@@ -1,7 +1,8 @@
 #include "ir.h"
 
-IR ir[TMAX];
+IR ir[IR_MAX];
 int irTop = 0;
+extern int L[]; // label => address
 
 void irNew(IR p) {
   ir[irTop++] = p;
@@ -28,7 +29,7 @@ void irEmitOp2(int t, int t1, char *op, int t2) {
 }
 
 void irEmitLabel(int label) {
-  L[label] = irTop;
+  // L[label] = irTop;
   irNew((IR) {.type=IrLabel, .op="label", .label=label});
 }
 
@@ -59,8 +60,21 @@ void irPrint(IR *p) {
 }
 
 void irDump() {
+  printf("=======irDump()==========\n");
   for (int i=0; i<irTop; i++) {
     printf("%02d: ", i);
     irPrint(&ir[i]);
+  }
+}
+
+int irPass2() {
+  printf("==========irPass2()============\n");
+  for (int i=0; i<irTop; i++) {
+    int label = ir[i].label, type = ir[i].type;
+    if (type == IrLabel) {
+      assert(label != 0);
+      L[label] = i;
+      printf("L%d=%d\n", label, L[label]);
+    }
   }
 }

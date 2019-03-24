@@ -13,10 +13,13 @@ int main(int argc, char * argv[]) {
   if (isLexDump) lexDump();
   parse();
   if (isIrDump) irDump();
+  irPass2();
+#ifdef _IR64_
   if (isIr64Dump) {
       ir64init();
       ir64jit();
       // ir64dump();
   }
-  // if (isRun) irRun();
+#endif
+  if (isRun) irRun();
 }

@@ -3,10 +3,8 @@
 
 #include <stdio.h>
 #include "map.h"
-#include "strTable.h"
 #include "util.h"
 
-// IR Emit
 #define emit printf
 
 extern void irEmitArg(int t1) ;
@@ -36,7 +34,7 @@ typedef struct {
 
 extern IR ir[];
 extern int irTop;
-extern int L[]; // label => address
+extern int irPass2();
 extern int irExec(int i);
 extern void irRun();
 extern void irPrint(IR *p);

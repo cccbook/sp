@@ -93,11 +93,16 @@ int E() {
   return i1;
 }
 
+int EXP() {
+  tempIdx = 1; // 讓 temp 重新開始，才不會 temp 太多！
+  return E();
+}
+
 // ASSIGN = id '=' E
 void ASSIGN(char *id) {
   // char *id = next();
   skip("=");
-  int e = E();
+  int e = EXP();
   irEmitAssignSt(id, e);
   // emit("%s = t%d\n", id, e);
 }

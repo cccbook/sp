@@ -28,6 +28,7 @@ extern Pair* mapAdd(Map *map, char *key, void *value);
 extern void mapAddAll(Map *map, Pair *list, int top);
 extern void* mapLookup(Map *map, char *key);
 extern void mapDump(Map *map);
+extern void mapDumpInt(Map *map);
 extern void mapFree(Map *map);
 
 #endif

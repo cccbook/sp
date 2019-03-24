@@ -44,6 +44,7 @@ int opCode[OP_TOP];
 #define OP_J 0x3F // 3: jlt jgt jle jge jeq jne jmp
 
 IR64 ir64[IR_MAX];
+int64_t ir64label[IR_MAX];
 int64_t ir64top = 0;
 
 #define M_TOP 10000
@@ -71,7 +72,6 @@ int op2i(char *op) {
 }
 
 int symTop = 0;
-// Pair symList[VAR_MAX];
 Map symMap;
 
 typedef struct {
@@ -97,7 +97,6 @@ int *symAdd(char *name, char type, int addr) {
 // ============================= IR64 ====================================
 
 void ir64init() {
-  // printf("=======ir64init()==========\n");
   opMapInit();
   mapNew(&symMap, VAR_MAX);
   // mapDumpInt(&opMap);
@@ -121,12 +120,10 @@ void ir64print(int i, IR64 *r) {
   }
 }
 
-void ir64jit1(IR *r) {
-  // printf("===========ir64jit1()==========\n");
+void ir64pass1(IR *r) {
+  assert(r->t < 254 && r->t1 < 254 && r->t2 < 254); // 因為 ir64 只有 253 個可用暫存器，temp 代號不能超過暫存器數量！
   IR64 r64;
   memset(&r64, 0, sizeof(r64));
-  // printf("ir64jit1()\n");
-  // printf("r->s=%s\n", r->s);
   if (r->s) {
     if (isdigit(*r->s)) {
         r64.m = 0; // no memory access
@@ -154,13 +151,13 @@ void ir64jit1(IR *r) {
     // case IrCall1:
     case IrGoto:
     case IrIfGoto:
-    case IrIfNotGoto:
+    case IrIfNotGoto: 
+      ir64label[ir64top] = r->label;
+      printf("pass2 : label= %d >> ", r->label);
       r64.r0 = r->t;
-      r64.r1 = R_CS;
-      r64.c  = ir64top;
-      if (r->type == IrGoto) r64.op = op2i("jmp"); 
+      if (r->type == IrGoto) r64.op = op2i("jmp");
       else if (r->type == IrIfGoto) r64.op = op2i("jeq"); 
-      else if (r->type == IrIfGoto) r64.op = op2i("jne"); 
+      else if (r->type == IrIfNotGoto) r64.op = op2i("jne"); 
       break;
     // case IrCall:
     // case IrArg:
@@ -170,11 +167,24 @@ void ir64jit1(IR *r) {
   ir64[ir64top++] = r64;
 }
 
+void ir64pass2(IR64 *r64, int label, int i) {
+  if ((r64->op & 0x30) == 0x30) {
+    assert(label != 0);
+    r64->r1 = R_CS;
+    r64->c  = L[label]; 
+  }
+  ir64print(i, r64);
+}
+
 void ir64jit() {
-  printf("==============ir64jit=========\n");
   symTop = 0;
+  printf("============pass1=========\n");
   for (int i=0; i<irTop; i++) {
-    ir64jit1(&ir[i]);
+    ir64pass1(&ir[i]);
+  }
+  printf("============pass2=========\n");
+  for (int i=0; i<ir64top; i++) {
+    ir64pass2(&ir64[i], ir64label[i], i);
   }
 }
 
@@ -185,30 +195,7 @@ void ir64dump() {
   }
 }
 
-/*
-int ir64op2(int a, OpCode op, int b) {
-  switch (op) {
-    case OP_ADD: return a + b;
-    case OP_SUB: return a - b;
-    case OP_MUL: return a * b;
-    case OP_DIV: return a / b;
-    case OP_MOD: return a % b;
-    case OP_BAND: return a & b;
-    case OP_BOR: return a | b;
-    case OP_BXOR: return a ^ b;
-    case OP_SHL: return a << b;
-    case OP_SHR: return a >> b;
-    case OP_LT: return a < b;
-    case OP_GT: return a > b;
-    case OP_LE: return a <= b;
-    case OP_GE: return a >= b;
-    case OP_EQ: return a == b;
-    case OP_NE: return a != b;
-    case OP_LAND: return a && b;
-    case OP_LOR: return a || b;
-    default: error('ir64op2: op=%02x not found!', op);
-  }
-}
+--xxx; // 這裡要預留設定 DS，CS 的空間 (啟動程式)，乾脆預留整個 Boot 好了！。
 
 int ir64exec(int i) {
   IR *r = &ir64[i];
@@ -234,6 +221,8 @@ int ir64exec(int i) {
     case OP_MUL: R[r0] = R1 *  R2; break;
     case OP_DIV: R[r0] = R1 /  R2; break;
     case OP_MOD: R[r0] = R1 %  R2; break;
+    case OP_SHL: R[r0] = R1 << c; break;
+    case OP_SHR: R[r0] = R1 >> c; break;
     case OP_BAND:R[r0] = R1 &  R2; break;
     case OP_BOR: R[r0] = R1 |  R2; break;
     case OP_BXOR:R[r0] = R1 ^  R2; break;
@@ -254,6 +243,32 @@ void ir64run() {
   printf("===================ir64run()=======================\n");
   for (int16_t pc = 0; pc < ir64top;) {
     pc = ir64exec(pc);
+  }
+}
+
+
+/*
+int ir64op2(int a, OpCode op, int b) {
+  switch (op) {
+    case OP_ADD: return a + b;
+    case OP_SUB: return a - b;
+    case OP_MUL: return a * b;
+    case OP_DIV: return a / b;
+    case OP_MOD: return a % b;
+    case OP_BAND: return a & b;
+    case OP_BOR: return a | b;
+    case OP_BXOR: return a ^ b;
+    case OP_SHL: return a << b;
+    case OP_SHR: return a >> b;
+    case OP_LT: return a < b;
+    case OP_GT: return a > b;
+    case OP_LE: return a <= b;
+    case OP_GE: return a >= b;
+    case OP_EQ: return a == b;
+    case OP_NE: return a != b;
+    case OP_LAND: return a && b;
+    case OP_LOR: return a || b;
+    default: error('ir64op2: op=%02x not found!', op);
   }
 }
 */
