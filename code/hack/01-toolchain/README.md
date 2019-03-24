@@ -6,13 +6,11 @@
 ```
 user@DESKTOP-96FRN6B MSYS /d/ccc/book/sp/code/hack/01-toolchain
 $ make
-gcc -std=c99 -O0 asm.c map.c util.c strTable.c -o asm
-gcc -std=c99 -O0 vm.c util.c -o vm
 gcc -std=c99 -O0 macro.c map.c util.c -o macro
 
 user@DESKTOP-96FRN6B MSYS /d/ccc/book/sp/code/hack/01-toolchain
-$ ./run.sh test/macro/float
-3.141590 6.283180 25.132721
+$ ./run.sh test/macro/sum
+sum=55
 
 ```
 
