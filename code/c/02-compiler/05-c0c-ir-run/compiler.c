@@ -27,7 +27,7 @@ int isEnd() {
 }
 
 char *next() {
-  printf("%02d:token = %-10s type = %-10s\n", tokenIdx, tokens[tokenIdx], typeName[types[tokenIdx]]);
+  // printf("%02d:token = %-10s type = %-10s\n", tokenIdx, tokens[tokenIdx], typeName[types[tokenIdx]]);
   return tokens[tokenIdx++];
 }
 
