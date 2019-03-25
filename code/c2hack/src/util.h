@@ -29,6 +29,7 @@ extern void format(char *buf, char *fmt, ...);
 #define debug(...) ({ if (isDebug) printf(__VA_ARGS__); })
 
 
-extern int isDebug;
+extern char isDebug;
+extern char isFlag[];
 
 #endif

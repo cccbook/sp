@@ -1,0 +1,19 @@
+t1 = 0
+s = t1
+t1 = 1
+i = t1
+(L1)
+t2 = i
+t3 = 10
+t4 = t2 <= t3
+ifnot t4 goto L2
+t1 = s
+t2 = i
+t3 = t1 + t2
+s = t3
+t1 = i
+t2 = 1
+t3 = t1 + t2
+i = t3
+goto L1
+(L2)

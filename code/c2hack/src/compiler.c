@@ -74,7 +74,6 @@ int F() {
     f = nextTemp();
     char *item = next();
     irEmitAssignTs(f, item);
-    // emit("t%d = %s\n", f, item);
   }
   return f;
 }
@@ -87,24 +86,22 @@ int E() {
     int i2 = E();
     int i = nextTemp();
     irEmitOp2(i, i1, op, i2);
-    // emit("t%d = t%d %s t%d\n", i, i1, op, i2);
     i1 = i;
   }
   return i1;
 }
 
+// EXP = E
 int EXP() {
   tempIdx = 1; // 讓 temp 重新開始，才不會 temp 太多！
   return E();
 }
 
-// ASSIGN = id '=' E
+// ASSIGN(id) = '=' E
 void ASSIGN(char *id) {
-  // char *id = next();
   skip("=");
   int e = EXP();
   irEmitAssignSt(id, e);
-  // emit("%s = t%d\n", id, e);
 }
 
 // while (E) STMT
@@ -112,20 +109,17 @@ void WHILE() {
   int whileBegin = nextLabel();
   int whileEnd = nextLabel();
   irEmitLabel(whileBegin);
-  // emit("(L%d)\n", whileBegin);
   skip("while");
   skip("(");
   int e = E();
   irEmitIfNotGoto(e, whileEnd);
-  // emit("goif T%d L%d\n", whileEnd, e);
   skip(")");
   STMT();
   irEmitGoto(whileBegin);
-  // emit("goto L%d\n", whileBegin);
   irEmitLabel(whileEnd);
-  // emit("(L%d)\n", whileEnd);
 }
 
+// STMT = WHILE | BLOCK | CALL ; | ASSIGN ;
 void STMT() {
   if (isNext("while"))
     WHILE();
@@ -153,19 +147,21 @@ void STMT() {
   }
 }
 
+// STMTS = STMT*
 void STMTS() {
   while (!isEnd() && !isNext("}")) {
     STMT();
   }
 }
 
-// { STMT* }
+// BLOCK = { STMT* }
 void BLOCK() {
   skip("{");
   STMTS();
   skip("}");
 }
 
+// PROG = STMT*
 void PROG() {
   STMTS();
 }

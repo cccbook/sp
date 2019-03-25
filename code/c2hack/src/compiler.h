@@ -3,7 +3,7 @@
 
 #include "lexer.h"
 #include "ir.h"
-#include "hack.h"
+#include "ir2m0.h"
 
 extern void parse();
 

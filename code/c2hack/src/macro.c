@@ -18,11 +18,12 @@ Pair macroList[] = {
   {"fmul", "@${1}\nD=A\n@21\nswi"},
   {"fdiv", "@${1}\nD=A\n@22\nswi"},
   // control
-  {"=", "@${1}\nD=M\n@${2}\nM=D"},
+  {"set", "@${3}\nD=M\n@${1}\nM=D"}, // .set  i = t1
+  {"setc","@${3}\nD=A\n@${1}\nM=D"}, // .setc i = 5
   {"op", "@${3}\nD=M\n@${5}\nD=D${4}M\n@${1}\nM=D"}, // .op z = x + y
   {"goto", "@${1}\n0;JMP"}, // goto L
   {"if", "@${1}\nD=M\n@${3}\nD;JNE"}, // if e goto L
-  {"ifnot", "@${1}\nD=M\n${3}\nD;JEQ"}, // ifnot e goto L
+  {"ifnot", "@${1}\nD=M\n@${3}\nD;JEQ"}, // ifnot e goto L
 
 };
 
@@ -65,8 +66,8 @@ int main(int argc, char *argv[]) {
 
   char *file = argv[1];
   char iFile[SMAX], oFile[SMAX];
-  sprintf(iFile, "%s.m", file);
-  sprintf(oFile, "%s.asm", file);
+  sprintf(iFile, "%s.m0", file);
+  sprintf(oFile, "%s.s0", file);
 
   mapNew(&macroMap, 37); mapAddAll(&macroMap, macroList, ARRAY_SIZE(macroList));
   macroExpand(iFile, oFile);

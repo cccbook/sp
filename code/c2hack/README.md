@@ -2,6 +2,20 @@
 
 ```
 user@DESKTOP-96FRN6B MSYS /d/ccc/book/sp/code/c2hack/src
+$ make
+gcc -std=c99 -O0 c0c.c lexer.c compiler.c ir.c irvm.c ir2m0.c map.c util.c -o ../bin/c0c
+gcc -std=c99 -O0 asm.c map.c util.c strTable.c -o ../bin/asm
+gcc -std=c99 -O0 vm.c util.c -o ../bin/vm
+gcc -std=c99 -O0 macro.c map.c util.c -o ../bin/macro
+
+user@DESKTOP-96FRN6B MSYS /d/ccc/book/sp/code/c2hack/src
+$ make m0run file=../test/m0/sum1
+../bin/macro ../test/m0/sum1
+../bin/asm ../test/m0/sum1
+../bin/vm  ../test/m0/sum1.o0
+55
+
+user@DESKTOP-96FRN6B MSYS /d/ccc/book/sp/code/c2hack/src
 $ make clean
 rm -f ../bin/*.o ../bin/*.exe
 
@@ -20,8 +34,19 @@ $ make as0run file=../test/as0/macro/sumMacro
 sum=55
 
 user@DESKTOP-96FRN6B MSYS /d/ccc/book/sp/code/c2hack/src
+$ make
+gcc -std=c99 -O0 c0c.c lexer.c compiler.c ir.c irvm.c map.c util.c hack.c -o ../bin/c0c
+gcc -std=c99 -O0 asm.c map.c util.c strTable.c -o ../bin/asm
+gcc -std=c99 -O0 vm.c util.c -o ../bin/vm
+gcc -std=c99 -O0 macro.c map.c util.c -o ../bin/macro
+
+user@DESKTOP-96FRN6B MSYS /d/ccc/book/sp/code/c2hack/src
 $ make c0run file=../test/c0/sum.c0
 ../bin/c0c ../test/c0/sum.c0 -run
+
+user@DESKTOP-96FRN6B MSYS /d/ccc/book/sp/code/c2hack/src
+$ make c0run file=../test/c0/sum
+../bin/c0c ../test/c0/sum -run
 // t1 = 0
 @0
 D=M
@@ -266,6 +291,4 @@ M=D
 07: t4 = t2 <= t3 = 0
 08: ifnot t4(=0) goto L2 = 18
 18: (L2) = 18
-
-
 ```

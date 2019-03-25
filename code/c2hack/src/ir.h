@@ -5,17 +5,6 @@
 #include "map.h"
 #include "util.h"
 
-extern void irEmitArg(int t1) ;
-extern void irEmitCall(char *fname, int t1);
-extern void irEmitAssignTs(int t, char *s);
-extern void irEmitAssignSt(char *s, int t);
-extern void irEmitOp2(int t, int p1, char *op, int p2);
-extern void irEmitLabel(int label);
-extern void irEmitGoto(int label);
-extern void irEmitIfGoto(int t, int label);
-extern void irEmitIfNotGoto(int t, int label);
-extern void irDump();
-
 // IR Virtual Machine
 #define trace printf
 #define VAR_MAX 10000
@@ -36,5 +25,17 @@ extern int irPass2();
 extern int irExec(int i);
 extern void irRun();
 extern void irPrint(IR *p);
+extern void irEmitArg(int t1) ;
+extern void irEmitCall(char *fname, int t1);
+extern void irEmitAssignTs(int t, char *s);
+extern void irEmitAssignSt(char *s, int t);
+extern void irEmitOp2(int t, int p1, char *op, int p2);
+extern void irEmitLabel(int label);
+extern void irEmitGoto(int label);
+extern void irEmitIfGoto(int t, int label);
+extern void irEmitIfNotGoto(int t, int label);
+extern void irWrite(FILE *fp, IR *p);
+extern void irSave(char *fname);
+extern void irDump();
 
 #endif

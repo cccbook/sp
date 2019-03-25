@@ -273,8 +273,8 @@ void pass2(string inFile, string binFile) {
 
 void assemble(string file) {
   char inFile[100], binFile[100];
-  sprintf(inFile, "%s.asm", file);
-  sprintf(binFile, "%s.bin", file);
+  sprintf(inFile, "%s.s0", file);
+  sprintf(binFile, "%s.o0", file);
   symDump(&symMap);
   pass1(inFile);
   symDump(&symMap);

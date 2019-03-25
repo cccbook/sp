@@ -45,38 +45,46 @@ void irEmitIfNotGoto(int t, int label) {
   irNew((IR) {.type=IrIfNotGoto, .op="ifnot-goto", .t=t, .label=label});
 }
 
-void irPrint(IR *p) {
+void irWrite(FILE *fp, IR *p) {
   switch (p->type) {
-    case IrCall: printf("call %s %d", p->op, p->t1); break;
-    case IrArg:  printf("arg t%d", p->t1); break;
-    case IrAssignSt: printf("%s = t%d", p->s, p->t); break;
-    case IrAssignTs: printf("t%d = %s", p->t, p->s); break;
-    case IrLabel: printf("(L%d)", p->label); break;
-    case IrGoto: printf("goto L%d", p->label); break;
-    case IrIfGoto: printf("if t%d goto L%d", p->t, p->label); break;
-    case IrIfNotGoto: printf("ifnot t%d goto L%d", p->t, p->label); break;
-    case IrOp2: printf("t%d = t%d %s t%d", p->t, p->t1, p->op, p->t2); break;
+    case IrCall: fprintf(fp, "call %s %d", p->op, p->t1); break;
+    case IrArg:  fprintf(fp, "arg t%d", p->t1); break;
+    case IrAssignSt: fprintf(fp, "%s = t%d", p->s, p->t); break;
+    case IrAssignTs: fprintf(fp, "t%d = %s", p->t, p->s); break;
+    case IrLabel: fprintf(fp, "(L%d)", p->label); break;
+    case IrGoto: fprintf(fp, "goto L%d", p->label); break;
+    case IrIfGoto: fprintf(fp, "if t%d goto L%d", p->t, p->label); break;
+    case IrIfNotGoto: fprintf(fp, "ifnot t%d goto L%d", p->t, p->label); break;
+    case IrOp2: fprintf(fp, "t%d = t%d %s t%d", p->t, p->t1, p->op, p->t2); break;
     default: error("ir.type %d not found!", p->type);
   }
-  printf("\n");
+  fprintf(fp, "\n");
+}
+
+void irSave(char *fname) {
+  FILE *irF = fopen(fname, "w");
+  for (int i=0; i<irTop; i++) {
+    irWrite(irF, &ir[i]);
+  }
+  fclose(irF);
 }
 
 void irDump() {
   printf("=======irDump()==========\n");
   for (int i=0; i<irTop; i++) {
     printf("%02d: ", i);
-    irPrint(&ir[i]);
+    irWrite(stdout, &ir[i]);
   }
 }
 
 int irPass2() {
-  // printf("==========irPass2()============\n");
+  debug("==========irPass2()============\n");
   for (int i=0; i<irTop; i++) {
     int label = ir[i].label, type = ir[i].type;
     if (type == IrLabel) {
       assert(label != 0);
       L[label] = i;
-      // printf("L%d=%d\n", label, L[label]);
+      debug("L%d=%d\n", label, L[label]);
     }
   }
 }

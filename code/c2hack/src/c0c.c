@@ -1,25 +1,18 @@
 #include "compiler.h"
 
 int main(int argc, char * argv[]) {
-  int isLexDump = 0, isIrDump = 0, isRun = 0;
-  for (int i=0; i<argc; i++) {
-    if (eq(argv[i], "-lex")) isLexDump = 1;
-    if (eq(argv[i], "-ir")) isIrDump = 1;
-    if (eq(argv[i], "-run")) isRun = 1;
-  }
-  readText(argv[1], code, TMAX);
+  argHandle(argc, argv, 2, "c0c <file> -d -r");
+  char c0File[SMAX], irFile[SMAX], m0File[SMAX];
+  sprintf(c0File, "%s.c0", argv[1]);
+  sprintf(irFile, "%s.i0", argv[1]);
+  sprintf(m0File, "%s.m0", argv[1]);
+  readText(c0File, code, TMAX);
   lex(code);
-  if (isLexDump) lexDump();
+  if (isDebug) lexDump();
   parse();
   irPass2();
-  if (isIrDump) irDump();
-  ir2asm();
-  if (isRun) irRun();
-/*
-  char irFile[SMAX];
-  sprintf(irFile, "%s.ir", argv[1]);
-  FILE *irF = fopen(irFile, "w");
-  irDump(irF);
-  fclose(irF);
-*/
+  if (isDebug) irDump();
+  irSave(irFile);
+  ir2m0(m0File);
+  if (isFlag['r']) irRun();
 }
