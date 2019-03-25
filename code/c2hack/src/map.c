@@ -9,7 +9,7 @@ unsigned int hash(char *key) {
     h = (h << 4) + h + *p; // h = h*17 + *p; 為了加速不用乘法 ....
     p++;
   }
-  return h << 6 + (p-key);
+  return h << 6 + p-key;
 }
 
 Map* mapNew(Map *map, int size) {
@@ -32,7 +32,16 @@ Pair *mapFind(Map *map, char *key) {
   int h = mapFindIdx(map, key);
   return &map->table[h];
 }
-
+/*
+Pair *mapFind(Map *map, char *key) {
+  int h = hash(key) % map->size;
+  while (map->table[h].key != NULL) {
+    if (strcmp(map->table[h].key, key)==0) break;
+    h = (h+1) % map->size;
+  }
+  return &map->table[h];
+}
+*/
 Pair* mapAdd(Map *map, char *key, void *value) {
   assert(map->top < map->size);
   Pair *p = mapFind(map, key);
@@ -59,17 +68,7 @@ void mapDump(Map *map) {
   for (int i=0; i<map->size; i++) {
     Pair *p = &map->table[i];
     if (p->key != NULL) {
-      printf("%03d:  %-20s %s\n", i, p->key, (char*) p->value);
-    }
-  }
-}
-
-void mapDumpInt(Map *map) {
-  printf("======= mapDumpInt() ==============\n");
-  for (int i=0; i<map->size; i++) {
-    Pair *p = &map->table[i];
-    if (p->key != NULL) {
-      printf("%03d:  %-20s %d\n", i, p->key, *(int*) p->value);
+      printf("%d:  %s %s\n", i, p->key, (char*) p->value);
     }
   }
 }
