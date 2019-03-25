@@ -8,7 +8,8 @@
 
 int16_t D = 0, A = 0, PC = 0;
 uint16_t I = 0;
-int16_t im[32768], m[24576+5];
+uint16_t im[32768];
+int16_t m[24576+5];
 int16_t *Keyboard = &m[24576];
 float   *F = (float*) &m[24577];
 
@@ -54,8 +55,8 @@ int putstr(int16_t *str) {
 }
 
 // 一開始就載入 im 到 m，所以不需要再有 D=I 之類的指令了。
-int swi(int16_t A, int16_t D) {
-  float f;
+void swi(int16_t A, int16_t D) {
+  // float f;
   switch (A) {
     case 0x00: // swi 0: print integer
       printf("%d", D);
@@ -98,8 +99,8 @@ int swi(int16_t A, int16_t D) {
 
 // C 型指令的擴充指令集 aluExt
 int cAssignExt(int16_t c, int16_t A, int16_t D, int16_t AM) {
-  int16_t out = 0, *mp;
-  char *p, line[100], msg[100];
+  int16_t out = 0; // , *mp;
+  // char *p, line[100], msg[100];
   switch (c) {
     // 運算延伸指令 : 使用 10xxxx ，避開 {"0",   "101010"}
     case 0x20: out = D << AM;  break; // 左移
@@ -123,7 +124,7 @@ int cAssignExt(int16_t c, int16_t A, int16_t D, int16_t AM) {
 }
 
 // 處理 C 型指令
-int cInstr(int16_t i, int16_t a, int16_t c, int16_t d, int16_t j) {
+void cInstr(int16_t i, int16_t a, int16_t c, int16_t d, int16_t j) {
   assert(i==1);
   int AM = (a == 0) ? A : m[A];
   int16_t aluOut = cAssign(c, A, D, AM);
@@ -142,14 +143,14 @@ int cInstr(int16_t i, int16_t a, int16_t c, int16_t d, int16_t j) {
   }
 }
 
-int ioInstr(int16_t c) {
+void ioInstr(int16_t c) {
   error("目前不支援 ioInstr() 指令");
 }
 
 // 虛擬機主程式
-int run(uint16_t *im, int16_t *m, int imTop) {
-  char msg[100];
-  uint16_t p, i, a, c, d, j, e;
+void run(uint16_t *im, int16_t *m, int imTop) {
+  // char msg[100];
+  uint16_t p, i, a, c, d, j; // , e;
   while (1) {
     if (PC >= imTop) break; // 超出範圍，虛擬機自動結束。
     I = im[PC];
@@ -186,4 +187,5 @@ int main(int argc, char *argv[]) {
 
   memcpy(m, im, imTop); // 啟動後將指令記憶體 im 複製到資料記憶體 m，這樣就不需要存取 im 的指令了。
   run(im, m, imTop);
+  return 0;
 }

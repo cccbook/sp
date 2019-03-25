@@ -3,8 +3,7 @@
 void ir2macro(FILE *fp, IR *p) {
   int t=p->t, t1=p->t1, t2=p->t2, label=p->label;
   char *s = p->s, *op = p->op, digit[2];
-  irWrite(stdout, p);
-  // fprintf(fp, "// "); irWrite(stdout, p);
+  if (isDebug) irWrite(stdout, p);
   switch (p->type) {
     // case IrCall: error("IrCall"); break;
     // case IrArg:  error("IrArg"); break;

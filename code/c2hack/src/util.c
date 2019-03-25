@@ -8,10 +8,10 @@ void argHandle(int argc, char *argv[], int argMin, char *msg) {
     printf(msg);
     exit(1);
   }
-  memset(isFlag, 26, 0);
+  memset(isFlag, 0, sizeof(isFlag));
   for (int i=0; i<argc; i++) {
     char *a=argv[i];
-    if (*a=='-') isFlag[*++a] = 1;
+    if (*a++ == '-') isFlag[(int) *a] = 1;
   }
   isDebug = isFlag['d'];
 }
@@ -85,12 +85,7 @@ void hexDump16(uint16_t *words, int len) {
     printf("%04X", words[i]);
   }
 }
-/*
-int error(char *msg) {
-  printf("Error: %s", msg);
-  assert(0);
-}
-*/
+
 void replace(char *str, char *set, char t) {
   for (char *p = str; *p!= '\0'; p++) {
     if (strchr(set, *p) != NULL) *p = t;
@@ -101,7 +96,7 @@ void htob(char* hex, char* binary) {
   for (int i=0; hex[i] != '\0'; i++) {
     char *ptr = strchr(hexDigits, hex[i]);
     assert(ptr != NULL);
-    char h = ptr - hexDigits;
+    int h = ptr - hexDigits;
     sprintf(&binary[4*i], "%s", h2b[h]);
   }
 }

@@ -24,9 +24,9 @@ extern void format(char *buf, char *fmt, ...);
 #define TMAX 1000
 
 #define member(c, set) strchr(set, c)
-#define error(...) ({ printf(__VA_ARGS__); assert(0); })
+#define error(...) { printf(__VA_ARGS__); assert(0); }
 #define eq(x,y) (strcmp((x),(y))==0)
-#define debug(...) ({ if (isDebug) printf(__VA_ARGS__); })
+#define debug(...) { if (isDebug) printf(__VA_ARGS__); }
 
 
 extern char isDebug;

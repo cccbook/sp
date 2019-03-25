@@ -29,7 +29,6 @@ void irEmitOp2(int t, int t1, char *op, int t2) {
 }
 
 void irEmitLabel(int label) {
-  // L[label] = irTop;
   irNew((IR) {.type=IrLabel, .op="label", .label=label});
 }
 
@@ -77,7 +76,7 @@ void irDump() {
   }
 }
 
-int irPass2() {
+void irPass2() {
   debug("==========irPass2()============\n");
   for (int i=0; i<irTop; i++) {
     int label = ir[i].label, type = ir[i].type;

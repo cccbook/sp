@@ -61,6 +61,9 @@ int CALL(char *id) {
   }
   skip(")");
   irEmitCall(id, ei);
+  // 這裡要再加處理程式
+  int r = nextTemp();
+  return r;
 }
 
 // F = (E) | Number | Id | CALL
@@ -167,7 +170,7 @@ void PROG() {
 }
 
 void parse() {
-  // printf("============ parse =============\n");
+  debug("============ parse =============\n");
   tokenIdx = 0;
   PROG();
 }

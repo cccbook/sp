@@ -3,14 +3,14 @@
 char *typeName[5] = {"Id", "Int", "Keyword", "Literal", "Op"};
 char code[TMAX], *p;
 char strTable[TMAX], *strTableEnd=strTable;
-char *tokens[TMAX], tokenTop=0, tokenIdx=0, token[SMAX];
+char *tokens[TMAX], token[SMAX];
+int tokenTop=0, tokenIdx=0;
 TokenType types[TMAX], type;
 
 char *scan() {
   while (isspace(*p)) p++;
 
   char *start = p;
-  // TokenType type;
   if (*p == '\0') return NULL;
   if (*p == '"') {
     p++;
@@ -39,8 +39,7 @@ char *scan() {
   return token;
 }
 
-int lex(char *code) {
-  // printf("========== lex ==============\n");
+void lex(char *code) {
   p = code;
   tokenTop = 0;
   while (1) {
@@ -50,7 +49,6 @@ int lex(char *code) {
     types[tokenTop] = type;
     tokens[tokenTop++] = strTableEnd;
     strTableEnd += (strlen(tok)+1);
-    // printf("token=%s\n", tok);
   }
 }
 

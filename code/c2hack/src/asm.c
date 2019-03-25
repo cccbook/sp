@@ -81,7 +81,7 @@ void symDump(Map *map) {
   }
 }
 
-int parseLabelData(Code *c, char *line) {
+void parseLabelData(Code *c, char *line) {
   char *p = line;
   assert(*p == '(');
   c->type = 'L';
@@ -97,7 +97,7 @@ int parseLabelData(Code *c, char *line) {
   }
 
   uint16_t *b = c->bin;
-  for (int i=0; p=c->dstr[i]; i++) { // 注意： p 改指向 dstr[i] 了
+  for (int i=0; (p = c->dstr[i]); i++) { // 注意： p 改指向 dstr[i] 了
     c->bptr[i] = b;
     if (*p == '"') { // 字串 "..." 
       c->dtype[i] = 'S';
@@ -111,7 +111,7 @@ int parseLabelData(Code *c, char *line) {
         *b++ = tf[0];
         *b++ = tf[1];
       } else {
-        int16_t n;
+        int n;
         sscanf(p, "%d", &n);
         c->dtype[i] = 'N';
         *b++ = n;
@@ -135,7 +135,6 @@ int parse(char *line, Code *c) {
     if (*p!=' ') break;
   }
   c->size = 1;
-  char *begin = p;
   if (*p == '\0') { // 空行 : 不算大小
     c->size = 0;
   } else if (*p == '(') { // 如果是符號行 (L)
@@ -172,7 +171,7 @@ int parse(char *line, Code *c) {
 // ex: comp: D+A, code: {a,c} = {0,code(D+A)}
 // ex: comp: D+M, code: {a,c} = {1,code(D+A)}
 void comp2code(char *comp, char *code) {
-  char *aComp = comp, mComp[100], iComp[100], *c;
+  char *aComp = comp, mComp[100], *c;
   c = mapLookup(&cMap, aComp); // A: 0xxxxxx
   if (c) { // {a=0 /*A*/}
     sprintf(code, "0%s", c);
@@ -184,7 +183,7 @@ void comp2code(char *comp, char *code) {
     sprintf(code, "1%s", c); /*D+M*/;
     return;
   }
-  error("comp=%s not found!");
+  error("comp=%s or %s not found!", aComp, mComp);
 }
 
 void code2bin(Code *c) {
@@ -209,7 +208,7 @@ void code2bin(Code *c) {
     char ccode[20], *dcode="000", *jcode="000";
     if (c->d) { // d=c
       dcode = mapLookup(&dMap, c->d);
-      if (!dcode) error("code2bin: dcode not found!", dcode);
+      if (!dcode) error("code2bin: c->d=%s not found!", c->d);
       comp2code(c->c, ccode);
       sprintf(bstr, "111%s%s%s", ccode, dcode, jcode);
     } else { // c;j
@@ -221,7 +220,6 @@ void code2bin(Code *c) {
     }
     bin[0] = btoi(bstr);
   } else if (c->label) { // LABEL : 把符號轉成位址
-    int16_t *b = bin;
     for (int i=0; c->dstr[i]; i++) { // i < c->dsize
       if (c->dtype[i] == 'L') {
         uint16_t *address = mapLookup(&symMap, c->dstr[i]);

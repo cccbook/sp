@@ -32,19 +32,17 @@ Map macroMap;
 int expand(char *line, char *code) {
   replace(line, "\r\n", ' ');
   if (line[0] != '.') { sprintf(code, "%s\n", line); return 0; }
-  // printf("line=%s\n", line);
-  char p[6][SMAX]; memset(p, 6*SMAX, 0);
+  char p[6][SMAX]; memset(p, 0, 6*SMAX);
   sscanf(line, ".%s %s %s %s %s %s", p[0], p[1], p[2], p[3], p[4], p[5]);
   char *macro = mapLookup(&macroMap, p[0]);
   if (!macro) error("macro %s not found!", p[0]);
   char eMacro[TMAX];
   format(eMacro, macro, p[1], p[2], p[3], p[4], p[5]);
-  // printf("eMacro=\n%s\n", eMacro);
   sprintf(code, "// %s\n%s\n", line, eMacro);
   return 1;
 }
 
-int macroExpand(char *iFile, char *oFile) {
+void macroExpand(char *iFile, char *oFile) {
   char line[SMAX];
   debug("====== macroExpand ============\n");
   FILE *iF = fopen(iFile, "r");
@@ -52,7 +50,7 @@ int macroExpand(char *iFile, char *oFile) {
   while (fgets(line, sizeof(line), iF)) {
     char code[TMAX];
     int isExpand = expand(line, code);
-    if (isExpand) debug("%s", code); else debug("%s", line);
+    if (isExpand) { debug("%s", code); } else debug("%s", line);
     fwrite(code, strlen(code), 1, oF);
   }
   fclose(iF);

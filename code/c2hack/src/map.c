@@ -9,7 +9,7 @@ unsigned int hash(char *key) {
     h = (h << 4) + h + *p; // h = h*17 + *p; 為了加速不用乘法 ....
     p++;
   }
-  return h << 6 + p-key;
+  return (h << 6) + (p - key); // 移位後加上長度
 }
 
 Map* mapNew(Map *map, int size) {
@@ -32,16 +32,7 @@ Pair *mapFind(Map *map, char *key) {
   int h = mapFindIdx(map, key);
   return &map->table[h];
 }
-/*
-Pair *mapFind(Map *map, char *key) {
-  int h = hash(key) % map->size;
-  while (map->table[h].key != NULL) {
-    if (strcmp(map->table[h].key, key)==0) break;
-    h = (h+1) % map->size;
-  }
-  return &map->table[h];
-}
-*/
+
 Pair* mapAdd(Map *map, char *key, void *value) {
   assert(map->top < map->size);
   Pair *p = mapFind(map, key);
@@ -58,7 +49,6 @@ void* mapLookup(Map *map, char *key) {
 
 void mapAddAll(Map *map, Pair *list, int top) {
   for (int i=0; i<top; i++) {
-    // printf("%d : key=%s value=%s\n", i, list[i].key, list[i].value);
     mapAdd(map, list[i].key, list[i].value);
   }
 }
