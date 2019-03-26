@@ -1,36 +1,20 @@
-@main
-0;JMP
-
-(msg) "sum=", 0
-(i) 1
-(sum) 0
-
-(main)
-
-(loop)
-// if i>10 goto exit
-@i
-D=M
-@10
-D=D-A
-@exit
-D;JGT
-// sum = sum + i
-@sum
-D=M
-@i
-D=D+M
-@sum
-M=D
-// i = i + 1
-@1
-D=A
-@i
-M=M+1
-// goto loop
-@loop
-0;JMP
-(exit)
-
-.sput msg
-.iput sum
+.seti t1 = 0
+.set  s = t1
+.seti t1 = 1
+.set  i = t1
+(L1)
+.set  t2 = i
+.seti t3 = 10
+.op   t4 = t2 <= t3
+.ifnot t4 goto L2
+.set  t1 = s
+.set  t2 = i
+.op   t3 = t1 + t2
+.set  s = t3
+.set  t1 = i
+.seti t2 = 1
+.op   t3 = t1 + t2
+.set  i = t3
+.goto L1
+(L2)
+.puti s

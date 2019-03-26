@@ -2,6 +2,7 @@
 
 Pair varList[VAR_MAX];
 Map varMap;
+int L[VAR_MAX];
 int v[VAR_MAX];
 int t[VAR_MAX] = { 0 };
 

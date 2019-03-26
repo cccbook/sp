@@ -1,0 +1,31 @@
+@main  
+0;JMP  
+  
+(C4) 4.0  
+(PI) 3.14159  
+  
+(main)  
+// .setf PI  
+@PI
+D=A
+@17
+swi
+// .putf  
+@18
+swi
+// .addf PI  
+@PI
+D=A
+@19
+swi
+// .putf  
+@18
+swi
+// .mulf C4  
+@C4
+D=A
+@21
+swi
+// .putf  
+@18
+swi

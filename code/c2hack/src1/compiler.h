@@ -5,6 +5,6 @@
 #include "ir.h"
 #include "ir2m0.h"
 
-extern void parse(char *code);
+extern void parse();
 
 #endif

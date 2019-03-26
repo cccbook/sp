@@ -19,7 +19,7 @@ Pair cList[] = {
   {"A+1", "110111"},
   {"A-1", "110010"},
   {"A-D", "000111"},
-  // Extension instruction : 使用 10 開頭
+  // Extension instruction : 使用 10 開頭，避開 {"0",   "101010"}
   {"D<<A", "100000"},
   {"D>>A", "100001"},
   {"D*A",  "100010"},
@@ -30,12 +30,12 @@ Pair cList[] = {
   {"D>A",  "100111"},
   {"D>=A", "101000"},
   {"D==A", "101001"},
-  // -- 原本指令 D=0 之類的 c 欄位就有 "101010"，要避開！
   {"D!=A", "101011"},
   {"D^A",  "101100"},
   {"call", "101101"},
   {"ret",  "101110"},
   {"swi",  "101111"},
+  // io 指令 : I[14]=1 使用 CPU，I[14]=0 使用 IO 指令，所以不需要再避免衝突了。
 };
 
 Pair jList[] = {
@@ -280,6 +280,8 @@ void assemble(string file) {
   symDump(&symMap);
 }
 
+// run: ./asm <file> 
+// notice : <file> with no extension.
 int main(int argc, char *argv[]) {
   argHandle(argc, argv, 2, "./asm <file>\n");
   // 建置表格

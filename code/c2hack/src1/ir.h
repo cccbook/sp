@@ -21,8 +21,6 @@ typedef struct {
 
 extern IR ir[];
 extern int irTop;
-extern int L[];
-
 extern void irPass2();
 extern int irExec(int i);
 extern void irRun();

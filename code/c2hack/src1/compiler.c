@@ -6,33 +6,29 @@ void STMT();
 void IF();
 void BLOCK();
 
-Token tnow, tnext;
-
 int tempIdx = 1, labelIdx = 1;
 
 #define nextTemp() (tempIdx++)
 #define nextLabel() (labelIdx++)
 
 int isNext(char *set) {
-  char eset[SMAX], etoken[SMAX+2];
+  char eset[SMAX], etoken[SMAX];
   sprintf(eset, " %s ", set);
-  sprintf(etoken, " %s ", tnext.str);
-  return (tnext.type != End && strstr(eset, etoken) != NULL);
+  sprintf(etoken, " %s ", tokens[tokenIdx]);
+  return (tokenIdx < tokenTop && strstr(eset, etoken) != NULL);
 }
 
 int isNextType(TokenType type) {
-  return (tnext.type == type);
+  return (types[tokenIdx] == type);
 }
 
 int isEnd() {
-  return tnext.type == End;
+  return tokenIdx >= tokenTop;
 }
 
 char *next() {
-  tnow = tnext;
-  tnext = lexScan();
-  printf("token = %-10s type = %-10s\n", tnext.str, tokenTypeName[tnext.type]);
-  return tnow.str;
+  // printf("%02d:token = %-10s type = %-10s\n", tokenIdx, tokens[tokenIdx], typeName[types[tokenIdx]]);
+  return tokens[tokenIdx++];
 }
 
 char *skip(char *set) {
@@ -47,7 +43,7 @@ char *skipType(TokenType type) {
   if (isNextType(type)) {
     return next();
   } else {
-    error("skipType(%s) got %s fail!\n", tokenTypeName[type], tokenTypeName[tnext.type]);
+    error("skipType(%s) got %s fail!\n", typeName[type], typeName[types[tokenIdx]]);
   }
 }
 
@@ -136,6 +132,15 @@ void STMT() {
     BLOCK();
   else {
     char *id = next();
+    /*
+    if (eq(id, "int")) {
+      skip("int");
+      while (!isNext(";")) {
+        char *var = skipType(Id);
+        mapAdd(symMap, var, &symList[symTop++]);
+      }
+    }
+    */
     if (isNext("(")) {
       CALL(id);
     } else {
@@ -164,9 +169,8 @@ void PROG() {
   STMTS();
 }
 
-void parse(char *code) {
+void parse() {
   debug("============ parse =============\n");
-  lexInit(code);
-  next();
+  tokenIdx = 0;
   PROG();
 }

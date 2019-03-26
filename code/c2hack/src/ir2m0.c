@@ -11,7 +11,7 @@ void ir2macro(FILE *fp, IR *p) {
       fprintf(fp, ".set  %s = t%d", s, t); // s=t
       break;
     case IrAssignTs:
-      digit[0] = isdigit(*s) ? 'c' : ' ';
+      digit[0] = isdigit(*s) ? 'i' : ' ';
       fprintf(fp, ".set%s t%d = %s", digit, t, s); // t=s
       break;
     case IrLabel: // (label)

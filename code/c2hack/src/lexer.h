@@ -1,18 +1,18 @@
 #ifndef __LEXER_H__
 #define __LEXER_H__
 
-#include "util.h"
+#include "../lib/util.h"
+#include "../lib/strTable.h"
 
-typedef enum { Id, Int, Keyword, Literal, Op } TokenType;
+typedef enum { Id, Int, Keyword, Literal, Op, End } TokenType;
 
-extern char *typeName[];
-extern char code[];
-extern char strTable[], *strTableEnd;
-extern char *tokens[];
-extern int tokenTop, tokenIdx;
-extern TokenType types[];
+typedef struct {
+  TokenType type;
+  char *str;
+} Token;
 
-extern void lex(char *text);
-extern void lexDump();
+extern char *tokenTypeName[];
+extern void lexInit(char *code);
+extern Token lexScan();
 
 #endif

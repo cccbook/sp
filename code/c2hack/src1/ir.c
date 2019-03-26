@@ -2,7 +2,7 @@
 
 IR ir[IR_MAX];
 int irTop = 0;
-int L[VAR_MAX]; // label => address
+extern int L[]; // label => address
 
 void irNew(IR p) {
   ir[irTop++] = p;

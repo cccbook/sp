@@ -4,4 +4,4 @@
 (str) "hello!", 0
 
 (main)
-.sput str
+.puts str
