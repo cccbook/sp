@@ -1,0 +1,20 @@
+.seti t1 = 0
+.set  s = t1
+.seti t1 = 1
+.set  i = t1
+(L1)
+.set  t2 = i
+.seti t3 = 10
+.op   t4 = t2 <= t3
+.ifnot t4 goto L2
+.set  t1 = s
+.set  t2 = i
+.op   t3 = t1 + t2
+.set  s = t3
+.set  t1 = i
+.seti t2 = 1
+.op   t3 = t1 + t2
+.set  i = t3
+.goto L1
+(L2)
+.puti s

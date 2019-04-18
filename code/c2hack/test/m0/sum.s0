@@ -1,0 +1,96 @@
+// .seti t1 = 0  
+@0
+D=A
+@t1
+M=D
+// .set  s = t1  
+@t1
+D=M
+@s
+M=D
+// .seti t1 = 1  
+@1
+D=A
+@t1
+M=D
+// .set  i = t1  
+@t1
+D=M
+@i
+M=D
+(L1)  
+// .set  t2 = i  
+@i
+D=M
+@t2
+M=D
+// .seti t3 = 10  
+@10
+D=A
+@t3
+M=D
+// .op   t4 = t2 <= t3  
+@t2
+D=M
+@t3
+D=D<=M
+@t4
+M=D
+// .ifnot t4 goto L2  
+@t4
+D=M
+@L2
+D;JEQ
+// .set  t1 = s  
+@s
+D=M
+@t1
+M=D
+// .set  t2 = i  
+@i
+D=M
+@t2
+M=D
+// .op   t3 = t1 + t2  
+@t1
+D=M
+@t2
+D=D+M
+@t3
+M=D
+// .set  s = t3  
+@t3
+D=M
+@s
+M=D
+// .set  t1 = i  
+@i
+D=M
+@t1
+M=D
+// .seti t2 = 1  
+@1
+D=A
+@t2
+M=D
+// .op   t3 = t1 + t2  
+@t1
+D=M
+@t2
+D=D+M
+@t3
+M=D
+// .set  i = t3  
+@t3
+D=M
+@i
+M=D
+// .goto L1  
+@L1
+0;JMP
+(L2)  
+// .puti s  
+@s
+D=M
+@0
+swi
