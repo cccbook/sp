@@ -1,0 +1,178 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nand2tetris -- 動手設計電腦的軟硬體 >>  10. 編譯器 (I)</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.2/pure-min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../mdbook.css">
+</head>
+<body>
+
+<div class="header pure-menu pure-menu-horizontal">
+  <ul id="topBar" class="pure-menu-list">
+    <li id="bookTitle" class="pure-menu-item"></li>
+    <i onclick="MDB.view()" class="fa fa-tablet" aria-hidden="true" title="View"></i>&nbsp;
+    <i onclick="MDB.edit()" class="fa fa-pencil-square-o" aria-hidden="true" title="Edit"></i>&nbsp;
+<!--    <i onclick="MDB.save()" class="fa fa-floppy-o" aria-hidden="true" title="Save"></i>&nbsp; -->
+    <i onclick="MDB.plugin('upload.html')" class="fa fa-upload" aria-hidden="true" title="Upload"></i>
+    <li id="opMenu" class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+      <a id="me" class="pure-menu-link mt" data-mt="User"></a>
+      <ul class="pure-menu-children">
+        <li class="pure-menu-item"><a onclick="MDB.plugin('createBook.html')" class="pure-menu-link mt" data-mt="NewBook=寫書">NewBook</a></li>
+        <li class="pure-menu-item"><a onclick="MDB.plugin('login.html')" class="pure-menu-link mt" data-mt="Login=登入">Login</a></li>
+        <li class="pure-menu-item"><a onclick="MDB.logout()" class="pure-menu-link mt" data-mt="Logout=登出">Logout</a></li>
+<!--        <li class="pure-menu-item"><a onclick="MDB.plugin('search.html')" class="pure-menu-link mt" data-mt="Search=搜尋">Search</a></li>
+        <li class="pure-menu-item"><a href="#sms" class="pure-menu-link mt" data-mt="Comment=留言">Comment</a></li>
+-->
+      </ul>
+    </li>
+    <li id="languageMenu" class="pure-menu-item pure-menu-has-children pure-menu-allow-hover"> <!-- hidden -->
+      <a id="locale" class="pure-menu-link">Global</a>
+      <ul class="pure-menu-children">
+        <li class="pure-menu-item"><a onclick="MDB.render('Global')" class="pure-menu-link">Global</a></li>
+        <li class="pure-menu-item"><a onclick="MDB.render('English')" class="pure-menu-link">English</a></li>
+        <li class="pure-menu-item"><a onclick="MDB.render('繁體中文')" class="pure-menu-link">繁體中文</a></li>
+        <li class="pure-menu-item"><a onclick="MDB.render('简体中文')" class="pure-menu-link">简体中文</a></li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<div id="layout">
+  <a href="#menu" id="menuLink" class="menu-link"><span></span></a>
+  <div id="menu">
+    <div id="sideMenu" class="pure-menu">
+      <div class="pure-menu-heading"><a href="/"><i class="fa fa-home" aria-hidden="true" title="Home"></i></a>
+        <a href="book.mdo"><i class="fa fa-book" aria-hidden="true" title="Book"></i></a>
+        <a href="../../view//"><i class="fa fa-user" aria-hidden="true" title="Author"></i></a>
+      </div>
+      <ul class="pure-menu-list" id="bookBox">
+      </ul>
+    </div>
+  </div>
+  <div id="main">
+    <div class="content" id="viewBox" hidden>
+      <div id="mdBox"></div>
+      <div style="text-align:center">
+        <span class="footnote">
+        <label class="mt" data-mt="Author=作者">Author</label> ： <a href="/view/ccc/">ccc</a> , 
+        <label class="mt" data-mt="Licensed in=使用請遵循">Licensed in</label> <a href="../../view/license/notSpecified.md" class="mt" data-mt="License=授權聲明">授權聲明</a> 
+<!--     ,    <label class="mt" data-mt="Welcome to=歡迎"></label> <a href="#sms" class="mt" data-mt="Comment=評論留言">Comment</a> ！ -->
+        </span>
+      </div>
+    </div>
+    <div class="content" id="editBox" hidden>
+      <form class="pure-form pure-form-stacked">
+      <div style="height:2.5em">
+        <button type="button" class="pure-button pure-button-primary mt" data-mt="Save=儲存" onclick="MDB.save()">Save</button>
+        <select id="watchOption" style="float:right">
+          <option value="no"  class="mt" data-mt="No Translation=不翻譯" selected="selected"> 不翻譯 </option>
+          <option value="c2e" class="mt" data-mt="Chinese to English=中翻英"> 中翻英 </option>
+          <option value="e2c" class="mt" data-mt="English to Chinese=英翻中"> 英翻中 </option>
+        </select>
+      </div>
+      </form>
+      <div id="watch" style="height:5em" hidden></div>
+      <textarea id="editText" name="editText"># 10. 編譯器 (I)
+
+| 教學 | 主題  | 影片  |
+|--------|-----|------|
+| PDF | [Chapter 10. Compiler I: Syntax Analysis](http://www.nand2tetris.org/lectures/PDF/lecture%2010%20compiler%20I.pdf)  |  |
+| 範例 | [剖析數學運算式 (JavaScript)](../ai/parseExp.md) |  |
+| 範例 | [產生數學運算式 (C)](cExpGen.md) |  |
+| 範例 | [數學運算式編譯器 (C)](cExpCompiler.md) |  |
+| 影片 | gcc 編譯器工具鏈的用法 | [影片](https://www.youtube.com/watch?v=CcaegVVaxT8) |</textarea>
+      <textarea id="editBook" name="editBook" style="display:none">{
+ "title": "Nand2tetris -- 動手設計電腦的軟硬體",
+ "editor": "ccc",
+ "chapters": [
+  {
+   "title": "課程",
+   "link": "README.md"
+  },
+  {
+   "title": "十分鐘系列",
+   "link": "slide.md"
+  },
+  {
+   "title": "1. 布林邏輯",
+   "link": "chapter1.md"
+  },
+  {
+   "title": "2. 算術電路",
+   "link": "chapter2.md"
+  },
+  {
+   "title": "3. 記憶電路",
+   "link": "chapter3.md"
+  },
+  {
+   "title": "4. 組合語言",
+   "link": "chapter4.md"
+  },
+  {
+   "title": "5. 計算機結構",
+   "link": "chapter5.md"
+  },
+  {
+   "title": "6. 組譯器",
+   "link": "chapter6.md"
+  },
+  {
+   "title": "7. 虛擬機 (1)",
+   "link": "chapter7.md"
+  },
+  {
+   "title": "8. 虛擬機 (2)",
+   "link": "chapter8.md"
+  },
+  {
+   "title": "9. 高階語言",
+   "link": "chapter9.md"
+  },
+  {
+   "title": "10. 編譯器 (1)",
+   "link": "chapter10.md"
+  },
+  {
+   "title": "11. 編譯器 (2)",
+   "link": "chapter11.md"
+  },
+  {
+   "title": "12. 作業系統",
+   "link": "chapter12.md"
+  },
+  {
+   "title": "補充",
+   "link": "appendix.md"
+  },
+  {
+   "title": "補充投影片",
+   "link": "bookSlide.md"
+  }
+ ],
+ "book": "nand2tetris"
+}</textarea>
+    </div>
+    <div class="content" id="pluginBox" hidden></div>
+  </div>
+</div>
+<script src="../../f6.js"></script>
+<script src="../../mdbook.js"></script>
+<script>
+MDB.setting = {
+  user: '',
+  book: 'nand2tetris',
+  file: 'chapter10.md',
+  locale: '',
+  showdownJsUrl: 'https://cdnjs.cloudflare.com/ajax/libs/showdown/1.6.0/showdown.min.js',
+  highlightCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css',
+  katexCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css',
+  katexJsUrl: 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js',
+  highlightJsUrl: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js',
+}
+</script>
+</body>
+</html>

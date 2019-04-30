@@ -1,0 +1,421 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>專為中學生寫的 JavaScript 程式書 >>  第 3 章 - 陣列與字串</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.2/pure-min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../mdbook.css">
+</head>
+<body>
+
+<div class="header pure-menu pure-menu-horizontal">
+  <ul id="topBar" class="pure-menu-list">
+    <li id="bookTitle" class="pure-menu-item"></li>
+    <i onclick="MDB.view()" class="fa fa-tablet" aria-hidden="true" title="View"></i>&nbsp;
+    <i onclick="MDB.edit()" class="fa fa-pencil-square-o" aria-hidden="true" title="Edit"></i>&nbsp;
+<!--    <i onclick="MDB.save()" class="fa fa-floppy-o" aria-hidden="true" title="Save"></i>&nbsp; -->
+    <i onclick="MDB.plugin('upload.html')" class="fa fa-upload" aria-hidden="true" title="Upload"></i>
+    <li id="opMenu" class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+      <a id="me" class="pure-menu-link mt" data-mt="User"></a>
+      <ul class="pure-menu-children">
+        <li class="pure-menu-item"><a onclick="MDB.plugin('createBook.html')" class="pure-menu-link mt" data-mt="NewBook=寫書">NewBook</a></li>
+        <li class="pure-menu-item"><a onclick="MDB.plugin('login.html')" class="pure-menu-link mt" data-mt="Login=登入">Login</a></li>
+        <li class="pure-menu-item"><a onclick="MDB.logout()" class="pure-menu-link mt" data-mt="Logout=登出">Logout</a></li>
+<!--        <li class="pure-menu-item"><a onclick="MDB.plugin('search.html')" class="pure-menu-link mt" data-mt="Search=搜尋">Search</a></li>
+        <li class="pure-menu-item"><a href="#sms" class="pure-menu-link mt" data-mt="Comment=留言">Comment</a></li>
+-->
+      </ul>
+    </li>
+    <li id="languageMenu" class="pure-menu-item pure-menu-has-children pure-menu-allow-hover"> <!-- hidden -->
+      <a id="locale" class="pure-menu-link">Global</a>
+      <ul class="pure-menu-children">
+        <li class="pure-menu-item"><a onclick="MDB.render('Global')" class="pure-menu-link">Global</a></li>
+        <li class="pure-menu-item"><a onclick="MDB.render('English')" class="pure-menu-link">English</a></li>
+        <li class="pure-menu-item"><a onclick="MDB.render('繁體中文')" class="pure-menu-link">繁體中文</a></li>
+        <li class="pure-menu-item"><a onclick="MDB.render('简体中文')" class="pure-menu-link">简体中文</a></li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<div id="layout">
+  <a href="#menu" id="menuLink" class="menu-link"><span></span></a>
+  <div id="menu">
+    <div id="sideMenu" class="pure-menu">
+      <div class="pure-menu-heading"><a href="/"><i class="fa fa-home" aria-hidden="true" title="Home"></i></a>
+        <a href="book.mdo"><i class="fa fa-book" aria-hidden="true" title="Book"></i></a>
+        <a href="../../view//"><i class="fa fa-user" aria-hidden="true" title="Author"></i></a>
+      </div>
+      <ul class="pure-menu-list" id="bookBox">
+      </ul>
+    </div>
+  </div>
+  <div id="main">
+    <div class="content" id="viewBox" hidden>
+      <div id="mdBox"></div>
+      <div style="text-align:center">
+        <span class="footnote">
+        <label class="mt" data-mt="Author=作者">Author</label> ： <a href="/view/ccc/">ccc</a> , 
+        <label class="mt" data-mt="Licensed in=使用請遵循">Licensed in</label> <a href="../../view/license/notSpecified.md" class="mt" data-mt="License=授權聲明">授權聲明</a> 
+<!--     ,    <label class="mt" data-mt="Welcome to=歡迎"></label> <a href="#sms" class="mt" data-mt="Comment=評論留言">Comment</a> ！ -->
+        </span>
+      </div>
+    </div>
+    <div class="content" id="editBox" hidden>
+      <form class="pure-form pure-form-stacked">
+      <div style="height:2.5em">
+        <button type="button" class="pure-button pure-button-primary mt" data-mt="Save=儲存" onclick="MDB.save()">Save</button>
+        <select id="watchOption" style="float:right">
+          <option value="no"  class="mt" data-mt="No Translation=不翻譯" selected="selected"> 不翻譯 </option>
+          <option value="c2e" class="mt" data-mt="Chinese to English=中翻英"> 中翻英 </option>
+          <option value="e2c" class="mt" data-mt="English to Chinese=英翻中"> 英翻中 </option>
+        </select>
+      </div>
+      </form>
+      <div id="watch" style="height:5em" hidden></div>
+      <textarea id="editText" name="editText"># 第 3 章 - 陣列與字串
+
+## 陣列操作
+
+JavaScript 的陣列宣告非常簡單，就是用 `[ ... ]` 所框起來的一連串資料。以下我們啟動 node之後用交談的方式先進行一些陣列操作的示範，以便讓讀者能實際體會《陣列到底是甚麼？》
+
+
+### 陣列存取
+
+```
+$ node
+> a=[0,1,2]
+[ 0, 1, 2 ]
+> a
+[ 0, 1, 2 ]
+> a[0]
+0
+> a[1]
+1
+> a[2]
+2
+> a[3]
+undefined
+> a[4]
+undefined
+> a[9]
+undefined
+> a[9]=9
+9
+> a
+[ 0, 1, 2, , , , , , , 9 ]
+> a[0]=7
+7
+> a
+[ 7, 1, 2, , , , , , , 9 ]
+> 
+
+```
+
+### 函數操作
+
+在 javascript 當中，陣列是一種《物件》，裡面有很多可以呼叫的函數，像是 push, pop, shift, unshift, join, reverse, slice, sort .... 等等，我們可以透過這些函數對陣列進行操作，取得我們所想要的結果。以下是一系列的互動示範。
+
+```
+> a = [1,2,3]
+[ 1, 2, 3 ]
+> a.push(4) // 把 4 推入陣列尾端
+4
+> a
+[ 1, 2, 3, 4 ]
+> a.push(5) // 再把 5 推入
+5
+> a
+[ 1, 2, 3, 4, 5 ]
+> a.concat([6,7,8]) // 將兩陣列連接起來後傳回，但必須注意這並不會改變 a 的內容。
+[ 1, 2, 3, 4, 5, 6, 7, 8 ]
+> a                 // a 的內容並沒有改變
+[ 1, 2, 3, 4, 5 ]
+> b=a.concat([6,7,8]) // 如果想把連接的結果記住，可以塞給某變數，例如 b 。
+[ 1, 2, 3, 4, 5, 6, 7, 8 ]
+> b
+[ 1, 2, 3, 4, 5, 6, 7, 8 ]
+> a
+[ 1, 2, 3, 4, 5 ]
+> a.join(':') // 把陣列用 : 符號連接成一個字串。
+'1:2:3:4:5'
+> a.join()    // 把陣列連接成一個字串 (預設連接符號為 ,)
+'1,2,3,4,5'
+> a.pop       // 陣列.pop 是一個函數
+[Function: pop]
+> a.pop()     // 呼叫該函數可以《彈出》最後的那個元素！
+5
+> a           // 《彈出後》該陣列尾端的元素就移除了！
+[ 1, 2, 3, 4 ]
+> a.reverse() // 將陣列反轉！
+[ 4, 3, 2, 1 ]
+> a           // reverse 之後陣列就真的反轉了，原本的 a 被修改成反轉後的狀態！
+[ 4, 3, 2, 1 ]
+> a.shift()   // 從陣列頭部取出一個元素。
+4
+> a           // shift 之後，頭部的元素就真的移除了！
+[ 3, 2, 1 ]
+> b           // 上次用 a.concat([6,7,8]) 所做出來的 b 元素還在。
+[ 1, 2, 3, 4, 5, 6, 7, 8 ]
+> b.slice(2,4) // 用 slice 取出其中第 2 個到第 4 個之間的子陣列。 (注意：這只會傳回 b[2], b[3], 不包含 b[4])
+[ 3, 4 ]
+> b.slice(2,6) // 取出其中第 2 個到第 6 個之間的子陣列。
+[ 3, 4, 5, 6 ]
+> a            // 再次看看 a 的內容
+[ 3, 2, 1 ]
+> a.sort()     // 將 a 排序 (預設為由小到大排列)
+[ 1, 2, 3 ]
+> a            // a 的內容被從小到大排列了！
+[ 1, 2, 3 ]
+> b
+[ 1, 2, 3, 4, 5, 6, 7, 8 ]
+> r=b.splice(1,3, "a", "b", "c", "d") // splice 的功能有點複雜，是將指定的 (1,3) 區間移除後，再插入後面的那些元素。
+[ 2, 3, 4 ]
+> r                                   // 所以 (1,3) 區間內的 (2,3,4) 被移除了。
+[ 2, 3, 4 ]
+> b                                   // 然後又塞入了 "a", "b", "c", "d" 這四個元素！
+[ 1, 'a', 'b', 'c', 'd', 5, 6, 7, 8 ]
+> 
+
+```
+
+當您會使用互動式的方式操作陣列之後，就可以開始撰寫有關陣列的程式了。
+
+## 一維陣列
+
+JavaScript 的陣列宣告非常簡單，就是用 `[...]` 所框起來的一連串資料，或者您也可以用 `new Array()` 語句來建立一個空的陣列，而且可以用 length 屬性來取得陣列大小。
+
+檔案：array.js
+
+```javascript
+var a=[1,6,2,5,3,6,1];
+
+for (i=0;i<a.length;i++) {
+  console.log("a[%d]=%d", i, a[i]);
+}
+```
+
+執行結果
+
+```
+D:\jsbook>node array.js
+a[0]=1
+a[1]=6
+a[2]=2
+a[3]=5
+a[4]=3
+a[5]=6
+a[6]=1
+```
+
+當然、javascript 有些語法是 C 語言所沒有的，像是 JavaScript 的 foreach 語句採用 `for (i in c)` 這樣的語法，其中的 c 必須是個陣列或容器，而 i 則是索引值 (注意、不是內容，是索引值)，以下是這種語句的一個範例。
+
+檔案：foreach.js
+
+```javascript
+var a=[1,6,2,5,3,6,1];
+
+for (i in a) {
+  console.log("a[%d]=%d", i, a[i]);
+}
+```
+
+執行結果
+
+```
+D:\jsbook>node foreach
+a[0]=1
+a[1]=6
+a[2]=2
+a[3]=5
+a[4]=3
+a[5]=6
+a[6]=1
+```
+
+## 二維陣列
+
+除了一維陣列、我們也可以宣告二維、三維、甚至更高維的陣列，以下是一個將二為陣列格式化為字串後印出來的範例。
+
+檔案：array2D.js
+
+```javascript
+var a=[[1,6,2],
+       [5,3,6]];
+
+for (var i=0; i<a.length; i++) {
+  var line = "";
+  for (var j=0; j<a[i].length; j++) {
+    line = line + a[i][j] + " ";
+  }
+  console.log(line);
+}
+```
+
+執行結果
+
+```
+D:\jsbook>node array2D
+1 6 2
+5 3 6
+```
+
+
+
+## 結語
+
+雖然陣列和字串都可以用 a[i] 這種方式存取裡面的元素，但是兩者所具有的函數還是不一樣的。
+
+在 javascript 裡面，字串並非一種陣列，因此我們可以對陣列進行 push 等動作，但是卻不能對字串進行 push 動作，否則會發生錯誤的！
+
+以下是一個誤用的範例：
+
+```
+D:\cccwd2\file\jsh\code>node
+> "abc".push("d")
+TypeError: "abc".push is not a function
+    at repl:1:7
+    at REPLServer.defaultEval (repl.js:248:27)
+    at bound (domain.js:280:14)
+    at REPLServer.runBound [as eval] (domain.js:293:12)
+    at REPLServer.<anonymous> (repl.js:412:12)
+    at emitOne (events.js:82:20)
+    at REPLServer.emit (events.js:169:7)
+    at REPLServer.Interface._onLine (readline.js:210:10)
+    at REPLServer.Interface._line (readline.js:549:8)
+    at REPLServer.Interface._ttyWrite (readline.js:826:14)
+> ["a", "b", "c"].push("d")
+4
+
+```
+
+所以在使用 javascript 裡面，記得不要把字串誤以為是陣列來用喔！
+
+
+## 習題
+
+本章習題絕大部分都需要先學會函數之後才能實作，因此請再看完第4章後再來練習本章習題！
+
+### 陣列處理習題
+
+1. 請在一個已經排序的陣列中之正確位置插入一個數值。 
+    * 範例： insert([1,2,5,6,7], 3) => [1,2,3,5,6,7]
+2. 請用二分搜尋法搜尋一個已經排好序的陣列。
+    * 範例： find([ 1, 4, 5, 8, 9], 5) => 2 , 找不到時傳回 -1。
+3. 請將 a 到 b 之間無法被 3, 5, 7 整除的數字放到陣列中？ 
+    * 範例： filter357(5,10) = [8]
+    * 範例： filter357(5,15) = [8,11,13]
+4. 請算出某陣列的平均值？ 
+    * 範例： mean([1,2,3,4,5]) => 3
+5. 請算出某陣列的標準差？ (標準差為 (xi-x)^2 的總和) 
+    * 範例： sd([1,2,3,4,5]) = sqrt((2^2+1^2+0^2+1^2+2^2)/5) = sqrt(2)=1.414。
+6. 請寫一個函數找出一個排序好陣列中差異最小的兩個數之距離？ 
+    * 範例： minGap([1,3,6,7,10]) = 1
+7. 請寫一個函數 random(n, a, b) 可以產生 n 個介於 a 到 b 之間的浮點亂數？  
+    * 範例： random(3, 10, 20)= [13.76, 19,23, 14,11]
+8. 寫一個程式做因數分解。 
+    * 範例：factor(45) => [3, 3, 5]
+
+### 矩陣處理習題
+1. 寫一個程式把矩陣轉置。 
+    * 範例：transpose([[1,2,3], [3,2,1]]) => [[1,3], [2,2], [3,1]]
+2. 請寫一個函數計算兩矩陣相加？ 
+    * 範例： add([[1,2],[3,4]], [[1,1],[1,1]]) => [[2,3], [4,5]]
+3. 請寫一個函數計算兩矩陣相減？ 
+    * 範例： sub([[1,2],[3,4]], [[1,1],[1,1]]) => [[0,1], [2,3]]
+4. 請寫一個函數計算兩矩陣相乘？ 
+    * 範例： mul([[1,2],[3,4]], [[1,1],[1,1]]) => [[3,3], [7,7]]
+5. 請寫一個函數 neg(A) 傳回某矩陣 A 的負矩陣 -A。 
+    * 範例： neg([[1,2],[3,4]]) => [[-1,-2],[-3,-4]]
+6. 請寫一個函數判斷某方陣是否每行每列的加總都是一樣的？ 
+    * 範例： isMagic([[1,2,3], [2,3,1], [3,1,2]]) = true
+    * 範例： isMagic([[1,2,3], [2,3,1], [3,2,1]]) = false
+7. 請寫一個函數可以把 n*m 個數值的陣列改變為的矩陣？  
+    * 範例： asMatrix([1,2,3,4,5,6], 2, 3) => [[1,2,3],[4,5,6]] 
+</textarea>
+      <textarea id="editBook" name="editBook" style="display:none">{
+ "title": "專為中學生寫的 JavaScript 程式書",
+ "editor": "ccc",
+ "chapters": [
+  {
+   "title": "前言",
+   "link": "README.md"
+  },
+  {
+   "title": "1. 程式入門",
+   "link": "chapter1.md"
+  },
+  {
+   "title": "2. 基本語法",
+   "link": "chapter2.md"
+  },
+  {
+   "title": "3. 字串",
+   "link": "chapterString.md"
+  },
+  {
+   "title": "4. 陣列",
+   "link": "chapter3.md"
+  },
+  {
+   "title": "5. 函數",
+   "link": "chapter4.md"
+  },
+  {
+   "title": "6. 字典與 JSON",
+   "link": "chapter5.md"
+  },
+  {
+   "title": "7. 物件導向與原型",
+   "link": "chapter6.md"
+  },
+  {
+   "title": "8. 函式庫",
+   "link": "chapter7.md"
+  },
+  {
+   "title": "9. 模組",
+   "link": "chapter8.md"
+  },
+  {
+   "title": "10. 檔案與輸出入",
+   "link": "chapter9.md"
+  },
+  {
+   "title": "11. 資料庫",
+   "link": "chapter10.md"
+  },
+  {
+   "title": "12. 網路",
+   "link": "chapter11.md"
+  },
+  {
+   "title": "習題解答",
+   "link": "answer.md"
+  }
+ ],
+ "book": "jsh"
+}</textarea>
+    </div>
+    <div class="content" id="pluginBox" hidden></div>
+  </div>
+</div>
+<script src="../../f6.js"></script>
+<script src="../../mdbook.js"></script>
+<script>
+MDB.setting = {
+  user: '',
+  book: 'jsh',
+  file: 'chapter3.md',
+  locale: '',
+  showdownJsUrl: 'https://cdnjs.cloudflare.com/ajax/libs/showdown/1.6.0/showdown.min.js',
+  highlightCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css',
+  katexCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css',
+  katexJsUrl: 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js',
+  highlightJsUrl: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js',
+}
+</script>
+</body>
+</html>

@@ -88,3 +88,5 @@ B lock y
 * http://sp1.wikidot.com/pthread
 * http://www.yolinux.com/TUTORIALS/LinuxTutorialPosixThreads.html#BASICS
 * [C 語言pthread 多執行緒平行化程式設計入門教學與範例- G. T. Wang](https://blog.gtwang.org/programming/pthread-multithreading-programming-in-c-tutorial/)
+* http://www.cse.cuhk.edu.hk/~ericlo/teaching/os/lab/9-PThread/index.html
+

@@ -1,0 +1,382 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>專為中學生寫的 JavaScript 程式書 >>  第 10 章 - 資料庫</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.2/pure-min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../mdbook.css">
+</head>
+<body>
+
+<div class="header pure-menu pure-menu-horizontal">
+  <ul id="topBar" class="pure-menu-list">
+    <li id="bookTitle" class="pure-menu-item"></li>
+    <i onclick="MDB.view()" class="fa fa-tablet" aria-hidden="true" title="View"></i>&nbsp;
+    <i onclick="MDB.edit()" class="fa fa-pencil-square-o" aria-hidden="true" title="Edit"></i>&nbsp;
+<!--    <i onclick="MDB.save()" class="fa fa-floppy-o" aria-hidden="true" title="Save"></i>&nbsp; -->
+    <i onclick="MDB.plugin('upload.html')" class="fa fa-upload" aria-hidden="true" title="Upload"></i>
+    <li id="opMenu" class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+      <a id="me" class="pure-menu-link mt" data-mt="User"></a>
+      <ul class="pure-menu-children">
+        <li class="pure-menu-item"><a onclick="MDB.plugin('createBook.html')" class="pure-menu-link mt" data-mt="NewBook=寫書">NewBook</a></li>
+        <li class="pure-menu-item"><a onclick="MDB.plugin('login.html')" class="pure-menu-link mt" data-mt="Login=登入">Login</a></li>
+        <li class="pure-menu-item"><a onclick="MDB.logout()" class="pure-menu-link mt" data-mt="Logout=登出">Logout</a></li>
+<!--        <li class="pure-menu-item"><a onclick="MDB.plugin('search.html')" class="pure-menu-link mt" data-mt="Search=搜尋">Search</a></li>
+        <li class="pure-menu-item"><a href="#sms" class="pure-menu-link mt" data-mt="Comment=留言">Comment</a></li>
+-->
+      </ul>
+    </li>
+    <li id="languageMenu" class="pure-menu-item pure-menu-has-children pure-menu-allow-hover"> <!-- hidden -->
+      <a id="locale" class="pure-menu-link">Global</a>
+      <ul class="pure-menu-children">
+        <li class="pure-menu-item"><a onclick="MDB.render('Global')" class="pure-menu-link">Global</a></li>
+        <li class="pure-menu-item"><a onclick="MDB.render('English')" class="pure-menu-link">English</a></li>
+        <li class="pure-menu-item"><a onclick="MDB.render('繁體中文')" class="pure-menu-link">繁體中文</a></li>
+        <li class="pure-menu-item"><a onclick="MDB.render('简体中文')" class="pure-menu-link">简体中文</a></li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<div id="layout">
+  <a href="#menu" id="menuLink" class="menu-link"><span></span></a>
+  <div id="menu">
+    <div id="sideMenu" class="pure-menu">
+      <div class="pure-menu-heading"><a href="/"><i class="fa fa-home" aria-hidden="true" title="Home"></i></a>
+        <a href="book.mdo"><i class="fa fa-book" aria-hidden="true" title="Book"></i></a>
+        <a href="../../view//"><i class="fa fa-user" aria-hidden="true" title="Author"></i></a>
+      </div>
+      <ul class="pure-menu-list" id="bookBox">
+      </ul>
+    </div>
+  </div>
+  <div id="main">
+    <div class="content" id="viewBox" hidden>
+      <div id="mdBox"></div>
+      <div style="text-align:center">
+        <span class="footnote">
+        <label class="mt" data-mt="Author=作者">Author</label> ： <a href="/view/ccc/">ccc</a> , 
+        <label class="mt" data-mt="Licensed in=使用請遵循">Licensed in</label> <a href="../../view/license/notSpecified.md" class="mt" data-mt="License=授權聲明">授權聲明</a> 
+<!--     ,    <label class="mt" data-mt="Welcome to=歡迎"></label> <a href="#sms" class="mt" data-mt="Comment=評論留言">Comment</a> ！ -->
+        </span>
+      </div>
+    </div>
+    <div class="content" id="editBox" hidden>
+      <form class="pure-form pure-form-stacked">
+      <div style="height:2.5em">
+        <button type="button" class="pure-button pure-button-primary mt" data-mt="Save=儲存" onclick="MDB.save()">Save</button>
+        <select id="watchOption" style="float:right">
+          <option value="no"  class="mt" data-mt="No Translation=不翻譯" selected="selected"> 不翻譯 </option>
+          <option value="c2e" class="mt" data-mt="Chinese to English=中翻英"> 中翻英 </option>
+          <option value="e2c" class="mt" data-mt="English to Chinese=英翻中"> 英翻中 </option>
+        </select>
+      </div>
+      </form>
+      <div id="watch" style="height:5em" hidden></div>
+      <textarea id="editText" name="editText"># 第 10 章 - 資料庫
+
+## MongoDB 文件型 JSON 資料庫
+
+### MongoDB -- 安裝與啟動
+
+下載點: <https://www.mongodb.org/downloads>
+
+下載完成後使用『下一步』大法即可完成安裝。
+
+安裝完成之後，在 windows 下必須設定系統路徑，我的路徑在： 『C:\Program Files\MongoDB\Server\3.0\bin』 當中。
+
+接著請啟動命令列，然後建立資料庫路徑 /db/mongodb/ ，接著輸入下列指令。
+
+```
+D:\db>mongod --dbpath /db/mongodb
+```
+
+此時 mongodb 伺服器就會啟動完成。
+
+```
+D:\db>mongo
+MongoDB shell version: 3.0.2
+connecting to: test
+```
+
+接著您就可以使用指令進行『新增/修改/刪除/查詢』了。
+
+### 新增操作
+
+參考： <http://www.w3cschool.cc/mongodb/mongodb-insert.html>
+
+```javascript
+> db.user.insert({user:"CCC", password:"123"})
+WriteResult({ "nInserted" : 1 })
+> db.user.find()
+{ "_id" : ObjectId("55486b1327403e89a3cc397a"), "user" : "ccc", "password" : "123" }
+> db.user.insert({user:"snoopy", password:"321"})
+WriteResult({ "nInserted" : 1 })
+> db.user.find()
+{ "_id" : ObjectId("55486b1327403e89a3cc397a"), "user" : "ccc", "password" : "123" }
+{ "_id" : ObjectId("55487073434ed6d677f8454d"), "user" : "snoopy", "password" : "321" }
+```
+
+### 修改操作
+
+參考： <http://www.w3cschool.cc/mongodb/mongodb-update.html>
+
+
+```javascript
+> db.user.update({"user":"snoopy"}, {"user":"snoopy", "password":"snoopy321"})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.user.find()
+{ "_id" : ObjectId("55486b1327403e89a3cc397a"), "user" : "ccc", "password" : "123" }
+{ "_id" : ObjectId("55487073434ed6d677f8454d"), "user" : "snoopy", "password" : "snoopy321" }
+```
+
+### 刪除操作
+
+參考： <http://www.w3cschool.cc/mongodb/mongodb-remove.html>
+
+
+```javascript
+> db.user.find()
+{ "_id" : ObjectId("55486b1327403e89a3cc397a"), "user" : "ccc", "password" : "123" }
+{ "_id" : ObjectId("55487073434ed6d677f8454d"), "user" : "snoopy", "password" : "snoopy321" }
+> db.user.remove({user:"ccc"})
+WriteResult({ "nRemoved" : 1 })
+> db.user.find()
+{ "_id" : ObjectId("55487073434ed6d677f8454d"), "user" : "snoopy", "password" : "snoopy321" }
+```
+
+### 查詢操作
+
+參考： <http://www.w3cschool.cc/mongodb/mongodb-update.html>
+
+
+```javascript
+> db.user.insert({user:"garfield", password:"cookie"})
+WriteResult({ "nInserted" : 1 })
+> db.user.find()
+{ "_id" : ObjectId("55487073434ed6d677f8454d"), "user" : "snoopy", "password" : "snoopy321" }
+{ "_id" : ObjectId("55487d09434ed6d677f8454e"), "user" : "garfield", "password": "cookie" }
+> db.user.find({user:"garfield"})
+{ "_id" : ObjectId("55487d09434ed6d677f8454e"), "user" : "garfield", "password": "cookie" }
+> db.user.find({user:"snoopy"})
+{ "_id" : ObjectId("55487073434ed6d677f8454d"), "user" : "snoopy", "password" :"snoopy321" }
+```
+
+### 條件式查詢
+
+參考： <http://www.w3cschool.cc/mongodb/mongodb-operators.html>
+
+```javascript
+> db.users.find({age :{$gt : 8}})
+{ "_id" : ObjectId("55487ecd3c69cbdeba209fb3"), "name" : "ccc", "age" : 45, "password" : "321" }
+{ "_id" : ObjectId("55487eed3c69cbdeba209fb5"), "name" : "garfield", "age" : 9,"password" : "garfield123" }
+> db.users.find()
+{ "_id" : ObjectId("55487ecd3c69cbdeba209fb3"), "name" : "ccc", "age" : 45, "password" : "321" }
+{ "_id" : ObjectId("55487ede3c69cbdeba209fb4"), "name" : "snoopy", "age" : 5, "password" : "snoopy123" }
+{ "_id" : ObjectId("55487eed3c69cbdeba209fb5"), "name" : "garfield", "age" : 9, "password" : "garfield123" }
+> db.users.find().limit(2)
+{ "_id" : ObjectId("55487ecd3c69cbdeba209fb3"), "name" : "ccc", "age" : 45, "password" : "321" }
+{ "_id" : ObjectId("55487ede3c69cbdeba209fb4"), "name" : "snoopy", "age" : 5, "password" : "snoopy123" }
+> db.users.find().limit(2).skip(1)
+{ "_id" : ObjectId("55487ede3c69cbdeba209fb4"), "name" : "snoopy", "age" : 5, "password" : "snoopy123" }
+{ "_id" : ObjectId("55487eed3c69cbdeba209fb5"), "name" : "garfield", "age" : 9,"password" : "garfield123" }
+```
+
+### 排序與索引
+
+```javascript
+> db.users.find().sort({age:1})
+{ "_id" : ObjectId("55487ede3c69cbdeba209fb4"), "name" : "snoopy", "age" : 5, "password" : "snoopy123" }
+{ "_id" : ObjectId("55487eed3c69cbdeba209fb5"), "name" : "garfield", "age" : 9,"password" : "garfield123" }
+{ "_id" : ObjectId("55487ecd3c69cbdeba209fb3"), "name" : "ccc", "age" : 45, "password" : "321" }
+> db.users.find().sort({age:-1})
+{ "_id" : ObjectId("55487ecd3c69cbdeba209fb3"), "name" : "ccc", "age" : 45, "password" : "321" }
+{ "_id" : ObjectId("55487eed3c69cbdeba209fb5"), "name" : "garfield", "age" : 9,"password" : "garfield123" }
+{ "_id" : ObjectId("55487ede3c69cbdeba209fb4"), "name" : "snoopy", "age" : 5, "password" : "snoopy123" }
+> db.users.ensureIndex({name:1})
+{
+        "createdCollectionAutomatically" : false,
+        "numIndexesBefore" : 1,
+        "numIndexesAfter" : 2,
+        "ok" : 1
+}
+```
+
+### 離開
+
+```javascript
+> quit()
+
+D:\db>
+```
+
+### 日期與時間操作
+
+```
+> db.filelog.insert({path:'wd.html', time:new Date()})
+WriteResult({ "nInserted" : 1 })
+> db.filelog.find()
+{ "_id" : ObjectId("571d78c179eb77457f34a8b5"), "path" : "wd.html", "time" : ISO
+Date("2016-04-25T01:54:09.026Z") }
+>
+
+```
+
+## 使用程式存取 MongoDB
+
+您若要在 node.js 當中存取 mongoDB 的資料，必須先用 npm 安裝 mongoDB 的套件。
+
+```
+npm install mongodb
+```
+
+### 程式範例: mongotest.js
+
+參考： <https://mongodb.github.io/node-mongodb-native/api-articles/nodekoarticle1.html>
+
+
+```javascript
+var MongoClient = require('mongodb').MongoClient;
+
+MongoClient.connect("mongodb://localhost:27017/examdb", function(err, db) {
+  if(err) { return console.dir(err); }
+
+  var collection = db.collection('Q');
+  var docs = [{ type:"word", q:"he=他"}, { type:"word", q:"she=她"}, { type:"word", q:"it=它"} ];
+
+  collection.insert(docs, {w:1}, function(err, result) { // success!
+
+    collection.find().toArray(function(err, items) {
+        console.log("items=%j", items);
+        db.close();
+    });
+  });
+});
+```
+
+執行結果：
+
+```
+nqu-192-168-61-142:KoaExam mac020$ node mongotest
+items=[{"_id":"5716e82ea6c866eb02ffe700","type":"word","q":"he=他"},{"_id":"5716e82ea6c866eb02ffe701","type":"word","q":"she=她"},{"_id":"5716e82ea6c866eb02ffe702","type":"word","q":"it=它"}]
+```
+
+### 採用 yield 的寫法
+
+檔案： comongotest.js
+
+```
+var co = require("co");
+
+var MongoClient = require('mongodb').MongoClient;
+
+co(function*() {
+  var db = yield MongoClient.connect('mongodb://localhost:27017/examdb');
+  var collection = db.collection('Q');
+  var result = yield collection.insertMany([{ type:"word", q:"he=他"}, { type:"word", q:"she=她"}, { type:"word", q:"it=它"} ], {w:1});
+  var items = yield collection.find().toArray();
+  console.log("items=%j", items);
+  var result = yield db.close();
+});
+
+```
+
+執行結果
+
+```
+NQU-192-168-60-101:js csienqu$ node comongotest
+items=[{"_id":"57201788d3c8212f034d9479","type":"word","q":"he=他"},{"_id":"57201788d3c8212f034d947a","type":"word","q":"she=她"},{"_id":"57201788d3c8212f034d947b","type":"word","q":"it=它"}]
+
+```
+
+## 習題
+1. 請安裝好 mongodb 資料庫，並用 mongod 啟動伺服器之後，用 mongo 指令開始新增資料，並且玩玩資料庫《新增、修改、刪除、查詢》的動作，直到你能熟練地進行這些操作為止。
+2. 請建立一個自己想要用的資料庫 (像是通訊錄、字典....)等等，然後用編輯器(像是 notepad++) 編寫一堆資料後，寫程式將資料倒進該資料庫中！
+
+</textarea>
+      <textarea id="editBook" name="editBook" style="display:none">{
+ "title": "專為中學生寫的 JavaScript 程式書",
+ "editor": "ccc",
+ "chapters": [
+  {
+   "title": "前言",
+   "link": "README.md"
+  },
+  {
+   "title": "1. 程式入門",
+   "link": "chapter1.md"
+  },
+  {
+   "title": "2. 基本語法",
+   "link": "chapter2.md"
+  },
+  {
+   "title": "3. 字串",
+   "link": "chapterString.md"
+  },
+  {
+   "title": "4. 陣列",
+   "link": "chapter3.md"
+  },
+  {
+   "title": "5. 函數",
+   "link": "chapter4.md"
+  },
+  {
+   "title": "6. 字典與 JSON",
+   "link": "chapter5.md"
+  },
+  {
+   "title": "7. 物件導向與原型",
+   "link": "chapter6.md"
+  },
+  {
+   "title": "8. 函式庫",
+   "link": "chapter7.md"
+  },
+  {
+   "title": "9. 模組",
+   "link": "chapter8.md"
+  },
+  {
+   "title": "10. 檔案與輸出入",
+   "link": "chapter9.md"
+  },
+  {
+   "title": "11. 資料庫",
+   "link": "chapter10.md"
+  },
+  {
+   "title": "12. 網路",
+   "link": "chapter11.md"
+  },
+  {
+   "title": "習題解答",
+   "link": "answer.md"
+  }
+ ],
+ "book": "jsh"
+}</textarea>
+    </div>
+    <div class="content" id="pluginBox" hidden></div>
+  </div>
+</div>
+<script src="../../f6.js"></script>
+<script src="../../mdbook.js"></script>
+<script>
+MDB.setting = {
+  user: '',
+  book: 'jsh',
+  file: 'chapter10.md',
+  locale: '',
+  showdownJsUrl: 'https://cdnjs.cloudflare.com/ajax/libs/showdown/1.6.0/showdown.min.js',
+  highlightCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css',
+  katexCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css',
+  katexJsUrl: 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js',
+  highlightJsUrl: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js',
+}
+</script>
+</body>
+</html>

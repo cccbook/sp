@@ -1,0 +1,253 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home of C.C.Chen=陳鍾誠的網站 >>  關於陳鍾誠 - 給學生的自我介紹 (修課須知)</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.2/pure-min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../mdbook.css">
+</head>
+<body>
+
+<div class="header pure-menu pure-menu-horizontal">
+  <ul id="topBar" class="pure-menu-list">
+    <li id="bookTitle" class="pure-menu-item"></li>
+    <i onclick="MDB.view()" class="fa fa-tablet" aria-hidden="true" title="View"></i>&nbsp;
+    <i onclick="MDB.edit()" class="fa fa-pencil-square-o" aria-hidden="true" title="Edit"></i>&nbsp;
+<!--    <i onclick="MDB.save()" class="fa fa-floppy-o" aria-hidden="true" title="Save"></i>&nbsp; -->
+    <i onclick="MDB.plugin('upload.html')" class="fa fa-upload" aria-hidden="true" title="Upload"></i>
+    <li id="opMenu" class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+      <a id="me" class="pure-menu-link mt" data-mt="User"></a>
+      <ul class="pure-menu-children">
+        <li class="pure-menu-item"><a onclick="MDB.plugin('createBook.html')" class="pure-menu-link mt" data-mt="NewBook=寫書">NewBook</a></li>
+        <li class="pure-menu-item"><a onclick="MDB.plugin('login.html')" class="pure-menu-link mt" data-mt="Login=登入">Login</a></li>
+        <li class="pure-menu-item"><a onclick="MDB.logout()" class="pure-menu-link mt" data-mt="Logout=登出">Logout</a></li>
+<!--        <li class="pure-menu-item"><a onclick="MDB.plugin('search.html')" class="pure-menu-link mt" data-mt="Search=搜尋">Search</a></li>
+        <li class="pure-menu-item"><a href="#sms" class="pure-menu-link mt" data-mt="Comment=留言">Comment</a></li>
+-->
+      </ul>
+    </li>
+    <li id="languageMenu" class="pure-menu-item pure-menu-has-children pure-menu-allow-hover"> <!-- hidden -->
+      <a id="locale" class="pure-menu-link">Global</a>
+      <ul class="pure-menu-children">
+        <li class="pure-menu-item"><a onclick="MDB.render('Global')" class="pure-menu-link">Global</a></li>
+        <li class="pure-menu-item"><a onclick="MDB.render('English')" class="pure-menu-link">English</a></li>
+        <li class="pure-menu-item"><a onclick="MDB.render('繁體中文')" class="pure-menu-link">繁體中文</a></li>
+        <li class="pure-menu-item"><a onclick="MDB.render('简体中文')" class="pure-menu-link">简体中文</a></li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<div id="layout">
+  <a href="#menu" id="menuLink" class="menu-link"><span></span></a>
+  <div id="menu">
+    <div id="sideMenu" class="pure-menu">
+      <div class="pure-menu-heading"><a href="/"><i class="fa fa-home" aria-hidden="true" title="Home"></i></a>
+        <a href="book.mdo"><i class="fa fa-book" aria-hidden="true" title="Book"></i></a>
+        <a href="../../view//"><i class="fa fa-user" aria-hidden="true" title="Author"></i></a>
+      </div>
+      <ul class="pure-menu-list" id="bookBox">
+      </ul>
+    </div>
+  </div>
+  <div id="main">
+    <div class="content" id="viewBox" hidden>
+      <div id="mdBox"></div>
+      <div style="text-align:center">
+        <span class="footnote">
+        <label class="mt" data-mt="Author=作者">Author</label> ： <a href="/view/ccc/">ccc</a> , 
+        <label class="mt" data-mt="Licensed in=使用請遵循">Licensed in</label> <a href="../../view/license/notSpecified.md" class="mt" data-mt="License=授權聲明">授權聲明</a> 
+<!--     ,    <label class="mt" data-mt="Welcome to=歡迎"></label> <a href="#sms" class="mt" data-mt="Comment=評論留言">Comment</a> ！ -->
+        </span>
+      </div>
+    </div>
+    <div class="content" id="editBox" hidden>
+      <form class="pure-form pure-form-stacked">
+      <div style="height:2.5em">
+        <button type="button" class="pure-button pure-button-primary mt" data-mt="Save=儲存" onclick="MDB.save()">Save</button>
+        <select id="watchOption" style="float:right">
+          <option value="no"  class="mt" data-mt="No Translation=不翻譯" selected="selected"> 不翻譯 </option>
+          <option value="c2e" class="mt" data-mt="Chinese to English=中翻英"> 中翻英 </option>
+          <option value="e2c" class="mt" data-mt="English to Chinese=英翻中"> 英翻中 </option>
+        </select>
+      </div>
+      </form>
+      <div id="watch" style="height:5em" hidden></div>
+      <textarea id="editText" name="editText"># 關於陳鍾誠 - 給學生的自我介紹 (修課須知)
+
+我屬於自由派的老師，上課很少點名，點了名也不是要算分數，而是要認識大家！
+
+我在金門大學資訊工程系教書，目前主要教授下列 [六門課程](http://www.slideshare.net/ccckmit/javascript-c) ：
+
+課程             | 語言與軟體           | 學期 | 註 | 相關主題
+-----------------|----------------------|------|----|-----------
+[程式設計](js1.md) |JavaScript + Node.js  | 一上 | 必 | 修課須知 , HTML , CSS , JavaScript
+[程式設計進階](js1.md) | JavaScript + C 語言  | 一下 | 必 | C語言 前端瀏覽器, 後端伺服器
+[計算機結構](../nand2tetris/) | JavaScript + Verilog | 二上 | 必 | nand2tetris (Part I) , CPU設計
+[系統程式](../nand2tetris/) | JavaScript + C 語言  | 二下 | 必 | nand2tetris (Part II) , 編譯器 , 系統軟體
+[科學計算](sc1.md) | JavaScript + R 軟體  | 三上 | 選 | 微積分 , 機率統計 , 線性代數 , 數值分析
+[人工智慧](../ai/) | JavaScript + Node.js | 三下 | 選 | 離散數學 , 計算理論 , 自然語言 , 機器學習
+
+目前的評分方式，我通常採用下列模式：
+
+1. 平時成績 40% : 請您記得要常常問問題，常問問題的同學通常平時成績會比較高。
+2. 學習履歷 30% : 請把學習履歷也上傳到社團的學習履歷檔案區，並記錄下您學到的內容。
+3. 期末口試 30% : 對於不同課程，期末口試內容不同，但主要請告訴我妳學會甚麼，做了那些專案與作業，並且展示給我看。
+
+每門課我都會有一個 facebook 社團，您必須加入該社團，因為所有教材、作業等等都會公告在社團裡，而且作業也是繳交到社團裡，所以沒有加入社團很可能就會被當了！
+
+## 作業繳交規定
+
+我的課程常會有程式作業，繳交時請盡可能遵循下列規定，這樣分數也通常會比較高！
+
+1. 你可以選用任何一種程式語言來實作指定作業
+2. 請盡可能使用 github + github pages 繳交。
+3. 請盡可能放上能夠不用安裝就執行的版本，如果一定要安裝才能執行，請先用截圖展示。
+4. 請盡可能撰寫清楚的 README 文件，交待你的作業的內容，像是程式的功能與用途，原理與執行方式等等。
+
+大部分的課程都會有期末專案，而且我通常會讓大家自選題目，但是我也會建議一些題目。
+
+在我的課堂上，通常不需要你作創新型的題目，因為我希望大家先把技術學會學扎實，而不是急著去創新。
+
+以下是我和某學生的對話： [facebook原始貼文](https://www.facebook.com/ccckmit/posts/10153643169361893)
+
+```
+學生問： javascript 的期末作業想不出要做什麼？
+
+我回答：那就做留言板吧！
+
+學生說：問題是留言板太常見了，沒有特別。
+
+我回答：寫作業不要一直想搞創新，先學會才是重點。
+
+留言板可以很簡單，也可以很高級，facebook 也只不過是個留言板而已！
+```
+
+## 大一：程式設計 + 程式設計進階
+
+大一的程式設計我選擇以 JavaScript (JS) 帶領大家進入程式設計領域， JS 這個語言的強處是網站設計，因為 JS 是目前瀏覽器內唯一支援的程式語言，因此在網站設計上特別有優勢。
+
+我們使用 node.js 作為 Server 端 (後端) 的開發平台，node.js 使用的仍然是 JS，所以你可以用一個語言打通關，不需要學習好幾種語言。(因為前端瀏覽器也是用 JS)。
+
+如果你學會 node.js + JavaScript/HTML/CSS，那麼你就具備了《全端工程師》(Full Stack Engineer) 所需要的能力。
+
+我希望大一的同學可以學會程式設計，並且至少精通一個程式語言。
+
+但是你不一定要學 JS，你也可以自己學習 Python, Ruby, C#, Java, Scala, VB, C/C++ 等等語言。
+
+你也可以不需要學《網站設計》，改去學其他領域，像是《遊戲設計、手機APP設計、視窗程式、系統程式、嵌入式系統》等等。
+
+我們非常贊同你去學其他語言和平台，但如果你不跟著上課，請先告知我一下，這樣我就會用《自學》的方式來評定你的成績，而不是按照一般的方式評定你的成績，這樣對你也會比較好！
+
+在一年級下學期，我教完 JavaScript/Node.js 之後，會開始接著教《C語言》。
+
+為何要接著教 C 語言呢？
+
+主要是因為 C 語言是底層 (系統硬體層) 的主要開發語言，速度很快而且擅長控制硬體，這對資工系的同學後續學習《資料結構、系統程式、作業系統、嵌入式系統、機器人、編譯器》等等課程都會有很大的幫助，因此為了幫大家鋪路，我會先教 C 語言的基礎，然後在《系統程式》課程時，再更深入的介紹《C語言在系統軟體與嵌入式系統上的用途》。
+
+## 大二：計算機結構 + 系統程式
+
+大二的《計算機結構+系統程式》課程，我主要採用了 nand2tetris 這門網路課程。
+
+Nand2tetris 整門課程的設計，是以實作習題的方式，讓大家從 NAND 這個基本邏輯閘開始，一路往上建構出《AND、OR、NOT、XOR、多工器與解多工器 MUX/DMUX、加法器、ALU、暫存器、記憶體、CPU》直到整台電腦硬體，這部分是屬於計算機結構課程的內容。
+
+Nand2tetris 的第二部分，是讓學習者從《組譯器、虛擬機、編譯器到作業系統》，建構出具體而微的完整系統軟體，您可以使用任何一個程式語言和平台來實作這部分的習題。
+
+除此之外，我會補充軟硬體的一些進階觀念，像是硬體的《管線》 (pipeline)、記憶體階層、速度議題、還有平行加速方法等，因為這些議題在 nand2tetris 的實作裏是感受不到的。
+
+對於系統軟體部分，我也會用 C 語言進行一些補充示範，甚至搭配一些程式專案，像是 jserv 七百行系列中的 Rubi JIT Compiler 與 Mini-ARM-OS 等專案，說明 C 語言在硬體控制與系統層級的一些用法。
+
+但是採用 Nand2tetris 這門網路課，有優點也有缺點，優點是實作性很強，可以讓大家非常細緻的理解並實作每一部分的硬體和軟體，但缺點是理論性不足，不像經典教科書裏常常會教很多理論性的內容，因此我希望大家能購買或去借一兩本經典教科書來看，像是計算機結構就可以看《聖經版的白算盤書》，而《系統程式》則可以參考經典的海螺貝殼 Beck 版，或者是看我寫的那本系統程式》。
+
+## 大三：科學計算 + 人工智慧 (碩一同修)
+
+大三的《科學計算 + 人工智慧》課程，我希望帶領大家進入比較困難的研究議題，這部分會牽涉到不少數學，因此我先安排了一門《科學計算》課程在前面，企圖奠定數學與程式方面的基礎，然後才進入實務性和理論性都很強的《人工智慧領域》，希望這樣的安排會讓教學更順利。
+
+我們會從最簡單的《爬山算法》開始，然後分別接觸《神經網路、圖形搜尋、電腦下棋、邏輯推論、機器學習、語言處理》等領域，希望由淺入深的帶領大家一步步前進。
+
+但是《人工智慧》是個令人望而生畏的領域，我自己都還有很多無法理解的部分，雖然我會盡可能的把自己能理解的教給大家，但是仍然有一大片我所無法理解的領域，等著你去探索！
+
+## 專題製作 (專業實習)
+
+除了上述的課程之外，系上還有個《專題製作》(專業實習) 的課程，這個課程要求大家 3-5 人一組，去進行專案開發，目的是讓大家學習團隊合作的方法，並能運用所學到的技能去完成一個完整的作品。
+
+每年專題都有 [很多學生出問題](http://www.slideshare.net/ccckmit/ss-67392673) ，像是 [《選錯題目、想得很大、做得很爛、做不出來、無法合作》等等，一個很常見的現象是會有《掛名組員》](http://www.slideshare.net/ccckmit/ss-67436152) ，就是那種不願意做事參與的組員，於是最後同學之間常常搞得不歡而散，朋友便仇家的比比皆是。
+
+我目前帶的專題主要以《網站設計》居多，但是對研究性的《人工智慧、自然語言處理、機器翻譯》，還有實作性的《CPU設計、系統軟體設計》等等，也都是我自己也在做的領域，對這幾個領域有興趣的同學也歡迎來找我討論專題的事情！
+
+最後再次強調，我是自由派的老師，不會去逼學生做甚麼事，如果你修我的課或找我做專題，最好能有主動學習的精神，盡可能常常問我問題，這樣我才有辦法幫助你，否則你很可能會學不到任何東西。
+
+希望金門大學資工系的四年之內，你會滿載而歸，而不是空手而回！
+
+
+<div style="text-align: right">陳鍾誠 2017/2/22 於金門</div>
+
+
+</textarea>
+      <textarea id="editBook" name="editBook" style="display:none">{
+ "title": "Home of C.C.Chen=陳鍾誠的網站",
+ "editor": "ccc",
+ "locale": "繁體中文",
+ "chapters": [
+  {
+   "title": "C.C.Chen=陳鍾誠",
+   "link": "README.md"
+  },
+  {
+   "title": "Course=課程地圖",
+   "link": "course.md"
+  },
+  {
+   "title": "Book=書籍著作",
+   "link": "booklist.md"
+  },
+  {
+   "title": "Code=程式作品",
+   "link": "codelist.md"
+  },
+  {
+   "title": "Novel=小說故事",
+   "link": "novel.md"
+  },
+  {
+   "title": "Article=散文記事",
+   "link": "article.md"
+  },
+  {
+   "title": "Paper=論文研究",
+   "link": "paper.md"
+  },
+  {
+   "title": "Slide=十分鐘系列",
+   "link": "../slide/"
+  },
+  {
+   "title": "License=授權聲明",
+   "link": "license.md"
+  }
+ ],
+ "book": "ccc"
+}</textarea>
+    </div>
+    <div class="content" id="pluginBox" hidden></div>
+  </div>
+</div>
+<script src="../../f6.js"></script>
+<script src="../../mdbook.js"></script>
+<script>
+MDB.setting = {
+  user: '',
+  book: 'ccc',
+  file: 'cccForStudent.md',
+  locale: '繁體中文',
+  showdownJsUrl: 'https://cdnjs.cloudflare.com/ajax/libs/showdown/1.6.0/showdown.min.js',
+  highlightCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css',
+  katexCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css',
+  katexJsUrl: 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js',
+  highlightJsUrl: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js',
+}
+</script>
+</body>
+</html>

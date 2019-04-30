@@ -1,0 +1,164 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home of C.C.Chen=陳鍾誠的網站 >>  關於陳鍾誠 - 給程式人的自我介紹</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.2/pure-min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../mdbook.css">
+</head>
+<body>
+
+<div class="header pure-menu pure-menu-horizontal">
+  <ul id="topBar" class="pure-menu-list">
+    <li id="bookTitle" class="pure-menu-item"></li>
+    <i onclick="MDB.view()" class="fa fa-tablet" aria-hidden="true" title="View"></i>&nbsp;
+    <i onclick="MDB.edit()" class="fa fa-pencil-square-o" aria-hidden="true" title="Edit"></i>&nbsp;
+<!--    <i onclick="MDB.save()" class="fa fa-floppy-o" aria-hidden="true" title="Save"></i>&nbsp; -->
+    <i onclick="MDB.plugin('upload.html')" class="fa fa-upload" aria-hidden="true" title="Upload"></i>
+    <li id="opMenu" class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+      <a id="me" class="pure-menu-link mt" data-mt="User"></a>
+      <ul class="pure-menu-children">
+        <li class="pure-menu-item"><a onclick="MDB.plugin('createBook.html')" class="pure-menu-link mt" data-mt="NewBook=寫書">NewBook</a></li>
+        <li class="pure-menu-item"><a onclick="MDB.plugin('login.html')" class="pure-menu-link mt" data-mt="Login=登入">Login</a></li>
+        <li class="pure-menu-item"><a onclick="MDB.logout()" class="pure-menu-link mt" data-mt="Logout=登出">Logout</a></li>
+<!--        <li class="pure-menu-item"><a onclick="MDB.plugin('search.html')" class="pure-menu-link mt" data-mt="Search=搜尋">Search</a></li>
+        <li class="pure-menu-item"><a href="#sms" class="pure-menu-link mt" data-mt="Comment=留言">Comment</a></li>
+-->
+      </ul>
+    </li>
+    <li id="languageMenu" class="pure-menu-item pure-menu-has-children pure-menu-allow-hover"> <!-- hidden -->
+      <a id="locale" class="pure-menu-link">Global</a>
+      <ul class="pure-menu-children">
+        <li class="pure-menu-item"><a onclick="MDB.render('Global')" class="pure-menu-link">Global</a></li>
+        <li class="pure-menu-item"><a onclick="MDB.render('English')" class="pure-menu-link">English</a></li>
+        <li class="pure-menu-item"><a onclick="MDB.render('繁體中文')" class="pure-menu-link">繁體中文</a></li>
+        <li class="pure-menu-item"><a onclick="MDB.render('简体中文')" class="pure-menu-link">简体中文</a></li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<div id="layout">
+  <a href="#menu" id="menuLink" class="menu-link"><span></span></a>
+  <div id="menu">
+    <div id="sideMenu" class="pure-menu">
+      <div class="pure-menu-heading"><a href="/"><i class="fa fa-home" aria-hidden="true" title="Home"></i></a>
+        <a href="book.mdo"><i class="fa fa-book" aria-hidden="true" title="Book"></i></a>
+        <a href="../../view//"><i class="fa fa-user" aria-hidden="true" title="Author"></i></a>
+      </div>
+      <ul class="pure-menu-list" id="bookBox">
+      </ul>
+    </div>
+  </div>
+  <div id="main">
+    <div class="content" id="viewBox" hidden>
+      <div id="mdBox"></div>
+      <div style="text-align:center">
+        <span class="footnote">
+        <label class="mt" data-mt="Author=作者">Author</label> ： <a href="/view/ccc/">ccc</a> , 
+        <label class="mt" data-mt="Licensed in=使用請遵循">Licensed in</label> <a href="../../view/license/notSpecified.md" class="mt" data-mt="License=授權聲明">授權聲明</a> 
+<!--     ,    <label class="mt" data-mt="Welcome to=歡迎"></label> <a href="#sms" class="mt" data-mt="Comment=評論留言">Comment</a> ！ -->
+        </span>
+      </div>
+    </div>
+    <div class="content" id="editBox" hidden>
+      <form class="pure-form pure-form-stacked">
+      <div style="height:2.5em">
+        <button type="button" class="pure-button pure-button-primary mt" data-mt="Save=儲存" onclick="MDB.save()">Save</button>
+        <select id="watchOption" style="float:right">
+          <option value="no"  class="mt" data-mt="No Translation=不翻譯" selected="selected"> 不翻譯 </option>
+          <option value="c2e" class="mt" data-mt="Chinese to English=中翻英"> 中翻英 </option>
+          <option value="e2c" class="mt" data-mt="English to Chinese=英翻中"> 英翻中 </option>
+        </select>
+      </div>
+      </form>
+      <div id="watch" style="height:5em" hidden></div>
+      <textarea id="editText" name="editText"># 關於陳鍾誠 - 給程式人的自我介紹
+
+雖然我在大學教書，但我不太寫論文，就算寫了也只放在 SlideShare 以投影片的方式公開，通常不會投稿任何期刊。
+
+相較於論文，我其實更喜歡寫程式，所以之前我辦過兩年的程式人雜誌，現在也還一直在寫程式，目前的一個焦點是 <http://mdbookspace.com> ，這是我自己用 node.js 寫的網站，和 gitbook 有點類似，但是由於最近 gitbook 愈來愈難用，所以我決定發揮程式人的本色，自己寫一個書籍出版網站，這個網站在 github 上的名稱是 [bookdown](https://github.com/ccckmit/bookdown) 。
+
+另外我還有幾個關注焦點，第一個是創造一個可以讓人和人之間溝通的人造語法，只要大家都遵循這種語法，就可以和世界各國的人溝通。我在這方面的一個嘗試是《八極語》，但後來我覺得直接採用英語語法或許更方便，因此就有了《人造英語》和《人造漢語》的想法。
+
+有了這種人造語言，機器翻譯根本就不用做了，因為只要進行逐字翻譯就好了，您可以在下列網址看到我做的逐字翻譯系統。
+
+* <https://mdbookspace.com/mt/mt.html>
+
+您也可以在 github 上下載我的機器翻譯專案 <https://github.com/ccckmit/english_chinese_machine_translation> 。
+
+最後由於我慣用的 Javascript 語言找不到一個像 Python/Scipy 這樣好用的科學計算平台，所以我就手癢寫了一個 [rlab 專案](https://github.com/ccckmit/rlab) ，您可以在下列網址看到 demo 。
+
+* <https://mdbookspace.com/rlab/rlab.html>
+
+我很喜歡和程式人交流，但是不那麼喜歡和教授們交流，所以歡迎喜歡寫程式的人多多和我交流，我的 facebook 是 <https://www.facebook.com/ccckmit> 。
+
+
+</textarea>
+      <textarea id="editBook" name="editBook" style="display:none">{
+ "title": "Home of C.C.Chen=陳鍾誠的網站",
+ "editor": "ccc",
+ "locale": "繁體中文",
+ "chapters": [
+  {
+   "title": "C.C.Chen=陳鍾誠",
+   "link": "README.md"
+  },
+  {
+   "title": "Course=課程地圖",
+   "link": "course.md"
+  },
+  {
+   "title": "Book=書籍著作",
+   "link": "booklist.md"
+  },
+  {
+   "title": "Code=程式作品",
+   "link": "codelist.md"
+  },
+  {
+   "title": "Novel=小說故事",
+   "link": "novel.md"
+  },
+  {
+   "title": "Article=散文記事",
+   "link": "article.md"
+  },
+  {
+   "title": "Paper=論文研究",
+   "link": "paper.md"
+  },
+  {
+   "title": "Slide=十分鐘系列",
+   "link": "../slide/"
+  },
+  {
+   "title": "License=授權聲明",
+   "link": "license.md"
+  }
+ ],
+ "book": "ccc"
+}</textarea>
+    </div>
+    <div class="content" id="pluginBox" hidden></div>
+  </div>
+</div>
+<script src="../../f6.js"></script>
+<script src="../../mdbook.js"></script>
+<script>
+MDB.setting = {
+  user: '',
+  book: 'ccc',
+  file: 'cccForProgrammer.md',
+  locale: '繁體中文',
+  showdownJsUrl: 'https://cdnjs.cloudflare.com/ajax/libs/showdown/1.6.0/showdown.min.js',
+  highlightCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css',
+  katexCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css',
+  katexJsUrl: 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js',
+  highlightJsUrl: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js',
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,386 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>專為中學生寫的 JavaScript 程式書 >>  第 11 章 - 網路</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.2/pure-min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../mdbook.css">
+</head>
+<body>
+
+<div class="header pure-menu pure-menu-horizontal">
+  <ul id="topBar" class="pure-menu-list">
+    <li id="bookTitle" class="pure-menu-item"></li>
+    <i onclick="MDB.view()" class="fa fa-tablet" aria-hidden="true" title="View"></i>&nbsp;
+    <i onclick="MDB.edit()" class="fa fa-pencil-square-o" aria-hidden="true" title="Edit"></i>&nbsp;
+<!--    <i onclick="MDB.save()" class="fa fa-floppy-o" aria-hidden="true" title="Save"></i>&nbsp; -->
+    <i onclick="MDB.plugin('upload.html')" class="fa fa-upload" aria-hidden="true" title="Upload"></i>
+    <li id="opMenu" class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+      <a id="me" class="pure-menu-link mt" data-mt="User"></a>
+      <ul class="pure-menu-children">
+        <li class="pure-menu-item"><a onclick="MDB.plugin('createBook.html')" class="pure-menu-link mt" data-mt="NewBook=寫書">NewBook</a></li>
+        <li class="pure-menu-item"><a onclick="MDB.plugin('login.html')" class="pure-menu-link mt" data-mt="Login=登入">Login</a></li>
+        <li class="pure-menu-item"><a onclick="MDB.logout()" class="pure-menu-link mt" data-mt="Logout=登出">Logout</a></li>
+<!--        <li class="pure-menu-item"><a onclick="MDB.plugin('search.html')" class="pure-menu-link mt" data-mt="Search=搜尋">Search</a></li>
+        <li class="pure-menu-item"><a href="#sms" class="pure-menu-link mt" data-mt="Comment=留言">Comment</a></li>
+-->
+      </ul>
+    </li>
+    <li id="languageMenu" class="pure-menu-item pure-menu-has-children pure-menu-allow-hover"> <!-- hidden -->
+      <a id="locale" class="pure-menu-link">Global</a>
+      <ul class="pure-menu-children">
+        <li class="pure-menu-item"><a onclick="MDB.render('Global')" class="pure-menu-link">Global</a></li>
+        <li class="pure-menu-item"><a onclick="MDB.render('English')" class="pure-menu-link">English</a></li>
+        <li class="pure-menu-item"><a onclick="MDB.render('繁體中文')" class="pure-menu-link">繁體中文</a></li>
+        <li class="pure-menu-item"><a onclick="MDB.render('简体中文')" class="pure-menu-link">简体中文</a></li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<div id="layout">
+  <a href="#menu" id="menuLink" class="menu-link"><span></span></a>
+  <div id="menu">
+    <div id="sideMenu" class="pure-menu">
+      <div class="pure-menu-heading"><a href="/"><i class="fa fa-home" aria-hidden="true" title="Home"></i></a>
+        <a href="book.mdo"><i class="fa fa-book" aria-hidden="true" title="Book"></i></a>
+        <a href="../../view//"><i class="fa fa-user" aria-hidden="true" title="Author"></i></a>
+      </div>
+      <ul class="pure-menu-list" id="bookBox">
+      </ul>
+    </div>
+  </div>
+  <div id="main">
+    <div class="content" id="viewBox" hidden>
+      <div id="mdBox"></div>
+      <div style="text-align:center">
+        <span class="footnote">
+        <label class="mt" data-mt="Author=作者">Author</label> ： <a href="/view/ccc/">ccc</a> , 
+        <label class="mt" data-mt="Licensed in=使用請遵循">Licensed in</label> <a href="../../view/license/notSpecified.md" class="mt" data-mt="License=授權聲明">授權聲明</a> 
+<!--     ,    <label class="mt" data-mt="Welcome to=歡迎"></label> <a href="#sms" class="mt" data-mt="Comment=評論留言">Comment</a> ！ -->
+        </span>
+      </div>
+    </div>
+    <div class="content" id="editBox" hidden>
+      <form class="pure-form pure-form-stacked">
+      <div style="height:2.5em">
+        <button type="button" class="pure-button pure-button-primary mt" data-mt="Save=儲存" onclick="MDB.save()">Save</button>
+        <select id="watchOption" style="float:right">
+          <option value="no"  class="mt" data-mt="No Translation=不翻譯" selected="selected"> 不翻譯 </option>
+          <option value="c2e" class="mt" data-mt="Chinese to English=中翻英"> 中翻英 </option>
+          <option value="e2c" class="mt" data-mt="English to Chinese=英翻中"> 英翻中 </option>
+        </select>
+      </div>
+      </form>
+      <div id="watch" style="height:5em" hidden></div>
+      <textarea id="editText" name="editText"># 第 11 章 - 網路
+
+## 下載一個網頁
+
+程式： pageget.js
+
+```javascript
+var http = require('http');
+
+http.get("http://www.nqu.edu.tw/cht/index.php?", function(res) {
+  console.log("Got response: " + res.statusCode);
+  res.on('data', function (chunk) {
+    console.log('BODY: ' + chunk);
+  });
+}).on('error', function(e) {
+  console.log("Got error: " + e.message);
+});
+```
+
+執行結果
+
+```
+NQU-192-168-60-101:crawler csienqu$ node pageget.js
+Got response: 200
+BODY: <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="zh-TW">
+
+<head>
+  <title>國立金門大學-></title>
+...
+</body>
+</html>
+```
+
+## 抽取出網頁中的超連結
+
+檔案： listurl.js
+
+```javascript
+var fs = require('fs');
+var html = fs.readFileSync(process.argv[2]).toString();
+var r = /href\s*=\s*"(.+?)"/gi;
+while (true) {
+  var m = r.exec(html);
+  if (!m) break;
+  console.log(m[1]);
+}
+```
+
+執行結果：
+
+```
+NQU-192-168-60-101:regexp csienqu$ ls
+copyfile.js  listurl.js   nqu.html     nqu.html.bak readfile.js  readline.js
+NQU-192-168-60-101:regexp csienqu$ node listurl nqu.html
+../cache/css194.css
+../js/calendar/calendar-mos.css
+index.php
+index.php?act=sitemap
+index.php
+...
+```
+
+## 網頁爬蟲
+
+以下程式可以《下載全世界的網頁》，只要你記憶體和硬碟夠大就行了！
+
+
+專案下載： @[[crawler.zip]](crawler.zip)
+
+程式： crawler.js
+
+```javascript
+// 安裝套件： npm install URIjs
+// 執行方法： node crawler http://tw.msn.com/
+var fs = require('fs');
+var http = require('http');
+var URI = require('URIjs');
+var c = console;
+
+var urlMap  = { };
+var urlList = [ ];
+var urlIdx  = 0;
+
+urlList.push(process.argv[2]); // 新增第一個網址
+
+crawNext(); // 開始抓
+
+function crawNext() { // 下載下一個網頁
+  if (urlIdx >= urlList.length) 
+    return;
+  var url = urlList[urlIdx];
+  if (url.indexOf('http://')!==0) {
+    urlIdx ++;
+    crawNext();
+    return;
+  }
+  c.log('url[%d]=%s', urlIdx, url);
+  urlMap[url] = { downlioad:false };
+  pageDownload(url, function (data) {
+    var page = data.toString();
+    urlMap[url].download = true;
+    var filename = urlToFileName(url);
+    fs.writeFile('data/'+filename, page, function(err) {
+    });
+    var refs = getMatches(page, /\shref\s*=\s*["'#]([^"'#]*)[#"']/gi, 1);
+    for (i in refs) {
+      try {
+      var refUri = URI(refs[i]).absoluteTo(url).toString();
+      c.log('ref=%s', refUri);
+      if (refUri !== undefined && urlMap[refUri] === undefined)
+        urlList.push(refUri);
+      } catch (e) {}
+    }
+    urlIdx ++;
+    crawNext();
+  });
+}
+// 下載一個網頁
+function pageDownload(url, callback) {
+  http.get(url, function(res) {
+    res.on('data', callback);
+  }).on('error', function(e) {
+    console.log("Got error: " + e.message);
+  });
+}
+// 取得正規表達式比對到的結果成為一個陣列
+function getMatches(string, regex, index) {
+    index || (index = 1); // default to the first capturing group
+    var matches = [];
+    var match;
+    while (match = regex.exec(string)) {
+        matches.push(match[index]);
+    }
+    return matches;
+}
+// 將網址改寫為合法的檔案名稱
+function urlToFileName(url) {
+  return url.replace(/[^\w]/gi, '_');
+}
+```
+
+執行方法
+
+```
+NQU-192-168-60-101:crawler csienqu$ npm install URIjs
+NQU-192-168-60-101:crawler csienqu$ node crawler http://tw.msn.com/
+....
+```
+
+## 一對一聊天
+
+* 一對一聊天下載： @[[chat11.zip]](chat11.zip)
+* 多人聊天室下載： @[[chatroom.zip]](chatroom.zip)
+
+執行畫面
+
+![](chat11.png)
+
+
+Server 端
+
+檔案: ChatServer.js
+
+```javascript
+var net = require('net');
+var readline = require('readline').createInterface(process.stdin, process.stdout);
+
+var server = net.createServer();
+
+server.on('connection', function(sock) {
+  console.log(sock.remoteAddress +':'+ sock.remotePort+' 連進來了');
+
+  readline.setPrompt('');
+  readline.prompt();
+
+  readline.on('line', function(line) {
+    sock.write(line);
+    readline.prompt();
+  });
+  
+  sock.on('data', function(data) {
+    console.log('收到:' + sock.remoteAddress + ': ' + data);
+  });
+});
+
+server.listen(5757);
+console.log('server 啟動');
+
+```
+
+關於 readline 的用法請參考：  <https://nodejs.org/api/readline.html>
+
+Client 端
+
+檔案: ChatClient.js
+
+```javascript
+var net = require('net');
+var readline = require('readline').createInterface(process.stdin, process.stdout);
+
+var client = new net.Socket();
+
+readline.on('line', function(line) {
+  client.write(line);
+  readline.prompt();
+});
+  
+client.connect(5757, '127.0.0.1', function() {
+  console.log('連接 ' + client.remoteAddress + ':' + client.remotePort);
+  readline.setPrompt('');
+  readline.prompt();
+});
+
+client.on('data', function(data) {
+    console.log('收到:' + data);
+});
+```
+
+## 習題
+1. 請寫一對程式，包含 server 與 client，其中 client 可以向 server 查詢系統時間。
+2. 請改良本章的 Crawler 程式，讓網址與抓回來的內容都改存在 mongodb 資料庫中，而不是放在《記憶體》和《檔案系統》當中
+
+
+</textarea>
+      <textarea id="editBook" name="editBook" style="display:none">{
+ "title": "專為中學生寫的 JavaScript 程式書",
+ "editor": "ccc",
+ "chapters": [
+  {
+   "title": "前言",
+   "link": "README.md"
+  },
+  {
+   "title": "1. 程式入門",
+   "link": "chapter1.md"
+  },
+  {
+   "title": "2. 基本語法",
+   "link": "chapter2.md"
+  },
+  {
+   "title": "3. 字串",
+   "link": "chapterString.md"
+  },
+  {
+   "title": "4. 陣列",
+   "link": "chapter3.md"
+  },
+  {
+   "title": "5. 函數",
+   "link": "chapter4.md"
+  },
+  {
+   "title": "6. 字典與 JSON",
+   "link": "chapter5.md"
+  },
+  {
+   "title": "7. 物件導向與原型",
+   "link": "chapter6.md"
+  },
+  {
+   "title": "8. 函式庫",
+   "link": "chapter7.md"
+  },
+  {
+   "title": "9. 模組",
+   "link": "chapter8.md"
+  },
+  {
+   "title": "10. 檔案與輸出入",
+   "link": "chapter9.md"
+  },
+  {
+   "title": "11. 資料庫",
+   "link": "chapter10.md"
+  },
+  {
+   "title": "12. 網路",
+   "link": "chapter11.md"
+  },
+  {
+   "title": "習題解答",
+   "link": "answer.md"
+  }
+ ],
+ "book": "jsh"
+}</textarea>
+    </div>
+    <div class="content" id="pluginBox" hidden></div>
+  </div>
+</div>
+<script src="../../f6.js"></script>
+<script src="../../mdbook.js"></script>
+<script>
+MDB.setting = {
+  user: '',
+  book: 'jsh',
+  file: 'chapter11.md',
+  locale: '',
+  showdownJsUrl: 'https://cdnjs.cloudflare.com/ajax/libs/showdown/1.6.0/showdown.min.js',
+  highlightCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css',
+  katexCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css',
+  katexJsUrl: 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js',
+  highlightJsUrl: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js',
+}
+</script>
+</body>
+</html>
