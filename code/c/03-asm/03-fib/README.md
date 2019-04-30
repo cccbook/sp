@@ -1,10 +1,10 @@
 # 組合語言與機器碼
 
 ```
-PS D:\ccc\book\sp\code\c\03-asm> cd .\03-fib\
-PS D:\ccc\book\sp\code\c\03-asm\03-fib> gcc -S fib.c -o fib.s
-PS D:\ccc\book\sp\code\c\03-asm\03-fib> gcc -c fib.c -o fib.o
-PS D:\ccc\book\sp\code\c\03-asm\03-fib> objdump -s fib.o
+$ cd .\03-fib\
+$ gcc -S fib.c -o fib.s
+$ gcc -c fib.c -o fib.o
+$ objdump -s fib.o
 
 fib.o:     file format pe-i386
 

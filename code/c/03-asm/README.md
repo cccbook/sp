@@ -1,5 +1,10 @@
 # 組合語言解讀
 
+## 工具
+
+* [gdb](gdb.md)
+    * https://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/gdb.html
+
 ## Frame 
 
 * https://eli.thegreenplace.net/2011/02/04/where-the-top-of-the-stack-is-on-x86 (x86 讚!)

@@ -44,6 +44,130 @@ L2:
 
 ```
 
+## 解說
+
+sum.s
+
+```
+	.file	"sum.c"
+	.text         
+	.globl	_sum 
+	.def	_sum;	.scl	2;	.type	32;	.endef
+_sum:
+	pushl	%ebp	 #
+	movl	%esp, %ebp	 #,       
+	subl	$16, %esp	 #,          // esp = esp - 16 (框架大小)
+	movl	$0, -4(%ebp)	 #, s    // s = 0
+	movl	$0, -8(%ebp)	 #, i    // i = 0
+	jmp	L2	 #
+L3:
+	movl	-8(%ebp), %eax	 # i, tmp89   // eax = i
+	addl	%eax, -4(%ebp)	 # tmp89, s   // s = eax + s = i + s
+	addl	$1, -8(%ebp)	 #, i           // i = i + 1
+L2:
+	movl	-8(%ebp), %eax	 # i, tmp90   // eax = i
+	cmpl	8(%ebp), %eax	 # n, tmp90     // compare n, eax
+	jle	L3	 #,                         // if (n < eax) goto L3
+	movl	-4(%ebp), %eax	 # s, D.1492  // eax = s
+	leave                               // 準備離開，參考 https://c9x.me/x86/html/file_module_x86_id_154.html
+	ret                                 // 返回  LR = PC
+	.ident	"GCC: (tdm-1) 5.1.0"
+
+```
+
+## gdb 
+
+參考: https://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/gdb.html#
+
+
+```
+user@DESKTOP-96FRN6B MSYS /d/ccc/book/sp/code/c/03-asm/02-sum
+$ gcc main.c sum.c -o sum -g
+
+user@DESKTOP-96FRN6B MSYS /d/ccc/book/sp/code/c/03-asm/02-sum
+$ gdb sum
+GNU gdb (GDB) 7.11.1
+Copyright (C) 2016 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "x86_64-pc-msys".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+<http://www.gnu.org/software/gdb/documentation/>.
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Traceback (most recent call last):
+  File "<string>", line 3, in <module>
+ImportError: No module named libstdcxx.v6.printers
+/etc/gdbinit:6: Error in sourced command file:
+Error while executing Python code.
+Reading symbols from sum...done.
+(gdb) break sum.c:4
+Breakpoint 1 at 0x1004010db: file sum.c, line 4.
+(gdb) r
+Starting program: /d/ccc/book/sp/code/c/03-asm/02-sum/sum
+[New Thread 5596.0x1188]
+[New Thread 5596.0x1030]
+[New Thread 5596.0x19fc]
+[New Thread 5596.0x764]
+
+Thread 1 "sum" hit Breakpoint 1, sum (n=10) at sum.c:4
+4           s=s+i;
+(gdb) r
+The program being debugged has been started already.
+Start it from the beginning? (y or n) n
+Program not restarted.
+(gdb) c
+Continuing.
+[New Thread 5596.0x254]
+
+Thread 1 "sum" hit Breakpoint 1, sum (n=10) at sum.c:4
+4           s=s+i;
+(gdb) print s
+$1 = 0
+(gdb) c
+Continuing.
+
+Thread 1 "sum" hit Breakpoint 1, sum (n=10) at sum.c:4
+4           s=s+i;
+(gdb) c
+Continuing.
+
+Thread 1 "sum" hit Breakpoint 1, sum (n=10) at sum.c:4
+4           s=s+i;
+(gdb) print s
+$2 = 3
+(gdb) c
+Continuing.
+
+Thread 1 "sum" hit Breakpoint 1, sum (n=10) at sum.c:4
+4           s=s+i;
+(gdb) c
+Continuing.
+
+Thread 1 "sum" hit Breakpoint 1, sum (n=10) at sum.c:4
+4           s=s+i;
+(gdb) print s
+$3 = 10
+(gdb) print i
+$4 = 5
+(gdb) delete breakpoints
+Delete all breakpoints? (y or n) y
+(gdb) c
+Continuing.
+[New Thread 5596.0x2318]
+sum(10)=55
+[Thread 5596.0x254 exited with code 0]
+[Thread 5596.0x19fc exited with code 0]
+[Thread 5596.0x1030 exited with code 0]
+[Thread 5596.0x764 exited with code 0]
+[Inferior 1 (process 5596) exited normally]
+```
+
 ## 將組合語言轉換為目的檔
 
 ```
