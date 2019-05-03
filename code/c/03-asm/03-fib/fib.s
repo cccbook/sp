@@ -1,30 +1,43 @@
-	.file	"fib.c"
-	.text
+	.section	__TEXT,__text,regular,pure_instructions
+	.macosx_version_min 10, 13
 	.globl	_fib
-	.def	_fib;	.scl	2;	.type	32;	.endef
-_fib:
-	pushl	%ebp
-	movl	%esp, %ebp
-	pushl	%ebx
-	subl	$20, %esp
-	cmpl	$1, 8(%ebp)
-	jg	L2
-	movl	$1, %eax
-	jmp	L3
-L2:
-	movl	8(%ebp), %eax
+	.p2align	4, 0x90
+_fib:                                   ## @fib
+	.cfi_startproc
+## BB#0:
+	pushq	%rbp
+Lcfi0:
+	.cfi_def_cfa_offset 16
+Lcfi1:
+	.cfi_offset %rbp, -16
+	movq	%rsp, %rbp
+Lcfi2:
+	.cfi_def_cfa_register %rbp
+	subq	$16, %rsp
+	movl	%edi, -8(%rbp)
+	cmpl	$1, -8(%rbp)
+	jg	LBB0_2
+## BB#1:
+	movl	$1, -4(%rbp)
+	jmp	LBB0_3
+LBB0_2:
+	movl	-8(%rbp), %eax
 	subl	$1, %eax
-	movl	%eax, (%esp)
-	call	_fib
-	movl	%eax, %ebx
-	movl	8(%ebp), %eax
-	subl	$2, %eax
-	movl	%eax, (%esp)
-	call	_fib
-	addl	%ebx, %eax
-L3:
-	addl	$20, %esp
-	popl	%ebx
-	popl	%ebp
-	ret
-	.ident	"GCC: (tdm-1) 5.1.0"
+	movl	%eax, %edi
+	callq	_fib
+	movl	-8(%rbp), %edi
+	subl	$2, %edi
+	movl	%eax, -12(%rbp)         ## 4-byte Spill
+	callq	_fib
+	movl	-12(%rbp), %edi         ## 4-byte Reload
+	addl	%eax, %edi
+	movl	%edi, -4(%rbp)
+LBB0_3:
+	movl	-4(%rbp), %eax
+	addq	$16, %rsp
+	popq	%rbp
+	retq
+	.cfi_endproc
+
+
+.subsections_via_symbols

@@ -31,7 +31,6 @@ void responseFile(int client_fd, char *path) {
   sprintf(fpath, "./web/%s", path);
   printf("responseFile:fpath=%s\n", fpath);
   FILE *file = fopen(fpath, "r");
-  printf("file=%d\n", file);
   int len = fread(text, 1, TEXT_MAX, file);
   text[len] = '\0';
   printf("text=%s\n", text);
@@ -60,6 +59,7 @@ void* handleRequest(void *client_fdp) {
   }
   close(client_fd);
   *(int*)client_fdp = -1;
+  return NULL;
 }
 
 int main()
