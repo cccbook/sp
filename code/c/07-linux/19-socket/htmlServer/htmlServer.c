@@ -23,12 +23,17 @@ void parseHeader(char *header, char *path) {
 
 void responseFile(int client_fd, char *path) {
   char text[TEXT_MAX], response[TEXT_MAX], fpath[STR_MAX];
-  sprintf(fpath, "./web/%s", path);
+  sprintf(fpath, "./web%s", path);
   printf("responseFile:fpath=%s\n", fpath);
   FILE *file = fopen(fpath, "r");
-  int len = fread(text, 1, TEXT_MAX, file);
-  text[len] = '\0';
-  printf("text=%s\n", text);
+  int len;
+  if (file == NULL) {
+    strcpy(text, "<html><body><h1>File not Found!</h1></body></html>");
+    len = strlen(text);
+  } else {
+    len = fread(text, 1, TEXT_MAX, file);
+    text[len] = '\0';
+  }
   sprintf(response, "HTTP/1.1 200 OK\r\n"
                     "Content-Type: text/html; charset=UTF-8\r\n"
                     "Content-Length: %d\r\n\r\n%s", len, text);
