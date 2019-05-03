@@ -2,7 +2,7 @@
 !/**/
 !*.*
 
-./vscode
+.vscode
 
 *.exe
 *.exe.stackdump
