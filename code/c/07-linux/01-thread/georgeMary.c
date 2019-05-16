@@ -11,7 +11,7 @@ void *print_george(void *argu) {    // 每隔一秒鐘印出一次 George 的函
   return NULL;    
 }    
 
-void *print_mary(void *argu) {     // 每隔一秒鐘印出一次 Mary 的函數
+void *print_mary(void *argu) {     // 每隔2秒鐘印出一次 Mary 的函數
   while (1) {    
     printf("Mary\n");    
     sleep(2);    
