@@ -5,6 +5,9 @@
 pthread_mutex_t x;
 pthread_mutex_t y;
 
+int xcounter = 0;
+int ycounter = 0;
+
 void *A(); 
 void *B(); 
 
@@ -25,17 +28,18 @@ int main(int argc, char *argv[])
 
     pthread_mutex_destroy(&x);
     pthread_mutex_destroy(&y);
+    printf("xcounter=%d ycounter=%d\n", xcounter, ycounter);
 }
 
 void *A() 
 {
     pthread_mutex_lock(&x);
     printf("A lock x\n");
-
+    xcounter ++;
     sleep(1);
     pthread_mutex_lock(&y);
     printf("A lock y\n");
-
+    ycounter ++;
     pthread_mutex_unlock(&y); 
     pthread_mutex_unlock(&x); 
 
@@ -46,12 +50,14 @@ void *A()
 
 void *B()
 {
-    
+    pthread_mutex_lock(&x);
     pthread_mutex_lock(&y);
     printf("B lock y\n");
+    ycounter --;
     sleep(1);
-    pthread_mutex_lock(&x);
+
     printf("B lock x\n");
+    xcounter --;
     pthread_mutex_unlock(&x);
     pthread_mutex_unlock(&y);
 

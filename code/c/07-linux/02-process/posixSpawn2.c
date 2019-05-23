@@ -23,6 +23,7 @@ void run_cmd(char *cmd)
         } else {
             perror("waitpid");
         }
+        while (1) {}
     } else {
         printf("posix_spawn: %s\n", strerror(status));
     }
@@ -32,5 +33,6 @@ int main(int argc, char* argv[])
 {
     run_cmd(argv[1]);
     printf("=====main=====\n");
+    while (1) {}
     return 0;
 }
