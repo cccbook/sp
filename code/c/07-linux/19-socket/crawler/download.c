@@ -3,5 +3,5 @@
 
 int main(int argc, char *argv[]) {
     char head[PACKET_MAX];
-    httpDownload("example.com", "80", "/", head, "page/example.html");
+    httpDownload("misavo.com", "80", "/view/ccc/cccForStudent.md", head, "page/cccForStudent.html");
 }

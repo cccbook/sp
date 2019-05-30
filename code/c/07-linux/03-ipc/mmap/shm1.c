@@ -19,8 +19,8 @@ void* create_shared_memory(size_t size) {
 }
 
 int main() {
-  char* parent_message = "hello";  // parent process will write this message
-  char* child_message = "goodbye"; // child process will then write this one
+  char parent_message[] = "hello";  // parent process will write this message
+  char child_message[] = "goodbye"; // child process will then write this one
 
   void* shmem = create_shared_memory(128);
 

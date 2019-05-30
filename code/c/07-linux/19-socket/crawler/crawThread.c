@@ -10,6 +10,7 @@ void* getPage(void *ip) {
   char file[100], head[PACKET_MAX];
   sprintf(file, "page/misavo_%d.html", i);
   httpDownload("misavo.com", "80", list[i], head, file);
+  return NULL;
 }
 
 int main() {
