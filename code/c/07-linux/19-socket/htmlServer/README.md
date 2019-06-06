@@ -6,8 +6,8 @@
 ## helloWebServer.c
 
 ```
-$ gcc helloWebServer.c -o helloWebServer
-$ ./helloWebServer
+$ gcc helloWebServer.c -o helloWebServer.exe
+$ ./helloWebServer.exe
 ```
 
 然後你會看到一個只會說 hello world! 的 server
@@ -15,8 +15,8 @@ $ ./helloWebServer
 ## headPrintServer.c
 
 ```
-$ gcc headPrintServer.c -o headPrintServer
-$ ./headPrintServer
+$ gcc headPrintServer.c -o headPrintServer.exe
+$ ./headPrintServer.exe
 ```
 
 一樣只會說 hello world! 
@@ -26,8 +26,8 @@ $ ./headPrintServer
 ## htmlServer
 
 ```
-$ gcc htmlServer.c -o htmlServer
-$ ./htmlServer
+$ gcc htmlServer.c -o htmlServer.exe
+$ ./htmlServer.exe
 ```
 
 然後訪問 http://localhost:8080/index.html 可以看到網頁，任意點選連結訪問其他頁面！
